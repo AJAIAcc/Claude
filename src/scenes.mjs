@@ -8,6 +8,7 @@ import * as LY from './core/lyrics.mjs';
 import {noise2,fbm,clamp,smoothstep,mulberry32} from './core/noise.mjs';
 import * as BG from './core/backdrops.mjs';
 import {TONE,ground,vignette as vig2,plate} from './core/tone.mjs';
+import {hex2rgb} from './core/palette.mjs';
 const {ease}=LY;
 const TAU=Math.PI*2;
 
@@ -49,6 +50,46 @@ function vignette(x,W,H,a=0.5,col='#1a120c'){
   x.save(); x.fillStyle=g; x.fillRect(0,0,W,H); x.restore();
 }
 function darkField(x,W,H,col,a=1){x.save();x.globalAlpha=a;x.fillStyle=col;x.fillRect(0,0,W,H);x.restore();}
+
+
+// ---- shot system: cut between wide / medium / close on bar lines, the way a
+// music video actually edits. Returns a transform for the headliner.
+export function shotFor(E,pattern,{barLen=2.411336,phase=2.1099}={}){
+  const bar=Math.floor((E.t-phase)/barLen);
+  const k=((bar%pattern.length)+pattern.length)%pattern.length;
+  return pattern[k];
+}
+function lyricForShot(x,W,H,E,l,SH,{col,accent}){
+  const p=(E.t-l.t)/Math.max(0.6,l.dur||2);
+  if(p<0||p>1)return;
+  // On medium/close shots the dark silhouette fills the frame, so dark type dies on it.
+  // Invert: a weighted plate and cream type.
+  const tight = SH.s>0.0007;
+  const C = tight ? '#FFF3DC' : col;
+  const A = tight ? PAL.goldPale : accent;
+  if(l.hero){
+    if(tight){
+      plate(x,W,H,{y:H*0.862,h:H*0.185,col:'#14090A',a:0.62});
+      LY.hero(x,W,H,l.text,clamp(p/0.42,0,1),{cy:H*0.862,col:C,accent:A,size:W*0.042,maxW:W*0.88});
+    } else {
+      LY.hero(x,W,H,l.text,clamp(p/0.42,0,1),{cy:H*0.225,col:C,accent:A,size:W*0.055,maxW:W*0.80});
+    }
+  } else {
+    if(tight) plate(x,W,H,{y:H*0.888,h:H*0.13,col:'#14090A',a:0.55});
+    LY.subtitle(x,W,H,l.text,p,{cy:tight?H*0.888:H*0.30,col:C,accent:A,size:W*0.030});
+  }
+}
+const SHOT={
+  wide:   {s:0.00050, y:0.925, x:0.50, line:1, orn:1},
+  wideL:  {s:0.00050, y:0.925, x:0.33, line:1, orn:1},
+  wideR:  {s:0.00050, y:0.925, x:0.67, line:1, orn:1},
+  med:    {s:0.00082, y:1.10,  x:0.50, line:0, orn:1},
+  medL:   {s:0.00082, y:1.10,  x:0.34, line:0, orn:1},
+  close:  {s:0.00230, y:2.05,  x:0.52, line:0, orn:0},
+  closeL: {s:0.00230, y:2.05,  x:0.34, line:0, orn:0},
+  closeR: {s:0.00230, y:2.05,  x:0.68, line:0, orn:0},
+};
+export {SHOT};
 
 // ============================= SCENES =============================
 
@@ -302,48 +343,47 @@ chorus(x,W,H,E){
   decoGround(x,W,H,E,{a:0.26,rot:E.t*0.030,n:34,col:PAL.paper,r1:W*0.92});
   halftone(x,0,H*0.05,W,H*0.8,{col:PAL.ox,pitch:11,a:0.16,
     fn:(u,v)=>Math.max(0,1-Math.hypot((u-0.5)*1.9,(v-0.52)*1.9))});
-  spotlight(x,W,H,W/2,H*0.80,W*0.34,{a:0.42,cone:true});
-  stageFloor(x,W,H,{a:0.15,y:H*0.82});
-  // chorus line
-  for(let i=0;i<9;i++){
-    const ph=E.t*3.3+i*0.72;
-    chorusFigure(x,W*(0.055+i*0.1115),H*0.905+Math.sin(ph*0.5)*5,H*0.00056,ph,
-      {col:PAL.ink,a:0.72,kick:1.0,face:i%2?1:-1});
+  const SH=shotFor(E,[SHOT.wide,SHOT.wide,SHOT.closeR,SHOT.med,
+                      SHOT.wideL,SHOT.wide,SHOT.closeL,SHOT.med]);
+  spotlight(x,W,H,W*SH.x,H*0.80,W*0.34,{a:0.42,cone:true});
+  if(SH.line){
+    stageFloor(x,W,H,{a:0.15,y:H*0.82});
+    for(let i=0;i<9;i++){
+      const ph=E.t*3.3+i*0.72;
+      chorusFigure(x,W*(0.055+i*0.1115),H*0.905+Math.sin(ph*0.5)*5,H*0.00056,ph,
+        {col:PAL.ink,a:0.72,kick:1.0,face:i%2?1:-1});
+    }
   }
-  // headliner
-  const pz=POSE(); pz.x=W/2; pz.y=H*0.845;
+  const pz=POSE(); pz.x=W*SH.x; pz.y=H*SH.y;
   pz.bloom=0.78+E.beatPulse*0.22; pz.mouth=E.vocal;
   pz.armF=[-2.05+Math.sin(E.t*2.6)*0.22,-0.26]; pz.armB=[1.95+Math.sin(E.t*2.6+1)*0.2,0.30];
   pz.bob=Math.sin(E.t*3.2)*6; pz.lean=Math.sin(E.t*1.6)*0.028; pz.flare=0.55+E.bands.sub*0.2;
   pz.sway=Math.sin(E.t*1.6)*0.16;
-  figure(x,pz,H*0.00050*(1+E.beatPulse*0.03),{a:1});
-  confetti(x,W,H,E,E.t,{n:70,a:0.55});
-  E.active.forEach(l=>{
-    const p=(E.t-l.t)/Math.max(0.6,l.dur||2);
-    if(p<0||p>1)return;
-    if(l.hero) LY.hero(x,W,H,l.text,clamp(p/0.42,0,1),{cy:H*0.225,col:PAL.ink,accent:PAL.terra,size:W*0.055,maxW:W*0.80});
-    else LY.subtitle(x,W,H,l.text,p,{cy:H*0.30,col:PAL.ink,accent:PAL.terra,size:W*0.030});
-  });
+  figure(x,pz,H*SH.s*(1+E.beatPulse*0.03),{a:1});
+  confetti(x,W,H,E,E.t,{n:SH.orn?70:34,a:0.55});
+  E.active.forEach(l=>lyricForShot(x,W,H,E,l,SH,{col:PAL.ink,accent:PAL.terra}));
   vig2(x,W,H,T);
 },
 chorusB(x,W,H,E){
-  const T=TONE.blaze; ground(x,W,H,E,'blaze');
-  BG.bgMarks(x,W,H,E,{a:0.040,col:PAL.terra,n:5,rot:E.t*0.12});
-  BG.bgMoire(x,W,H,E,{a:0.15,col:PAL.ink,n:26,cy:0.46,phase:(E.t*18)%(W*0.019)});
-  // concentric Deco mandala behind a lone figure
-  x.save(); x.translate(W/2,H*0.46);
-  for(let k=0;k<5;k++){
-    x.save(); x.rotate(E.t*(k%2?0.18:-0.18));
-    rays(x,0,0,W*(0.07+k*0.055),W*(0.105+k*0.055),10+k*5,
-      {col:[PAL.terra,PAL.gold,PAL.ink,PAL.pink,PAL.mint][k],a:0.26,duty:0.42});
-    x.restore();
+  // Banner composition: flat vertical colour bands, the figure as a poster cut-out.
+  const T=TONE.blaze; ground(x,W,H,E,'blaze',{heat:0.18});
+  const bands=[PAL.terra,PAL.ox,PAL.mint,PAL.gold,PAL.ox];
+  const nb=5, bw=W/nb;
+  x.save(); x.globalCompositeOperation='multiply';
+  for(let i=0;i<nb;i++){
+    const drift=Math.sin(E.t*0.5+i)*H*0.02;
+    x.globalAlpha=0.30+0.22*((i+Math.floor(E.t*2))%2);
+    x.fillStyle=bands[i]; x.fillRect(i*bw, -H*0.05+drift, bw*0.92, H*1.1);
   }
   x.restore();
-  const pz=POSE(); pz.x=W/2; pz.y=H*0.93; pz.bloom=0.7+E.beatPulse*0.25; pz.mouth=E.vocal;
+  BG.bgScallop(x,W,H,E,{a:0.30,col:PAL.paper,rows:4,r:W*0.12,phase:E.t*16});
+  towerBand(x,W,H,E,H*0.115,{a:0.34,n:30,amp:H*0.016,col:PAL.ink});
+  towerBand(x,W,H,E,H*0.885,{a:0.34,n:30,amp:H*0.016,col:PAL.ink});
+  const CS=shotFor(E,[SHOT.med,SHOT.wide,SHOT.closeR,SHOT.wideL]);
+  const pz=POSE(); pz.x=W*CS.x; pz.y=H*CS.y; pz.bloom=0.7+E.beatPulse*0.25; pz.mouth=E.vocal;
   pz.armF=[-1.9,0.1]; pz.armB=[1.5,0.4]; pz.bob=Math.sin(E.t*3.1)*5; pz.sway=Math.sin(E.t*1.5)*0.2;
-  figure(x,pz,H*0.00048,{a:1});
-  E.active.forEach(l=>{const p=(E.t-l.t)/Math.max(0.6,l.dur||2); if(p<0||p>1)return;
-    LY.hero(x,W,H,l.text,clamp(p/0.45,0,1),{cy:H*0.24,col:PAL.ink,accent:PAL.terra,size:W*0.058});});
+  figure(x,pz,H*CS.s,{a:1});
+  E.active.forEach(l=>lyricForShot(x,W,H,E,l,CS,{col:PAL.ink,accent:PAL.ox}));
   vig2(x,W,H,T);
 },
 };
@@ -364,7 +404,10 @@ function verseCommon(x,W,H,E,variant){
     col:dark?'#E8B9A0':'#FFF3DC'});
   stageFloor(x,W,H,{a:dark?0.26:0.14,y:H*0.82});
 
-  const pz=POSE(); pz.x=W*0.705; pz.y=H*0.885; pz.mouth=E.vocal;
+  const VS=shotFor(E,[SHOT.wideR,SHOT.wideR,SHOT.medL,SHOT.wideR,
+                      SHOT.closeR,SHOT.wideR,SHOT.wideR,SHOT.med]);
+  const pz=POSE(); pz.x=W*(VS===SHOT.wideR?0.705:VS.x); pz.y=H*(VS===SHOT.wideR?0.885:VS.y);
+  pz.mouth=E.vocal;
   pz.bloom=(dark?0.45:0.58)+E.beatPulse*0.16;
   pz.bob=Math.sin(E.t*2.6)*4; pz.lean=Math.sin(E.t*1.3)*0.022;
   pz.sway=Math.sin(E.t*1.3)*0.14;
@@ -385,7 +428,7 @@ function verseCommon(x,W,H,E,variant){
       chorusFigure(x,W*(0.06+i*0.085),H*0.905,H*0.00044,ph,{col:PAL.ink,a:0.40,kick:0.8,face:-1});
     }
   }
-  figure(x,pz,H*0.00062,{a:1,col:T.fig,rim:T.rim});
+  figure(x,pz,H*(VS===SHOT.wideR?0.00062:VS.s),{a:1,col:T.fig,rim:T.rim});
 
   // lyrics: left column for v1/v3, lower third for v2
   E.active.forEach(l=>{
@@ -578,16 +621,23 @@ burst(x,W,H,E){
     const ph=E.t*3.6+i*0.6;
     chorusFigure(x,W*(0.04+i*0.092),H*0.905,H*0.00054,ph,{col:PAL.ink,a:0.78,kick:1.1,face:i%2?1:-1});
   }
-  const pz=POSE(); pz.x=W/2; pz.y=H*0.955; pz.bloom=0.95+E.beatPulse*0.2; pz.mouth=E.vocal;
+  const BS=shotFor(E,[SHOT.wide,SHOT.wide,SHOT.wide,SHOT.closeL,
+                      SHOT.wide,SHOT.med,SHOT.wide,SHOT.closeR]);
+  const pz=POSE(); pz.x=W*BS.x; pz.y=H*BS.y; pz.bloom=0.95+E.beatPulse*0.2; pz.mouth=E.vocal;
   pz.armF=[-2.3,-0.3]; pz.armB=[2.1,0.25]; pz.bob=Math.sin(E.t*3.4)*7;
   pz.flare=0.7; pz.sway=Math.sin(E.t*1.8)*0.2;
-  figure(x,pz,H*0.00050,{a:1});
+  figure(x,pz,H*BS.s,{a:1});
   confetti(x,W,H,E,E.t,{n:110,a:0.7});
   E.active.forEach(l=>{
     const p=(E.t-l.t)/Math.max(0.6,l.dur||2);
     if(p<0||p>1)return;
-    if(l.slam) LY.slam(x,W,H,l.text.toUpperCase(),clamp(p/0.35,0,1),{cy:H*0.195,col:PAL.ink});
-    else LY.hero(x,W,H,l.text,clamp(p/0.42,0,1),{cy:H*0.21,col:PAL.ink,accent:PAL.terra,size:W*0.062});
+    const lowShot = BS.s>0.0007;
+    if(lowShot) plate(x,W,H,{y:H*0.862,h:H*0.185,col:'#14090A',a:0.62});
+    if(l.slam) LY.slam(x,W,H,l.text.toUpperCase(),clamp(p/0.35,0,1),
+      {cy:lowShot?H*0.862:H*0.195,col:lowShot?'#FFF3DC':PAL.ink});
+    else LY.hero(x,W,H,l.text,clamp(p/0.42,0,1),
+      {cy:lowShot?H*0.862:H*0.21,col:lowShot?'#FFF3DC':PAL.ink,
+       accent:lowShot?PAL.goldPale:PAL.terra,size:lowShot?W*0.044:W*0.062});
   });
   if(flash>0){x.save();x.globalCompositeOperation='screen';x.globalAlpha=flash*0.85;
     x.fillStyle='#FFF6E4';x.fillRect(0,0,W,H);x.restore();}
@@ -724,5 +774,62 @@ curtain(x,W,H,E){
   curtain(x,W,H,-1,1-cl,{col:PAL.ox,a:1});
   curtain(x,W,H, 1,1-cl,{col:PAL.ox,a:1});
   vig2(x,W,H,T,cl*0.45);
+},
+});
+
+// 129.40-140.35  TRIPTYCH — hard colour-blocked panels, cut on the beat.
+// The modern/K-pop register: flat blocking, bold type, rhythmic re-framing,
+// but the figure and ornament keep it inside the Deco world.
+Object.assign(SCENES,{
+triptych(x,W,H,E){
+  const T=TONE.blaze;
+  const t=E.t-E.sec.t0;
+  const beatIx=Math.floor((E.t-2.1099)/0.602834);
+  const sets=[
+    [PAL.terra,PAL.paper,PAL.ox],
+    [PAL.ox,PAL.gold,PAL.mint],
+    [PAL.gold,PAL.ox,PAL.terra],
+    [PAL.mint,PAL.terra,PAL.gold],
+  ];
+  const cols=sets[Math.abs(beatIx)%sets.length];
+  const n=3, pw=W/n;
+  for(let i=0;i<n;i++){
+    x.save();
+    x.beginPath(); x.rect(i*pw,0,pw+1,H); x.clip();
+    x.fillStyle=cols[i]; x.fillRect(i*pw,0,pw+1,H);
+    // paper tooth survives the colour blocking
+    x.save(); x.globalCompositeOperation='overlay'; x.globalAlpha=0.30;
+    x.drawImage(E.paper,0,0); x.restore();
+    // per-panel ornament
+    x.save(); x.globalAlpha=0.22;
+    if(i===0) rays(x,i*pw+pw/2,H*0.42,pw*0.08,pw*1.3,18,{col:PAL.paper,a:1,rot:E.t*0.1,duty:0.44});
+    if(i===1) arcBands(x,i*pw+pw/2,H*0.44,[pw*0.18,pw*0.26,pw*0.36,pw*0.46],{col:PAL.ink,a:1,lw:W*0.0028});
+    if(i===2) BG.bgChevron(x,W,H,E,{a:1,col:PAL.paper,rows:8,n:4,amp:H*0.045,phase:E.t*30});
+    x.restore();
+    // a figure per panel, each framed differently
+    const pz=POSE();
+    pz.x=i*pw+pw*0.5; pz.face=i===1?-1:1;
+    const scale=[0.00044,0.00064,0.00038][i];
+    pz.y=[H*0.98,H*1.26,H*0.94][i];
+    pz.bloom=0.7+E.beatPulse*0.3; pz.mouth=E.vocal;
+    pz.armF=[-1.6-i*0.3+Math.sin(E.t*3+i)*0.3,0.2];
+    pz.armB=[1.2+i*0.3+Math.cos(E.t*3+i)*0.3,0.35];
+    pz.bob=Math.sin(E.t*3.3+i)*5; pz.sway=Math.sin(E.t*1.7+i)*0.2;
+    // figure colour must contrast its own panel, not its index
+    const [pr,pg,pb]=hex2rgb(cols[i]);
+    const lum=(0.299*pr+0.587*pg+0.114*pb)/255;
+    figure(x,pz,H*scale,{a:1,col: lum>0.52 ? PAL.ink : '#F6EBD6'});
+    x.restore();
+    // hard panel rule
+    if(i) { x.save(); x.globalAlpha=0.5; x.fillStyle=PAL.ink; x.fillRect(i*pw-W*0.0012,0,W*0.0024,H); x.restore(); }
+  }
+  E.active.forEach(l=>{
+    const p=(E.t-l.t)/Math.max(0.6,l.dur||2);
+    if(p<0||p>1)return;
+    plate(x,W,H,{y:H*0.20,h:H*0.16,col:'#120A0B',a:0.42});
+    if(l.hero) LY.hero(x,W,H,l.text,clamp(p/0.40,0,1),{cy:H*0.20,col:'#FFF3DC',accent:PAL.goldPale,size:W*0.052,maxW:W*0.86});
+    else LY.subtitle(x,W,H,l.text,p,{cy:H*0.20,col:'#FFF3DC',accent:PAL.goldPale,size:W*0.030,rule:false});
+  });
+  vig2(x,W,H,T);
 },
 });

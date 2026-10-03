@@ -159,30 +159,45 @@ export function figure(x,p,S,{col=PAL.ink,a=1,pierced=true,rim=null}={}){
 export function chorusFigure(x,cx,cy,s,ph,{col=PAL.ink,a=1,kick=0.9,face=1}={}){
   x.save(); x.translate(cx,cy); x.scale(s*face,s); x.globalAlpha=a; x.fillStyle=col;
   const k=Math.sin(ph)*kick;
-  for(let i=0;i<9;i++){
-    const u=i/8, ang=(-0.18+u*2.2);
-    const mid=Math.sin(Math.PI*Math.pow(u,0.75)), len=22+Math.max(0,mid)*96;
-    x.save(); x.translate(0,-300); x.rotate(-ang);
-    x.beginPath(); x.moveTo(-6,-14); x.quadraticCurveTo(0,-14-len,6,-14); x.closePath(); x.fill();
-    x.restore();
+  // headdress: few, WIDE wedges. Many thin rays read as fringe at this size.
+  const n=6, T0=-0.10, T1=1.95, slot=(T1-T0)/(n-1);
+  x.save(); x.translate(-3,-300);
+  for(let i=0;i<n;i++){
+    const u=i/(n-1), th=T0+u*(T1-T0);
+    const env=Math.sin(Math.PI*Math.pow(u,0.75));
+    const Ri=16, Ro=Ri+22+env*62, hw=slot*0.40, tw=slot*0.15;
+    const pt=(r,d)=>[-Math.sin(th+d)*r,-Math.cos(th+d)*r];
+    const p1=pt(Ri,-hw),p2=pt(Ri,hw),p3=pt(Ro,tw),p4=pt(Ro,-tw);
+    x.beginPath(); x.moveTo(p1[0],p1[1]); x.lineTo(p2[0],p2[1]);
+    x.lineTo(p3[0],p3[1]); x.lineTo(p4[0],p4[1]); x.closePath(); x.fill();
   }
-  x.beginPath(); x.ellipse(2,-300,18,24,0,0,6.2832); x.fill();
-  x.beginPath(); x.moveTo(10,-284); x.lineTo(21,-293); x.lineTo(13,-276); x.closePath(); x.fill(); // nose
-  x.fillRect(-5,-280,13,30);
-  x.beginPath();                                   // narrow 1920s column, not a bell
-  x.moveTo(-16,-252); x.quadraticCurveTo(9,-262,18,-244);
-  x.quadraticCurveTo(23,-168,19,-96);
-  x.quadraticCurveTo(27,-48,33,6); x.quadraticCurveTo(-14,20,-44,4);
-  x.quadraticCurveTo(-30,-50,-19,-96);
-  x.quadraticCurveTo(-22,-174,-16,-252);
-  x.closePath(); x.fill();
-  x.save(); x.translate(6,-108); x.rotate(k*0.55);
-  x.beginPath(); x.moveTo(-9,0); x.lineTo(9,0); x.lineTo(4,112); x.lineTo(-8,112); x.closePath(); x.fill();
   x.restore();
+  // head in profile + neck
+  x.beginPath(); x.ellipse(2,-300,19,23,0,0,6.2832); x.fill();
+  x.beginPath(); x.moveTo(12,-302); x.lineTo(24,-296); x.lineTo(14,-288); x.closePath(); x.fill();
+  x.fillRect(-4,-282,12,28);
+  // arms: raised, with a real elbow bend, ending in a hand — not a stick
   for(const sd of [1,-1]){
-    x.save(); x.translate(sd*15,-242); x.rotate(sd*(2.35+Math.sin(ph+sd)*0.38));
-    x.beginPath(); x.moveTo(-7,0); x.lineTo(7,0); x.lineTo(3,118); x.lineTo(-5,118); x.closePath(); x.fill();
+    x.save(); x.translate(sd*14,-252); x.rotate(sd*(2.08+Math.sin(ph+sd*0.9)*0.22));
+    x.beginPath(); x.moveTo(-7,0); x.lineTo(7,0); x.lineTo(4,78); x.lineTo(-5,78); x.closePath(); x.fill();
+    x.translate(0,76); x.rotate(sd*-0.50);
+    x.beginPath(); x.moveTo(-5,0); x.lineTo(5,0); x.lineTo(3,66); x.lineTo(-4,66); x.closePath(); x.fill();
+    x.beginPath(); x.ellipse(0,68,6,10,0,0,6.2832); x.fill();
     x.restore();
   }
+  // 1920s column with a kicked hem
+  x.beginPath();
+  x.moveTo(-16,-254); x.quadraticCurveTo(8,-266,18,-246);
+  x.quadraticCurveTo(23,-168,20,-92);
+  x.quadraticCurveTo(34,-42,46,6);
+  x.quadraticCurveTo(-14,24,-54,4);
+  x.quadraticCurveTo(-36,-44,-20,-92);
+  x.quadraticCurveTo(-23,-170,-16,-254);
+  x.closePath(); x.fill();
+  // the kicking leg breaks the hem line
+  x.save(); x.translate(6,-104); x.rotate(k*0.52);
+  x.beginPath(); x.moveTo(-8,0); x.lineTo(8,0); x.lineTo(4,108); x.lineTo(-7,108); x.closePath(); x.fill();
+  x.beginPath(); x.ellipse(-1,110,8,5,0,0,6.2832); x.fill();
+  x.restore();
   x.restore();
 }

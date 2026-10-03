@@ -13,18 +13,36 @@ export function bgRays(x,W,H,E,{a=0.34,n=26,rot=0,col=PAL.goldPale,r1=null,cy=0.
 export function bgSkyline(x,W,H,E,{a=0.26,col=PAL.ink,base=0.80,seed=5,scale=1}={}){
   const r=mulberry32(seed);
   x.save(); x.globalAlpha=a; x.fillStyle=col;
-  let px=-W*0.05;
-  while(px<W*1.05){
-    const w=W*(0.045+r()*0.075)*scale;
-    const h=H*(0.10+r()*0.34)*scale;
-    const steps=2+((r()*3)|0);
-    for(let s=0;s<steps;s++){
-      const t=s/steps, ww=w*(1-t*0.52), hh=h*(1-t*0.30);
-      x.fillRect(px+(w-ww)/2, H*base-hh, ww, hh);
+  let px=-W*0.06;
+  while(px<W*1.06){
+    const w=W*(0.040+r()*0.070)*scale;
+    const h=H*(0.10+r()*0.36)*scale;
+    const kind=r();
+    const yB=H*base;
+    if(kind<0.42){
+      // ziggurat setbacks — the Deco skyscraper
+      const steps=3+((r()*3)|0);
+      for(let s2=0;s2<steps;s2++){
+        const t=s2/steps;
+        const ww=w*(1-t*0.58), hh=h*(0.34+t*0.66);
+        x.fillRect(px+(w-ww)/2, yB-hh, ww, hh);
+      }
+      x.fillRect(px+w*0.455, yB-h*1.16, w*0.09, h*0.22);              // spire
+      x.beginPath(); x.arc(px+w*0.5, yB-h*1.16, w*0.055,0,TAU); x.fill();
+    } else if(kind<0.70){
+      // chamfered tower with a crown of fins
+      x.beginPath();
+      x.moveTo(px,yB); x.lineTo(px,yB-h*0.86);
+      x.lineTo(px+w*0.22,yB-h); x.lineTo(px+w*0.78,yB-h);
+      x.lineTo(px+w,yB-h*0.86); x.lineTo(px+w,yB);
+      x.closePath(); x.fill();
+      for(let f=0;f<4;f++) x.fillRect(px+w*(0.18+f*0.2), yB-h*1.12, w*0.055, h*0.14);
+    } else {
+      // low block with a stepped parapet
+      x.fillRect(px, yB-h*0.62, w, h*0.62);
+      for(let f=0;f<5;f++) x.fillRect(px+w*(f*0.2), yB-h*0.70, w*0.12, h*0.09);
     }
-    // spire
-    if(r()>0.55){x.fillRect(px+w*0.46, H*base-h*1.22, w*0.08, h*0.26);}
-    px+=w*1.06;
+    px+=w*(1.02+r()*0.10);
   }
   x.restore();
 }

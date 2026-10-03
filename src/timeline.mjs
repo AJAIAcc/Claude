@@ -71,7 +71,7 @@ export const SECTIONS=[
   L(121.70,'Every heart is beating in time,'),
 ]},
 {id:'machine',   scene:'machine',   t0:125.41,t1:129.40, lines:[]},
-{id:'chorus3',   scene:'chorus',    t0:129.40,t1:140.35, lines:[
+{id:'chorus3',   scene:'triptych',  t0:129.40,t1:140.35, lines:[
   L(129.40,'The future’s here,'),
   L(132.10,'and it’s feeling sublime!',{hero:1}),
   L(134.80,'Take a bow, humanity,'),
