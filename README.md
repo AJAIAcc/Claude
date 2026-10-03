@@ -70,6 +70,21 @@ is how the 59 cues were checked rather than guessed.
 - **Type** — five faces, each with a job: Limelight (playbill), Josefin Sans (the
   lyric voice), Anton (the machine), Bodoni Moda (the programme), Poiret One (the aside).
 
+## Output
+
+| file | what |
+|---|---|
+| `out/take_a_bow_humanity.mp4` | master — 1920×1080, 30 fps, CRF 19, 435 MB |
+| `out/take_a_bow_humanity_web.mp4` | share — 1920×1080, 5.2 Mbps, 144 MB |
+| `out/take_a_bow_720p.mp4` | light — 1280×720, 222.4 s |
+| `out/styleboard.png` | the style sheet |
+| `analysis/timing_check.png` | every lyric cue over the vocal-salience curve |
+| `out/syncheck.png` | twelve musical landmarks, picture vs audio energy |
+
+Video and audio are both exactly 222.400 s. Frame *f* renders *t = f/30*, and the
+analysis decodes the mp3 through the same ffmpeg path the mux uses, so measured time
+and muxed time are the same clock.
+
 ## Build
 
 ```bash
