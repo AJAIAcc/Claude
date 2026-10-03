@@ -56,25 +56,81 @@ export const SCENES={
 
 // 0.00-2.82  iris opens on the house
 overture(x,W,H,E){
-  const p=E.sp;
-  darkField(x,W,H,PAL.night,1);
-  const r=ease.outExpo(clamp(p/0.85,0,1))*H*0.86;
-  x.save(); x.beginPath(); x.ellipse(W/2,H*0.47,r*1.25,r,0,0,TAU); x.clip();
-  x.drawImage(E.paper,0,0);
-  decoGround(x,W,H,E,{a:0.34*p,rot:p*0.3,n:22});
-  spotlight(x,W,H,W/2,H*0.62,W*0.30,{a:0.55*p,cone:false});
-  x.restore();
-  // ring
-  x.save(); x.globalAlpha=0.8; x.strokeStyle=PAL.gold; x.lineWidth=W*0.004;
-  x.beginPath(); x.ellipse(W/2,H*0.47,r*1.25,r,0,0,TAU); x.stroke(); x.restore();
-  vignette(x,W,H,0.55);
+  // The music opens on a rising piano glissando into a full-band hit at the first
+  // downbeat (2.11s). The picture does the same: build, then SLAM the title in as a
+  // stinger so the hook lands in the first three seconds.
+  const T=TONE.night;
+  const HIT=2.11;
+  const build=clamp(E.t/HIT,0,1);
+  const after=clamp((E.t-HIT)/0.75,0,1);
+  darkField(x,W,H,'#0A0506',1);
+
+  if(E.t<HIT){
+    // rising gliss: vertical light bars racing upward, accelerating
+    const acc=Math.pow(build,2.0);
+    x.save(); x.globalCompositeOperation='screen';
+    for(let i=0;i<34;i++){
+      const u=i/34;
+      const ph=(acc*2.4 + u*0.65)%1;
+      const h=H*(0.12+0.52*acc);
+      const y=H*(1.15-ph*1.35);
+      x.globalAlpha=(0.26+0.74*acc)*(1-Math.abs(ph-0.5)*1.15);
+      const g=x.createLinearGradient(0,y,0,y+h);
+      g.addColorStop(0,rgba(PAL.goldPale,0)); g.addColorStop(0.5,rgba(PAL.goldPale,0.9));
+      g.addColorStop(1,rgba(PAL.goldPale,0));
+      x.fillStyle=g; x.fillRect(u*W, y, W/34*0.62, h);
+    }
+    x.restore();
+    // a widening arc, like the lid of a grand piano opening
+    x.save(); x.globalAlpha=0.45+0.55*acc; x.strokeStyle=PAL.goldPale;
+    x.lineWidth=W*0.0034; x.beginPath();
+    x.arc(W/2,H*1.26,H*(0.55+acc*0.55),Math.PI*1.18,Math.PI*1.82); x.stroke(); x.restore();
+    // drum-roll grit
+    x.save(); x.globalAlpha=acc*0.30; x.fillStyle=PAL.terra;
+    for(let i=0;i<70;i++){
+      const r=mulberry32(i*7+Math.floor(E.t*24))();
+      x.fillRect(r*W,H*(0.2+r*0.7),W*0.004,W*0.004);
+    }
+    x.restore();
+  }
+
+  if(E.t>=HIT){
+    // the hit: everything exists at once
+    ground(x,W,H,E,'blaze',{heat:0.3});
+    decoGround(x,W,H,E,{a:0.40,rot:0.04,n:34,col:PAL.paper,r1:W*(0.35+ease.outExpo(after)*0.72)});
+    const o=proscenium(x,W,H,{col:PAL.ink,a:0.92,openW:0.76,openH:0.88,archR:0.30});
+    x.save(); clipArch(x,o);
+    spotlight(x,W,H,W/2,H*0.80,W*0.30,{a:0.55,cone:true});
+    stageFloor(x,W,H,{a:0.26,y:H*0.80});
+    const pz=POSE(); pz.x=W/2; pz.y=H*0.965; pz.bloom=0.4+after*0.5;
+    pz.armF=[-0.6-after*1.3,0.45]; pz.armB=[0.5+after*0.8,0.5];
+    figure(x,pz,H*0.00050,{a:after});
+    x.restore();
+    const f1=`400 ${W*0.082}px "Limelight"`;
+    const e=ease.outExpo(after), mis=(1-e)*22;
+    x.save(); x.translate(W/2,H*0.47); x.scale(1.22-0.22*e,1.22-0.22*e);
+    x.globalCompositeOperation='multiply';
+    inkText(x,'TAKE A BOW',-mis,0,{font:f1,col:PAL.pink,align:'center',base:'middle',a:0.6,track:W*0.0068,bleed:0.12,spread:3});
+    inkText(x,'TAKE A BOW', mis,0,{font:f1,col:PAL.mint,align:'center',base:'middle',a:0.5,track:W*0.0068,bleed:0.12,spread:3});
+    x.globalCompositeOperation='source-over';
+    inkText(x,'TAKE A BOW',0,0,{font:f1,col:PAL.ink,align:'center',base:'middle',track:W*0.0068,bleed:0.26,spread:W*0.0017});
+    x.restore();
+    // white flash on the hit itself
+    const fl=clamp(1-(E.t-HIT)/0.22,0,1);
+    if(fl>0){x.save();x.globalCompositeOperation='screen';x.globalAlpha=fl*0.95;
+      x.fillStyle='#FFF8E8';x.fillRect(0,0,W,H);x.restore();}
+    vig2(x,W,H,TONE.blaze);
+  } else {
+    vig2(x,W,H,T,0.1);
+  }
 },
 
 // 2.82-12.27  the spoken address, type stamping onto the programme
 spoken(x,W,H,E){
   x.drawImage(E.paper,0,0);
   BG.bgMarks(x,W,H,E,{a:0.030,col:PAL.terra,n:5,rot:0.2});
-  BG.bgColumns(x,W,H,E,{a:0.16,col:PAL.paperShade,n:6,top:0.06,bot:0.80});
+  BG.bgColumns(x,W,H,E,{a:0.34,col:PAL.paperShade,n:6,top:0.06,bot:0.80});
+  BG.bgSkyline(x,W,H,E,{a:0.16,col:PAL.inkSoft,base:0.80,seed:12,scale:0.75});
   spotlight(x,W,H,W*0.70,H*0.70,W*0.26,{a:0.50,cone:true});
   stageFloor(x,W,H,{a:0.13});
   // she stands upstage, back to us, turning on "dance!"
@@ -85,7 +141,7 @@ spoken(x,W,H,E){
   p.bob=Math.sin(E.t*2.0)*3;
   figure(x,p,H*0.00072,{a:0.92});
   // the words, stamped
-  const fs=W*0.047;
+  const fs=W*0.062;
   E.active.forEach((l,i)=>{
     const age=E.t-l.t, tt=clamp(age/0.26,0,1);
     if(age<0)return;
@@ -93,10 +149,12 @@ spoken(x,W,H,E){
     if(al<=0.01)return;
     const e=ease.outBack(tt,2.6);
     const slot=E.spokenIdx(l);
-    const px=W*0.075, py=H*(0.30+slot*0.098);
+    const px=W*0.068, py=H*(0.26+slot*0.108);
+    const f = l.slam? `400 ${fs*1.55}px "Limelight"` : `400 ${fs}px "Poiret"`;
+    const tw=measure(x,l.text,f,l.slam?8:3);
+    const fit=Math.min(1, (W*0.50)/Math.max(1,tw));
     x.save(); x.globalAlpha=al; x.translate(px,py);
-    x.scale(0.84+0.16*e,0.84+0.16*e);
-    const f = l.slam? `400 ${fs*1.5}px "Limelight"` : `400 ${fs}px "Poiret"`;
+    x.scale((0.84+0.16*e)*fit,(0.84+0.16*e)*fit);
     inkText(x,l.text,0,0,{font:f,col:l.slam?PAL.terra:PAL.ink,align:'left',base:'middle',
       track:l.slam?8:3,bleed:0.2,spread:fs*0.02});
     x.restore();
@@ -158,8 +216,34 @@ title(x,W,H,E){
     inkText(x,'A REVUE IN ONE ACT',W/2,ty+H*0.192,{font:`400 ${W*0.0155}px "Josefin"`,
       col:PAL.inkSoft,align:'center',base:'middle',track:W*0.0042,a:t3*0.9,bleed:0.1,spread:1.2});
   }
-  if(t>7.6) confetti(x,W,H,E,E.t,{n:40,a:0.5*clamp((t-7.6)/1.2,0,1)});
-  vignette(x,W,H,0.34);
+  // phase B: the card recedes and the company walks on
+  const B=clamp((t-4.6)/1.6,0,1);
+  if(B>0){
+    x.save(); clipArch(x,o);
+    for(let i=0;i<9;i++){
+      const on=clamp((t-4.6-i*0.30)/0.55,0,1);
+      if(on<=0) continue;
+      const ph=E.t*3.1+i*0.7;
+      const tx=W*(0.10+i*0.10), fromL=i%2===0;
+      const ex=tx+(1-ease.outQuint(on))*(fromL?-W*0.35:W*0.35);
+      chorusFigure(x,ex,H*0.885,H*0.00046,ph,{col:PAL.ink,a:0.80*on,kick:0.85,face:fromL?1:-1});
+    }
+    x.restore();
+    // ornament blooms out of the card
+    x.save(); x.globalAlpha=B*0.42;
+    arcBands(x,W/2,H*0.285,[W*0.21+B*W*0.05,W*0.235+B*W*0.05],{col:PAL.ink,a:1,lw:W*0.0022});
+    x.restore();
+    towerBand(x,W,H,E,H*0.085,{a:0.30*B,n:34,amp:W*0.009});
+    towerBand(x,W,H,E,H*0.945,{a:0.30*B,n:34,amp:W*0.009});
+  }
+  if(t>6.2){
+    const c2=clamp((t-6.2)/1.0,0,1);
+    inkText(x,'\u2014  T H E   L A S T   R E V U E  \u2014',W/2,H*0.635,
+      {font:`400 ${W*0.0175}px "Josefin"`,col:PAL.ink,align:'center',base:'middle',
+       track:W*0.0048,a:c2*0.85,bleed:0.1,spread:1.3});
+  }
+  if(t>7.6) confetti(x,W,H,E,E.t,{n:46,a:0.5*clamp((t-7.6)/1.2,0,1)});
+  vig2(x,W,H,T);
 },
 
 // 24.90-33.46 / 33.46-42.03  verses: figure right, lyrics left
@@ -529,9 +613,18 @@ gliss(x,W,H,E){
     x.fillRect(u*W, y, W/keys*0.86, h);
   }
   x.restore();
-  // accelerating chevrons
-  for(let k=0;k<5;k++) towerBand(x,W,H,E,H*(0.14+k*0.18)+Math.sin(E.t*2+k)*10,
-    {a:0.18+prog*0.2,n:20+k*8,amp:12+k*4,col:PAL.ink});
+  // accelerating chevrons — density and speed climb toward the final chorus
+  const rows=4+Math.floor(prog*4);
+  for(let k=0;k<rows;k++) towerBand(x,W,H,E,H*(0.10+k*(0.80/rows))+Math.sin(E.t*(2+prog*4)+k)*H*0.012,
+    {a:0.14+prog*0.26,n:16+k*7+Math.floor(prog*22),amp:H*(0.012+0.012*prog),col:PAL.ink});
+  // a rising seam that races up the frame and resets, the gliss made visible
+  const seam=((E.t*0.62)%1);
+  x.save(); x.globalCompositeOperation='screen'; x.globalAlpha=0.55;
+  const sy=H*(1.1-seam*1.25);
+  const sg=x.createLinearGradient(0,sy-H*0.10,0,sy+H*0.10);
+  sg.addColorStop(0,rgba(PAL.goldPale,0)); sg.addColorStop(0.5,rgba(PAL.goldPale,0.85));
+  sg.addColorStop(1,rgba(PAL.goldPale,0));
+  x.fillStyle=sg; x.fillRect(0,sy-H*0.10,W,H*0.20); x.restore();
   const pz=POSE(); pz.x=W/2; pz.y=H*0.90; pz.bloom=0.5+prog*0.5+E.beatPulse*0.2;
   pz.armF=[-1.2-prog*1.1,0.3]; pz.armB=[0.8+prog*1.1,0.4];
   pz.bob=Math.sin(E.t*3.0)*5; pz.mouth=E.vocal;

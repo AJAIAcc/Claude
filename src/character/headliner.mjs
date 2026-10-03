@@ -45,15 +45,19 @@ export function headdress(x,R,p,{col=PAL.ink,a=1,n=11}={}){
 // ---- profile head+body contour, one continuous cut ----
 function bodyPath(x,p){
   const fl=p.flare, sw=p.sway, tr=p.train;
+  // jaw articulation: the sung vocal drops the chin. In silhouette this is the
+  // whole of lip-sync, and it is how cut-out animation has always done it.
+  const m=Math.max(0,Math.min(1,p.mouth||0));
+  const jd=m*34, jb=m*7;
   x.beginPath();
   x.moveTo(-34,-948);
   x.bezierCurveTo(-6,-972, 20,-964, 34,-938);          // skull top -> forehead
   x.bezierCurveTo(44,-922, 44,-910, 41,-899);          // brow
   x.bezierCurveTo(50,-890, 61,-879, 58,-872);          // nose
   x.bezierCurveTo(54,-868, 47,-867, 44,-865);          // under nose
-  x.bezierCurveTo(53,-860, 54,-851, 47,-845);          // lips
-  x.bezierCurveTo(50,-840, 49,-831, 42,-825);          // chin
-  x.bezierCurveTo(30,-818, 22,-812, 16,-806);          // jaw
+  x.bezierCurveTo(53,-860, 54,-851, 47,-845);                        // upper lip (fixed)
+  x.bezierCurveTo(50-jb*0.5,-840+jd*0.30, 49-jb,-831+jd*0.72, 42-jb,-825+jd);  // lower lip + chin
+  x.bezierCurveTo(30-jb,-818+jd*0.82, 22-jb*0.6,-812+jd*0.45, 16,-806);        // jaw to throat
   x.bezierCurveTo(22,-792, 23,-776, 21,-762);          // throat
   x.bezierCurveTo(40,-756, 54,-744, 60,-726);          // shoulder -> bust
   x.bezierCurveTo(67,-700, 60,-668, 55,-634);
