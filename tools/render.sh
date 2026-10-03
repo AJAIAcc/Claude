@@ -21,6 +21,7 @@ N=$(ls "$FR" | wc -l)
 echo "frames written: $N / $TOTAL"
 [ "$N" -eq "$TOTAL" ] || { echo "FRAME COUNT MISMATCH"; exit 1; }
 ffmpeg -y -v error -stats -framerate 30 -i "$FR/%06d.jpg" -i audio/track.mp3 \
+  -vf "eq=contrast=1.075:saturation=1.10:gamma=0.985" \
   -c:v libx264 -preset ${PRESET:-slow} -crf ${CRF:-17} -pix_fmt yuv420p -profile:v high -level 4.2 \
   -c:a aac -b:a 256k -shortest -movflags +faststart "$OUT"
 rm -rf "$FR"

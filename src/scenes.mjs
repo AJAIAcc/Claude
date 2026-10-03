@@ -170,8 +170,8 @@ overture(x,W,H,E){
 spoken(x,W,H,E){
   x.drawImage(E.paper,0,0);
   BG.bgMarks(x,W,H,E,{a:0.030,col:PAL.terra,n:5,rot:0.2});
-  BG.bgColumns(x,W,H,E,{a:0.34,col:PAL.paperShade,n:6,top:0.06,bot:0.80});
-  BG.bgSkyline(x,W,H,E,{a:0.16,col:PAL.inkSoft,base:0.80,seed:12,scale:0.75});
+  BG.bgColumns(x,W,H,E,{a:0.42,col:PAL.paperShade,n:6,top:0.06,bot:0.80});
+  BG.bgSkyline(x,W,H,E,{a:0.30,col:PAL.inkSoft,base:0.80,seed:12,scale:0.75});
   spotlight(x,W,H,W*0.70,H*0.70,W*0.26,{a:0.50,cone:true});
   stageFloor(x,W,H,{a:0.13});
   // she stands upstage, back to us, turning on "dance!"
@@ -221,11 +221,12 @@ title(x,W,H,E){
   stageFloor(x,W,H,{a:0.18,y:H*0.76});
   // her reveal
   const rev=smoothstep(1.2,3.0,t);
-  const pz=POSE(); pz.x=W/2; pz.y=H*0.805; pz.s=1;
-  pz.bloom=0.25+rev*0.80+E.beatPulse*0.10;
-  pz.armF=[-0.5-rev*1.55,0.40]; pz.armB=[0.45+rev*0.9,0.5];
+  const pz=POSE(); pz.x=W/2; pz.y=H*0.965; pz.s=1;
+  pz.bloom=0.25+rev*0.55+E.beatPulse*0.10;
+  // arms stay low while the headline is on screen; she owns the lower third only
+  pz.armF=[-0.42-rev*0.85,0.55]; pz.armB=[0.38+rev*0.55,0.58];
   pz.bob=Math.sin(E.t*1.9)*4; pz.lean=-0.03*rev;
-  figure(x,pz,H*0.00054*(1+E.beatPulse*0.02),{a:rev});
+  figure(x,pz,H*0.00040*(1+E.beatPulse*0.02),{a:rev});
   x.restore();
   // TITLE
   const ty=H*0.285;
@@ -277,12 +278,6 @@ title(x,W,H,E){
     towerBand(x,W,H,E,H*0.085,{a:0.30*B,n:34,amp:W*0.009});
     towerBand(x,W,H,E,H*0.945,{a:0.30*B,n:34,amp:W*0.009});
   }
-  if(t>6.2){
-    const c2=clamp((t-6.2)/1.0,0,1);
-    inkText(x,'\u2014  T H E   L A S T   R E V U E  \u2014',W/2,H*0.635,
-      {font:`400 ${W*0.0175}px "Josefin"`,col:PAL.ink,align:'center',base:'middle',
-       track:W*0.0048,a:c2*0.85,bleed:0.1,spread:1.3});
-  }
   if(t>7.6) confetti(x,W,H,E,E.t,{n:46,a:0.5*clamp((t-7.6)/1.2,0,1)});
   vig2(x,W,H,T);
 },
@@ -319,8 +314,9 @@ prechorus(x,W,H,E){
   const inv=E.flux>0.62 && E.bands.sub<0.30;
   x.drawImage(E.paper,0,0);
   if(inv){x.save();x.globalCompositeOperation='multiply';x.fillStyle=PAL.ink;x.globalAlpha=0.82;x.fillRect(0,0,W,H);x.restore();}
-  BG.bgChevron(x,W,H,E,{a:inv?0.26:0.17,col:inv?PAL.gold:PAL.ink,rows:7,n:9,phase:E.t*34});
-  BG.bgBands(x,W,H,E,{cols:[rgba(PAL.terra,0.10),'rgba(0,0,0,0)'],n:7,a:inv?0.5:1});
+  BG.bgChevron(x,W,H,E,{a:inv?0.34:0.26,col:inv?PAL.gold:PAL.ink,rows:7,n:9,phase:E.t*34});
+  BG.bgBands(x,W,H,E,{cols:[rgba(PAL.terra,0.20),'rgba(0,0,0,0)'],n:7,a:inv?0.5:1});
+  BG.bgScallop(x,W,H,E,{a:0.18,col:PAL.ox,rows:3,r:W*0.13,phase:E.t*20});
   const lift=smoothstep(45.8,50.6,E.t);
   for(let i=0;i<7;i++){
     const ph=E.t*3.4+i*0.9;
@@ -648,7 +644,7 @@ burst(x,W,H,E){
 gliss(x,W,H,E){
   const t=E.t-E.sec.t0, prog=clamp(t/(E.sec.t1-E.sec.t0),0,1);
   x.drawImage(E.paper,0,0);
-  BG.bgGrid(x,W,H,E,{a:0.14+prog*0.16,col:PAL.ink,n:16,persp:0.42,phase:E.t*0.9});
+  BG.bgGrid(x,W,H,E,{a:0.22+prog*0.20,col:PAL.ink,n:16,persp:0.42,phase:E.t*0.9});
   BG.bgRays(x,W,H,E,{a:0.16+prog*0.16,n:24,rot:E.t*0.04,col:PAL.goldPale,cy:0.40});
   // keyboard sweeping upward
   x.save(); x.globalCompositeOperation='multiply';
@@ -658,8 +654,8 @@ gliss(x,W,H,E){
     const rise=((E.t*0.55+u*1.4)%1);
     const y=H*(1.05-rise*1.15);
     const h=H*0.055*(0.5+E.bands.high);
-    x.globalAlpha=0.30*(1-Math.abs(rise-0.5)*1.2);
-    x.fillStyle=(i%7===1||i%7===3||i%7===5)?PAL.ink:PAL.paperDeep;
+    x.globalAlpha=0.46*(1-Math.abs(rise-0.5)*1.2);
+    x.fillStyle=(i%7===1||i%7===3||i%7===5)?PAL.ink:PAL.terra;
     x.fillRect(u*W, y, W/keys*0.86, h);
   }
   x.restore();
@@ -669,10 +665,10 @@ gliss(x,W,H,E){
     {a:0.14+prog*0.26,n:16+k*7+Math.floor(prog*22),amp:H*(0.012+0.012*prog),col:PAL.ink});
   // a rising seam that races up the frame and resets, the gliss made visible
   const seam=((E.t*0.62)%1);
-  x.save(); x.globalCompositeOperation='screen'; x.globalAlpha=0.55;
+  x.save(); x.globalCompositeOperation='screen'; x.globalAlpha=0.26;
   const sy=H*(1.1-seam*1.25);
   const sg=x.createLinearGradient(0,sy-H*0.10,0,sy+H*0.10);
-  sg.addColorStop(0,rgba(PAL.goldPale,0)); sg.addColorStop(0.5,rgba(PAL.goldPale,0.85));
+  sg.addColorStop(0,rgba(PAL.goldPale,0)); sg.addColorStop(0.5,rgba(PAL.goldPale,0.7));
   sg.addColorStop(1,rgba(PAL.goldPale,0));
   x.fillStyle=sg; x.fillRect(0,sy-H*0.10,W,H*0.20); x.restore();
   const pz=POSE(); pz.x=W/2; pz.y=H*0.90; pz.bloom=0.5+prog*0.5+E.beatPulse*0.2;

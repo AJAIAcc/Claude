@@ -11,24 +11,24 @@ import {clamp,smoothstep,mulberry32,noise2} from './core/noise.mjs';
 const ease2=u=>1-Math.pow(1-u,4);
 // Per-section cut treatment. Keyed to what the music does at that boundary.
 const TRANS={
-  title:      {kind:'flash', dur:0.16, a:0.85, col:'#FFF6E4'},
+  title:      {kind:'flash', dur:0.11, a:0.62, col:'#FFF6E4'},
   verse1:     {kind:'sweep', dur:0.26, a:1,    col:'#F3EADA'},
-  prechorus:  {kind:'flash', dur:0.10, a:0.55, col:'#FFF0D0'},
-  chorus1:    {kind:'flash', dur:0.20, a:0.95, col:'#FFF6E4'},
+  prechorus:  {kind:'flash', dur:0.08, a:0.42, col:'#FFF0D0'},
+  chorus1:    {kind:'flash', dur:0.12, a:0.66, col:'#FFF6E4'},
   clarinet:   {kind:'sweep', dur:0.30, a:1,    col:'#EFE3CC'},
   verse3:     {kind:'dark',  dur:0.26, a:0.90, col:'#2A0F14'},
   sax:        {kind:'dark',  dur:0.22, a:0.85, col:'#160A0D'},
   machine:    {kind:'dark',  dur:0.12, a:1.00, col:'#000000'},
-  chorus2:    {kind:'flash', dur:0.18, a:0.90, col:'#FFF6E4'},
-  chorus3:    {kind:'flash', dur:0.14, a:0.70, col:'#FFF6E4'},
+  chorus2:    {kind:'flash', dur:0.11, a:0.62, col:'#FFF6E4'},
+  chorus3:    {kind:'flash', dur:0.10, a:0.50, col:'#FFF6E4'},
   descent:    {kind:'dark',  dur:0.30, a:0.70, col:'#2A0F14'},
   bridge:     {kind:'dark',  dur:0.40, a:0.95, col:'#000000'},
-  burst:      {kind:'flash', dur:0.26, a:1.00, col:'#FFFBF0'},
+  burst:      {kind:'flash', dur:0.14, a:0.78, col:'#FFFBF0'},
   gliss:      {kind:'sweep', dur:0.28, a:1,    col:'#F3EADA'},
-  finale:     {kind:'flash', dur:0.22, a:1.00, col:'#FFFBF0'},
+  finale:     {kind:'flash', dur:0.13, a:0.72, col:'#FFFBF0'},
   hush:       {kind:'dark',  dur:0.34, a:0.92, col:'#0B0507'},
-  choir:      {kind:'flash', dur:0.20, a:0.80, col:'#FFE9BE'},
-  curtain:    {kind:'flash', dur:0.18, a:0.90, col:'#FFF6E4'},
+  choir:      {kind:'flash', dur:0.12, a:0.58, col:'#FFE9BE'},
+  curtain:    {kind:'flash', dur:0.12, a:0.62, col:'#FFF6E4'},
 };
 let FONTS=false;
 export function initFonts(root='.'){
