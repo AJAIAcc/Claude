@@ -1,0 +1,21 @@
+import {createCanvas} from 'canvas'; import fs from 'fs';
+const {createRenderer}=await import('../src/render.mjs');
+const {initFonts}=await import('../src/render.mjs');
+const ts=process.argv.slice(3).map(Number);
+const cols=+(process.argv[2]||4);
+const TW=480, TH=270;
+const R=createRenderer(TW,TH,{root:'.',grainN:2});
+const rows=Math.ceil(ts.length/cols);
+const PAD=4, LBL=22;
+const c=createCanvas(cols*(TW+PAD)+PAD, rows*(TH+PAD+LBL)+PAD), x=c.getContext('2d');
+x.fillStyle='#1b1b1b'; x.fillRect(0,0,c.width,c.height);
+ts.forEach((t,i)=>{
+  const cx=PAD+(i%cols)*(TW+PAD), cy=PAD+((i/cols)|0)*(TH+PAD+LBL);
+  x.drawImage(R.drawFrame(t),cx,cy,TW,TH);
+  x.fillStyle='#eee'; x.font='13px "Josefin"';
+  const sec=R.env(t).sec;
+  x.fillText(`${t.toFixed(1)}s  ${sec.id}`,cx+3,cy+TH+15);
+});
+fs.mkdirSync('out',{recursive:true});
+fs.writeFileSync('out/contact.png',c.toBuffer('image/png'));
+console.log('out/contact.png',c.width+'x'+c.height);

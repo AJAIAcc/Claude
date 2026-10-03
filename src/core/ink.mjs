@@ -102,6 +102,12 @@ export function inkText(x,txt,px,py,{font,col=PAL.ink,align='left',base='alphabe
   x.restore();
 }
 
+// Space width: node-canvas under-reports ' ' for display faces, which jams words together.
+export function spaceW(x,font,fs,track=0){
+  x.save(); x.font=font; const m=x.measureText(' ').width; x.restore();
+  // must clear the letter-tracking, or inter-letter gaps read wider than word gaps
+  return Math.max(m*1.05, fs*0.32) + track*1.25;
+}
 export function measure(x,txt,font,track=0){
   x.save();x.font=font;let w=0;
   if(track){for(const ch of txt)w+=x.measureText(ch).width+track;w-=track;}

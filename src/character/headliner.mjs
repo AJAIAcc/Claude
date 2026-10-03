@@ -155,28 +155,30 @@ export function figure(x,p,S,{col=PAL.ink,a=1,pierced=true,rim=null}={}){
 export function chorusFigure(x,cx,cy,s,ph,{col=PAL.ink,a=1,kick=0.9,face=1}={}){
   x.save(); x.translate(cx,cy); x.scale(s*face,s); x.globalAlpha=a; x.fillStyle=col;
   const k=Math.sin(ph)*kick;
-  for(let i=0;i<7;i++){
-    const u=i/6, ang=(-0.35+u*2.1);
-    const mid=1-Math.abs(u-0.45)/0.6, len=26+Math.max(0,mid)*74;
+  for(let i=0;i<9;i++){
+    const u=i/8, ang=(-0.18+u*2.2);
+    const mid=Math.sin(Math.PI*Math.pow(u,0.75)), len=22+Math.max(0,mid)*96;
     x.save(); x.translate(0,-300); x.rotate(-ang);
-    x.beginPath(); x.moveTo(-5,-16); x.quadraticCurveTo(0,-16-len,5,-16); x.closePath(); x.fill();
+    x.beginPath(); x.moveTo(-6,-14); x.quadraticCurveTo(0,-14-len,6,-14); x.closePath(); x.fill();
     x.restore();
   }
-  x.beginPath(); x.ellipse(2,-300,21,25,0,0,6.2832); x.fill();
+  x.beginPath(); x.ellipse(2,-300,18,24,0,0,6.2832); x.fill();
   x.beginPath(); x.moveTo(10,-284); x.lineTo(21,-293); x.lineTo(13,-276); x.closePath(); x.fill(); // nose
   x.fillRect(-5,-280,13,30);
-  x.beginPath();
-  x.moveTo(-18,-252); x.quadraticCurveTo(10,-262,20,-244);
-  x.quadraticCurveTo(26,-170,20,-104);
-  x.quadraticCurveTo(44,-54,58,4); x.quadraticCurveTo(-10,22,-56,2);
-  x.quadraticCurveTo(-40,-56,-20,-104);
-  x.quadraticCurveTo(-24,-176,-18,-252);
+  x.beginPath();                                   // narrow 1920s column, not a bell
+  x.moveTo(-16,-252); x.quadraticCurveTo(9,-262,18,-244);
+  x.quadraticCurveTo(23,-168,19,-96);
+  x.quadraticCurveTo(27,-48,33,6); x.quadraticCurveTo(-14,20,-44,4);
+  x.quadraticCurveTo(-30,-50,-19,-96);
+  x.quadraticCurveTo(-22,-174,-16,-252);
   x.closePath(); x.fill();
   x.save(); x.translate(6,-108); x.rotate(k*0.55);
   x.beginPath(); x.moveTo(-9,0); x.lineTo(9,0); x.lineTo(4,112); x.lineTo(-8,112); x.closePath(); x.fill();
   x.restore();
-  x.save(); x.translate(14,-244); x.rotate(-(1.15+Math.sin(ph)*0.45));
-  x.beginPath(); x.moveTo(-8,0); x.lineTo(8,0); x.lineTo(4,132); x.lineTo(-6,132); x.closePath(); x.fill();
-  x.restore();
+  for(const sd of [1,-1]){
+    x.save(); x.translate(sd*15,-242); x.rotate(sd*(2.35+Math.sin(ph+sd)*0.38));
+    x.beginPath(); x.moveTo(-7,0); x.lineTo(7,0); x.lineTo(3,118); x.lineTo(-5,118); x.closePath(); x.fill();
+    x.restore();
+  }
   x.restore();
 }
