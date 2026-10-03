@@ -114,7 +114,7 @@ export const SECTIONS=[
   L(218.10,'(Hallelujah!)',{choir:1}),
 ]},
 {id:'curtain',   scene:'curtain',   t0:219.30,t1:222.432, lines:[
-  L(221.16,'Take a bow.',{slam:1}),
+  L(221.16,'Take a bow!',{slam:1}),
 ]},
 ];
 
