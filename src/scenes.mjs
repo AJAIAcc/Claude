@@ -143,9 +143,9 @@ overture(x,W,H,E){
     x.save(); clipArch(x,o);
     spotlight(x,W,H,W/2,H*0.80,W*0.30,{a:0.55,cone:true});
     stageFloor(x,W,H,{a:0.26,y:H*0.80});
-    const pz=POSE(); pz.x=W/2; pz.y=H*0.965; pz.bloom=0.4+after*0.5;
-    pz.armF=[-0.6-after*1.3,0.45]; pz.armB=[0.5+after*0.8,0.5];
-    figure(x,pz,H*0.00050,{a:after});
+    const pz=POSE(); pz.x=W/2; pz.y=H*0.975; pz.bloom=0.4+after*0.42;
+    pz.armF=[-0.5-after*0.75,0.52]; pz.armB=[0.42+after*0.55,0.55];
+    figure(x,pz,H*0.00038,{a:after});
     x.restore();
     const f1=`400 ${W*0.082}px "Limelight"`;
     const e=ease.outExpo(after), mis=(1-e)*22;
