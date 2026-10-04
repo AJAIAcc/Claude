@@ -1,0 +1,78 @@
+CONTROL  chain-encrypted real plaintext, random len-8 key
+  true key          : -1.223
+  best WRONG key    : -3.385  (w:NOTHNG)
+  separation        : +2.162  -> detector discriminates
+
+ pg     n  kw-chain  stream-chain   best-hit
+----------------------------------------------------------------------------
+ 15   262    -3.454        -3.452   st:phi(n)+75/id
+ 16   266    -3.410        -3.468   kw:CIRCUMFERENCEr6/id
+ 17   201    -3.398        -3.435   kw:CONSUMPTIONr9/atbash
+ 18   217    -3.388        -3.416   kw:SHAPEr0/id
+ 19   261    -3.385        -3.438   kw:w:CIRCUr1/id
+ 20   263    -3.408        -3.393   st:sq+7/atbash
+ 21   196    -3.447        -3.433   st:phi(n)+18/id
+ 22   208    -3.346        -3.363   kw:w:AREr0/id
+ 23   255    -3.459        -3.447   st:primes+17/atbash
+ 24   268    -3.435        -3.429   st:phi(p)+76/id
+ 25   263    -3.442        -3.423   st:primes+67/atbash
+ 26   273    -3.412        -3.420   kw:PILGRIMr2/atbash
+ 27   261    -3.406        -3.378   st:phi(p)+80/atbash
+ 28   272    -3.453        -3.470   kw:w:BELEIUEr2/atbash
+ 29   137    -3.326        -3.376   kw:PRIMALITYr2/atbash
+ 30   159    -3.373        -3.360   st:primes+136/atbash
+ 31   267    -3.370        -3.442   kw:w:ANYTHNGr4/atbash
+ 32   273    -3.446        -3.445   st:primes+173/id
+ 33   260    -3.453        -3.452   st:tri+21/atbash
+ 34   271    -3.369        -3.411   kw:w:STARTEDr1/atbash
+ 35   269    -3.418        -3.455   kw:MOBIUSr1/id
+ 36   273    -3.432        -3.450   kw:w:WENTr1/id
+ 37   131    -3.289        -3.332   kw:w:TRUr2/id
+ 38   213    -3.407        -3.414   kw:ANINSTRUCTIONr3/id
+ 39   270    -3.420        -3.420   kw:w:DECEPTIANr2/id
+ 40   273    -3.409        -3.460   kw:w:ENCRYr2/atbash
+ 41   265    -3.455        -3.396   st:primes+184/atbash
+ 42   234    -3.432        -3.446   kw:w:REPLIEDr0/atbash
+ 43   269    -3.388        -3.466   kw:FIBONACCIr4/id
+ 44   277    -3.421        -3.445   kw:SURFACEr4/id
+ 45   263    -3.477        -3.449   st:phi(p)+134/atbash
+ 46   269    -3.404        -3.450   kw:THEDIVINITYWITHINr5/atbash
+ 47   121    -3.362        -3.296   st:primes+160/id
+ 48   214    -3.409        -3.395   st:phi(n)+104/atbash
+ 49   261    -3.440        -3.410   st:primes+131/atbash
+ 50   271    -3.425        -3.422   st:phi(n)+107/id
+ 51   238    -3.415        -3.449   kw:TUNNELINGr1/id
+ 52   228    -3.413        -3.426   kw:CONSCIOUSNESSr6/atbash
+ 53   228    -3.391        -3.430   kw:w:THREr1/id
+ 54   240    -3.422        -3.371   st:phi(p)+140/id
+ 55   231    -3.439        -3.419   st:nat+27/id
+ 56   273    -3.443        -3.418   st:phi(p)+53/id
+ 57   272    -3.475        -3.344   st:fib+5/atbash
+ 58   274    -3.432        -3.411   st:phi(n)+134/id
+ 59   273    -3.434        -3.461   kw:COMMANDr5/id
+ 60   270    -3.366        -3.353   st:phi(p)+13/atbash
+ 61   270    -3.446        -3.489   kw:ANONYMOUSr2/id
+ 62   274    -3.428        -3.477   kw:w:STUDEr2/atbash
+ 63   271    -3.459        -3.453   st:primes+170/id
+ 64    66    -3.205        -3.254   kw:CARNALr5/atbash
+ 66    92    -3.218        -3.346   kw:SOULr3/id
+ 67   263    -3.456        -3.439   st:phi(p)+184/id
+ 68   179    -3.392        -3.426   kw:HASHESr5/atbash
+ 69   232    -3.383        -3.467   kw:YOURSELFr2/atbash
+ 70    76    -3.237        -3.167   st:phi(n)+16/atbash
+
+BEST ACROSS ALL PAGES (chain form):
+  pg70  -3.167  st:phi(n)+16/atbash
+  pg64  -3.205  kw:CARNALr5/atbash
+  pg66  -3.218  kw:SOULr3/id
+  pg37  -3.289  kw:w:TRUr2/id
+  pg47  -3.296  st:primes+160/id
+  pg29  -3.326  kw:PRIMALITYr2/atbash
+  pg57  -3.344  st:fib+5/atbash
+  pg22  -3.346  kw:w:AREr0/id
+
+reference: true key on chain-encrypted plaintext -1.223; best wrong key -3.385; uniform noise -3.87
+VERDICT: CANDIDATE - inspect.
+(1420s)
+
+[exited with code 0]
