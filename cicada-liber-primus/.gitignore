@@ -5,3 +5,5 @@ __pycache__/
 sweep_chain.log
 sweep_chain_climb.log
 sweep_v2.log
+keyword_null.log
+runkey.log
