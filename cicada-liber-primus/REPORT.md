@@ -141,7 +141,7 @@ Every row is an attack actually run against this page. Scores are per-rune; reca
 
 | Autokey | plaintext- and ciphertext-autokey, 414 primers, both signs | −3.95 | excluded |
 | First difference / chain decode | both signs × 29 primers × 29 post-shifts × ±1 | −3.64 | excluded |
-| Unconstrained Vigenère | coordinate-ascent hill-climb over the **entire** key space, lengths 1–12 | −3.23 | excluded |
+| Unconstrained Vigenère | coordinate-ascent hill-climb over the **entire** key space, lengths 1–12 | −3.21 | excluded |
 
 `solve.py` reproduces the monoalphabetic, keyword-Vigenère, integer-sequence and
 hill-climb rows with their controls; the running-key, autokey and first-difference rows
@@ -162,7 +162,7 @@ decrypt: EBEHAUIARSWHICHCAUSETHELOSSOFDIUINITYCONSUMPTIANWECONSUMETOOMUCHBECAUS
 truth  : EBEHAUIARSWHICHCAUSETHELOSSOFDIUINITYCONSUMPTIANWECONSUMETOOMUCHBECAUS
 ```
 
-On the target page the identical attack tops out at −3.23. Scores drift upward with key
+On the target page the identical attack tops out at −3.21 (best at L=12). Scores drift upward with key
 length purely because longer keys add free parameters — that is overfitting, not signal.
 **The page is not a periodic Vigenère of any length ≤ 12.**
 

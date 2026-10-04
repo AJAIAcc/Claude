@@ -1,0 +1,99 @@
+
+==============================================================================
+1. TARGET PAGE
+==============================================================================
+  master-transcription chunk 15  |  262 runes, 12 lines
+  headline runes: ᛋᚻᛖᚩᚷᛗᛡᚠᛋᚣᛖᛝᚳ  (index entry 0.5.0)
+  translation file has NO entry for section 0.5 -> unsolved
+  cross-check vs relikd/LiberPrayground: 262 runes, identical=True
+
+==============================================================================
+2. GATE — reproduce the four known Cicada methods
+==============================================================================
+  [PASS] page 0  atbash
+         A WARNNG. BELIEUE NOTHNG FROM THIS BOOC. EXCEPT WHAT YOU CNOW TO BE TRUE. TEST THE CNOWL
+  [PASS] page 4  atbash + shift 3
+         A COAN. A MAN DECIDED TO GO AND STUDY WITH A MASTER. HE WENT TO THE DOOR OF THE MASTER. 
+  [PASS] page 1  Vigenere DIVINITY + F-interrupter (beam)
+         WELCOME. WELCOME PILGRIM TO THE GREAT JOURNEY TOWARD THE END OF ALL THNGS. IT IS NOT AN 
+  [PASS] page 71 running key phi(p_n) = p_n - 1
+         AN END. WITHIN THE DEEP WEB THERE EXISTS A PAGE THAT HASHES TO.     IT IS THE DUTY OF EU
+
+  GATE PASSED
+
+==============================================================================
+3. CHARACTERISATION OF THE UNSOLVED CIPHERTEXT
+==============================================================================
+  unsolved corpus: 12048 runes over 49 pages
+
+  Index of coincidence (normalised x29; 1.00 = uniform, 1.79 = LP plaintext)
+    solved plaintext                   1.7880
+    page 1 ciphertext (Vigenere)       1.2265
+    TARGET page                        0.9949
+    all unsolved pages                 1.0002
+
+  unigram chi-square = 29.9 on 28 df (critical 41.3) -> flat
+
+  Periodic IoC (a Vigenere of period p spikes to ~1.79 at p):
+    p=  1  1.0002
+    p=  5  1.0006
+    p=  8  1.0019
+    p= 13  1.0029
+    p= 17  0.9962
+    p= 20  1.0048
+    p= 29  0.9993
+    p= 30  1.0087
+    p= 40  1.0082
+
+==============================================================================
+3b. THE DOUBLET FINGERPRINT  (the one real signal)
+==============================================================================
+  distance-k repeat rate; 3.448% expected under any flat model
+    k=1    81/12047   0.67%  z=-16.70   <== ADJACENT
+    k=2   412/12046   3.42%  z= -0.17
+    k=3   399/12045   3.31%  z= -0.82
+    k=4   425/12044   3.53%  z= +0.48
+    k=5   442/12043   3.67%  z= +1.33
+    k=6   429/12042   3.56%  z= +0.69
+    k=7   423/12041   3.51%  z= +0.39
+    k=8   411/12040   3.41%  z= -0.21
+
+  Same statistic on texts the SAME transcribers produced:
+    solved plaintext (decoded)        2.33%  z= -2.77
+    solved ciphertext p0 atbash       2.73%  z= -0.53
+    solved ciphertext p1 Vigenere     3.20%  z= -0.22
+    solved ciphertext p4-7            1.80%  z= -2.52
+  -> the deficit is confined to the unsolved pages; not a transcription artefact.
+
+  step  d = c[i]-c[i-1] mod 29:
+    chi-square over all 29 steps  =  311.6 on 28 df  -> strongly non-uniform
+    chi-square over the 28 d != 0 =   31.9 on 27 df (critical 40.1) -> uniform
+    d=0 occurs 81 times, 415 expected
+  -> ciphertext behaves as a chain: c[i] = c[i-1] + s[i], s uniform on 1..28.
+
+==============================================================================
+4. EXCLUSION BATTERY on the target page
+==============================================================================
+  score = mean 4-gram log-prob/rune under a model trained on 2058
+  runes of real LP plaintext.  correct plaintext ~ -1.2 ... -2.2 ; uniform ~ -3.87
+
+  A. monoalphabetic, all 812 affine maps (incl. every shift and atbash)
+     best -3.614   EXCLUDED
+  B. keyword Vigenere, 414 keys x sub/add x plain/atbash, F-interrupter beam
+     best -3.394  (w:ANSWERED, add, id)   EXCLUDED
+  C. integer-sequence running keys, 8400 variants (7 sequences x 300 offsets)
+     best -3.411  (phi(p)=p-1 off=15 add id)   EXCLUDED
+  D. unconstrained hill-climb (coordinate ascent over the whole key space)
+     CONTROL: real LP plaintext + random len-8 key, same 262 runes
+              recovered -1.172, key match = True  -> the attack has power
+     on page 15, lengths 1..12: best -3.208 at L=12   EXCLUDED
+     (scores drift up with L purely from added free parameters, not signal)
+
+==============================================================================
+VERDICT
+==============================================================================
+  Page NOT solved. The ciphertext is flat at every order except the adjacent-
+  doublet deficit, which identifies a chain cipher driven by a flat, aperiodic
+  28-symbol keystream. No public key source tested reproduces it. See REPORT.md.
+
+[exited with code 0]
