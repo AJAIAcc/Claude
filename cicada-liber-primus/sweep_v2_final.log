@@ -1,0 +1,85 @@
+REFERENCES under the new model
+  real LP plaintext : -0.897
+  uniform noise     : -4.799
+  overfitting null (hill-climb on UNIFORM RANDOM text):
+    n= 92 L= 8  -3.965
+    n= 92 L=12  -3.707
+    n=137 L= 8  -4.098
+    n=137 L=12  -3.859
+    n=262 L= 8  -4.287
+    n=262 L=12  -4.139
+    n=273 L= 8  -4.315
+    n=273 L=12  -4.227
+
+ pg     n    mono keyword  stream   best-hit
+------------------------------------------------------------------------------
+ 15   262  -4.571  -4.397  -4.414   kw:EVERYr2/sub/atbash
+ 16   266  -4.558  -4.404  -4.448   kw:w:INSTRUCTIANr1/add/atbash
+ 17   201  -4.516  -4.342  -4.428   kw:DESTROYr3/sub/atbash
+ 18   217  -4.574  -4.387  -4.416   kw:NUMBERSr5/add/atbash
+ 19   261  -4.585  -4.397  -4.442   kw:AETHEREALr2/sub/atbash
+ 20   263  -4.502  -4.472  -4.437   st:phi(p)+126/add
+ 21   196  -4.546  -4.415  -4.473   kw:w:AFTERr3/sub/atbash
+ 22   208  -4.499  -4.406  -4.522   kw:INFINITYr5/add/atbash
+ 23   255  -4.605  -4.432  -4.503   kw:CAUSEr0/add/atbash
+ 24   268  -4.587  -4.432  -4.423   st:phi(n)+80/sub
+ 25   263  -4.598  -4.432  -4.487   kw:DIVINITYr4/sub/atbash
+ 26   273  -4.533  -4.439  -4.454   kw:FUTHORCr2/add/id
+ 27   261  -4.573  -4.411  -4.454   kw:w:THNGSr2/sub/atbash
+ 28   272  -4.590  -4.437  -4.383   st:tri+4/sub
+ 29   137  -4.485  -4.320  -4.383   kw:BEHAVIOURSr5/add/atbash
+ 30   159  -4.481  -4.373  -4.368   st:phi(n)+121/sub
+ 31   267  -4.577  -4.459  -4.480   kw:THEDIVINITYWITHINr2/add/id
+ 32   273  -4.503  -4.440  -4.483   kw:w:MOMENTr2/sub/id
+ 33   260  -4.544  -4.444  -4.441   st:phi(n)+90/add
+ 34   271  -4.499  -4.410  -4.468   kw:INFINITYr0/add/id
+ 35   269  -4.557  -4.463  -4.489   kw:w:CIESr3/sub/id
+ 36   273  -4.496  -4.448  -4.472   kw:THELOSSOFDIVINITYr11/add/id
+ 37   131  -4.408  -4.329  -4.347   kw:STRONGr3/add/id
+ 38   213  -4.557  -4.394  -4.442   kw:OURSELVESr7/sub/id
+ 39   270  -4.607  -4.390  -4.446   kw:w:ASCEr1/sub/atbash
+ 40   273  -4.578  -4.451  -4.440   st:phi(p)+156/add
+ 41   265  -4.569  -4.358  -4.479   kw:w:THNGSr1/sub/atbash
+ 42   234  -4.559  -4.382  -4.427   kw:WEALTHr3/add/atbash
+ 43   269  -4.549  -4.425  -4.487   kw:KWESTIONr6/sub/id
+ 44   277  -4.596  -4.440  -4.441   kw:w:WISHr2/sub/id
+ 45   263  -4.548  -4.376  -4.466   kw:KNOWTHISr6/sub/atbash
+ 46   269  -4.597  -4.435  -4.451   kw:w:SHOULDr5/sub/id
+ 47   121  -4.435  -4.252  -4.354   kw:YOUr1/add/id
+ 48   214  -4.556  -4.445  -4.395   st:primes+180/sub
+ 49   261  -4.544  -4.381  -4.487   kw:w:CIRCUr1/add/atbash
+ 50   271  -4.570  -4.476  -4.492   kw:w:SOr1/sub/atbash
+ 51   238  -4.544  -4.433  -4.428   st:phi(n)+149/add
+ 52   228  -4.531  -4.411  -4.447   kw:AMASSr2/sub/atbash
+ 53   228  -4.550  -4.381  -4.525   kw:FREEDOMr3/sub/atbash
+ 54   240  -4.520  -4.449  -4.484   kw:THREETHREEZEROONEr7/sub/atbash
+ 55   231  -4.551  -4.425  -4.426   kw:SUFFERINGr2/add/id
+ 56   273  -4.577  -4.402  -4.391   st:phi(n)+169/add
+ 57   272  -4.574  -4.437  -4.433   st:primes+122/add
+ 58   274  -4.512  -4.428  -4.439   kw:w:CIRCUr1/add/id
+ 59   273  -4.577  -4.461  -4.417   st:phi(n)+3/add
+ 60   270  -4.601  -4.422  -4.465   kw:w:COULDr2/add/atbash
+ 61   270  -4.515  -4.436  -4.429   st:primes+19/sub
+ 62   274  -4.539  -4.388  -4.468   kw:SOMEWISDOMr8/add/id
+ 63   271  -4.568  -4.433  -4.456   kw:DISCOVERr2/add/id
+ 64    66  -4.324  -4.048  -4.237   kw:SOMEWISDOMr2/add/atbash
+ 66    92  -4.357  -4.222  -4.254   kw:OUTGUESSr7/sub/id
+ 67   263  -4.610  -4.438  -4.504   kw:w:ADHERENr4/sub/id
+ 68   179  -4.493  -4.399  -4.444   kw:w:SOr1/sub/id
+ 69   232  -4.555  -4.418  -4.503   kw:WORDSr3/sub/atbash
+ 70    76  -4.274  -4.151  -4.221   kw:w:FUNCTIANr2/add/id
+
+BEST ACROSS ALL PAGES (new model):
+  pg64  n=66   -4.048  kw:SOMEWISDOMr2/add/atbash
+  pg70  n=76   -4.151  kw:w:FUNCTIANr2/add/id
+  pg66  n=92   -4.222  kw:OUTGUESSr7/sub/id
+  pg47  n=121  -4.252  kw:YOUr1/add/id
+  pg29  n=137  -4.320  kw:BEHAVIOURSr5/add/atbash
+  pg37  n=131  -4.329  kw:STRONGr3/add/id
+  pg17  n=201  -4.342  kw:DESTROYr3/sub/atbash
+  pg41  n=265  -4.358  kw:w:THNGSr1/sub/atbash
+
+real plaintext ~ -0.90 ; uniform noise ~ -4.84 ; overfitting null ~ -4.32..-3.71
+(1337s)
+
+[exited with code 0]

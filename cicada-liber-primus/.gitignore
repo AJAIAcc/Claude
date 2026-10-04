@@ -1,9 +1,8 @@
 sources/
 __pycache__/
 *.pkl
-# in-flight sweep logs; final versions are force-added when the runs finish
 sweep_chain.log
 sweep_chain_climb.log
 sweep_v2.log
 runkey.log
-short_pages.log
+runkey2.log
