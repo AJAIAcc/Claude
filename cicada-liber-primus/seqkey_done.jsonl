@@ -24,3 +24,61 @@
 {"seq": "digits_sqrt2 [rev]", "best": [-3.825, "10", 0, "diff", "digits_sqrt2 [rev]", "sub", 0]}
 {"seq": "digits_sqrt3", "best": [-3.687, "11", 960, "plain", "digits_sqrt3", "add", 0]}
 {"seq": "digits_sqrt3 [rev]", "best": [-3.768, "8", 240, "plain", "digits_sqrt3 [rev]", "beaufort", 0]}
+{"seq": "factorial mod29", "best": [-4.0388867850652925, 15, 960, "plain", "factorial mod29", "beaufort", 0]}
+{"seq": "factorial mod29 [rev]", "best": [-4.110267979516454, 15, 2640, "diff", "factorial mod29 [rev]", "beaufort", 19752]}
+{"seq": "fibonacci", "best": [-4.013953160052917, 8, 480, "plain", "fibonacci", "beaufort", 12561]}
+{"seq": "fibonacci [rev]", "best": [-4.0228794210957775, 15, 0, "diff", "fibonacci [rev]", "beaufort", 12648]}
+{"seq": "liouville", "best": [-3.787865188227548, 9, 960, "atbash", "liouville", "beaufort", 5490]}
+{"seq": "liouville [rev]", "best": [-3.7401127423540865, 12, 240, "atbash", "liouville [rev]", "beaufort", 15576]}
+{"seq": "lucas", "best": [-3.9201460398589725, 15, 2160, "atbash", "lucas", "add", 2910]}
+{"seq": "lucas [rev]", "best": [-4.039294763397091, 8, 240, "plain", "lucas [rev]", "beaufort", 19722]}
+{"seq": "mobius", "best": [-3.7425290207105784, 15, 1920, "diff", "mobius", "beaufort", 11730]}
+{"seq": "mobius [rev]", "best": [-3.746747883937341, 14, 0, "plain", "mobius [rev]", "add", 15459]}
+{"seq": "n-phi(n)", "best": [-3.7891333899409005, 8, 480, "atbash", "n-phi(n)", "add", 5880]}
+{"seq": "n-phi(n) [rev]", "best": [-3.5829905821618766, 15, 2640, "plain", "n-phi(n) [rev]", "sub", 12183]}
+{"seq": "naturals", "best": [-3.980765400999936, 8, 0, "plain", "naturals", "sub", 12911]}
+{"seq": "naturals [rev]", "best": [-3.980765400999936, 8, 0, "plain", "naturals [rev]", "add", 7218]}
+{"seq": "omega(n) distinct", "best": [-3.7123175847696266, 15, 2400, "plain", "omega(n) distinct", "beaufort", 19671]}
+{"seq": "omega(n) distinct [rev]", "best": [-3.744978352252099, 8, 960, "atbash", "omega(n) distinct [rev]", "sub", 14055]}
+{"seq": "p+1", "best": [-3.7926746908421163, 13, 1440, "plain", "p+1", "sub", 16521]}
+{"seq": "p+1 [rev]", "best": [-3.637611029881097, 9, 240, "atbash", "p+1 [rev]", "beaufort", 17800]}
+{"seq": "p^2", "best": [-3.6809620208786153, 13, 1200, "plain", "p^2", "add", 8619]}
+{"seq": "p^2 [rev]", "best": [-3.807174324820006, 15, 2880, "diff", "p^2 [rev]", "add", 19481]}
+{"seq": "p_n mod 29", "best": [-3.8090242937704577, 7, 0, "atbash", "p_n mod 29", "add", 15527]}
+{"seq": "p_n mod 29 [rev]", "best": [-3.7697194475700586, 14, 720, "diff", "p_n mod 29 [rev]", "sub", 7577]}
+{"seq": "padovan", "best": [-3.8053443794570776, 13, 480, "atbash", "padovan", "beaufort", 4174]}
+{"seq": "padovan [rev]", "best": [-3.921240425868763, 8, 240, "diff", "padovan [rev]", "add", 458]}
+{"seq": "partitions", "best": [-3.792028829633033, 13, 960, "plain", "partitions", "beaufort", 3408]}
+{"seq": "partitions [rev]", "best": [-3.8106478885153496, 11, 960, "diff", "partitions [rev]", "sub", 1041]}
+{"seq": "pell", "best": [-4.106637265842554, 15, 0, "atbash", "pell", "beaufort", 68]}
+{"seq": "pell [rev]", "best": [-3.904002929986239, 14, 0, "diff", "pell [rev]", "sub", 19666]}
+{"seq": "phi(n)", "best": [-3.4843419498771473, 9, 720, "diff", "phi(n)", "beaufort", 1805]}
+{"seq": "phi(n) [rev]", "best": [-3.723731964164339, 14, 1200, "diff", "phi(n) [rev]", "add", 10443]}
+{"seq": "phi(p)=p-1", "best": [-3.730979163783513, 13, 1440, "diff", "phi(p)=p-1", "beaufort", 1656]}
+{"seq": "phi(p)=p-1 [rev]", "best": [-3.786692791387147, 13, 240, "atbash", "phi(p)=p-1 [rev]", "sub", 2324]}
+{"seq": "phi(phi(n))", "best": [-3.7975996336217404, 8, 720, "plain", "phi(phi(n))", "beaufort", 18020]}
+{"seq": "phi(phi(n)) [rev]", "best": [-3.6936612831648885, 14, 480, "plain", "phi(phi(n)) [rev]", "add", 14454]}
+{"seq": "pi(n) prime count", "best": [-3.7323640427353837, 12, 720, "atbash", "pi(n) prime count", "sub", 17578]}
+{"seq": "pi(n) prime count [rev]", "best": [-3.758732332007929, 13, 0, "atbash", "pi(n) prime count [rev]", "add", 13536]}
+{"seq": "prime_gaps", "best": [-3.6587478271822818, 8, 960, "plain", "prime_gaps", "sub", 6442]}
+{"seq": "prime_gaps [rev]", "best": [-3.6986106123257856, 11, 720, "atbash", "prime_gaps [rev]", "beaufort", 15242]}
+{"seq": "primes", "best": [-3.8090242937704577, 7, 0, "atbash", "primes", "add", 15527]}
+{"seq": "primes [rev]", "best": [-3.7697194475700586, 14, 720, "diff", "primes [rev]", "sub", 7577]}
+{"seq": "primorial mod29", "best": [-4.12448533543685, 8, 480, "plain", "primorial mod29", "beaufort", 0]}
+{"seq": "primorial mod29 [rev]", "best": [-4.1244853354368525, 8, 480, "plain", "primorial mod29 [rev]", "beaufort", 6591]}
+{"seq": "recaman", "best": [-3.769273719305519, 13, 720, "atbash", "recaman", "sub", 8262]}
+{"seq": "recaman [rev]", "best": [-3.725079778845365, 13, 720, "atbash", "recaman [rev]", "add", 2655]}
+{"seq": "sigma(n)", "best": [-3.777136616870222, 11, 720, "diff", "sigma(n)", "beaufort", 1926]}
+{"seq": "sigma(n) [rev]", "best": [-3.7281741262143497, 15, 1920, "plain", "sigma(n) [rev]", "add", 15295]}
+{"seq": "sigma(n)-n", "best": [-3.8170639015948233, 8, 480, "plain", "sigma(n)-n", "add", 6927]}
+{"seq": "sigma(n)-n [rev]", "best": [-3.807473696550398, 9, 1200, "atbash", "sigma(n)-n [rev]", "sub", 2958]}
+{"seq": "squarefree", "best": [-3.850940814816233, 12, 720, "plain", "squarefree", "add", 19635]}
+{"seq": "squarefree [rev]", "best": [-3.8384209634764517, 12, 720, "plain", "squarefree [rev]", "add", 6264]}
+{"seq": "squares", "best": [-4.012266798633065, 15, 480, "plain", "squares", "beaufort", 19661]}
+{"seq": "squares [rev]", "best": [-4.012266798633065, 15, 480, "plain", "squares [rev]", "beaufort", 14838]}
+{"seq": "thue-morse", "best": [-3.8579453309773064, 8, 480, "plain", "thue-morse", "beaufort", 2295]}
+{"seq": "thue-morse [rev]", "best": [-3.8579453309773064, 8, 480, "plain", "thue-morse [rev]", "beaufort", 6679]}
+{"seq": "triangular", "best": [-3.929987832409932, 13, 240, "plain", "triangular", "beaufort", 9647]}
+{"seq": "triangular [rev]", "best": [-3.929987832409932, 13, 240, "plain", "triangular [rev]", "beaufort", 19644]}
+{"seq": "tribonacci", "best": [-3.82034033978578, 11, 1200, "atbash", "tribonacci", "add", 307]}
+{"seq": "tribonacci [rev]", "best": [-3.977287599931057, 11, 1440, "diff", "tribonacci [rev]", "sub", 677]}

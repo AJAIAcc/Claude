@@ -1,0 +1,52 @@
+building screen table + sequences...
+sequences: 84
+tiles: 54 covering 12,747 runes
+
+resuming: 67 sequences already done
+
+[68/84] primorial mod29 [rev]      best -4.124 (seg8@480 plain/beaufort)  [34s]
+[69/84] recaman                    best -3.769 (seg13@720 atbash/sub)  [81s]
+[70/84] recaman [rev]              best -3.725 (seg13@720 atbash/add)  [110s]
+[71/84] sigma(n)                   best -3.777 (seg11@720 diff/beaufort)  [142s]
+[72/84] sigma(n) [rev]             best -3.728 (seg15@1920 plain/add)  [171s]
+[73/84] sigma(n)-n                 best -3.817 (seg8@480 plain/add)  [199s]
+[74/84] sigma(n)-n [rev]           best -3.807 (seg9@1200 atbash/sub)  [228s]
+[75/84] squarefree                 best -3.851 (seg12@720 plain/add)  [250s]
+[76/84] squarefree [rev]           best -3.838 (seg12@720 plain/add)  [273s]
+[77/84] squares                    best -4.012 (seg15@480 plain/beaufort)  [294s]
+[78/84] squares [rev]              best -4.012 (seg15@480 plain/beaufort)  [315s]
+[79/84] thue-morse                 best -3.858 (seg8@480 plain/beaufort)  [337s]
+[80/84] thue-morse [rev]           best -3.858 (seg8@480 plain/beaufort)  [359s]
+[81/84] triangular                 best -3.930 (seg13@240 plain/beaufort)  [380s]
+[82/84] triangular [rev]           best -3.930 (seg13@240 plain/beaufort)  [401s]
+[83/84] tribonacci                 best -3.820 (seg11@1200 atbash/add)  [423s]
+[84/84] tribonacci [rev]           best -3.977 (seg11@1440 diff/sub)  [444s]
+
+TOP 20
+  -3.484 seg9  @720   diff    phi(n)                     beaufort  off=1805
+  -3.583 seg15 @2640  plain   n-phi(n) [rev]             sub       off=12183
+  -3.638 seg9  @240   atbash  p+1 [rev]                  beaufort  off=17800
+  -3.651 seg15 @240   atbash  Omega(n) with mult         add       off=0
+  -3.659 seg8  @960   plain   prime_gaps                 sub       off=6442
+  -3.681 seg13 @1200  plain   p^2                        add       off=8619
+  -3.686 seg13 @1200  plain   digits_e [rev]             add       off=0
+  -3.687 seg11 @960   plain   digits_sqrt3               add       off=0
+  -3.691 seg9  @960   diff    digits_pi                  add       off=0
+  -3.694 seg14 @480   plain   phi(phi(n)) [rev]          add       off=14454
+  -3.699 seg11 @720   atbash  prime_gaps [rev]           beaufort  off=15242
+  -3.708 seg15 @1920  diff    digits_pi [rev]            sub       off=0
+  -3.712 seg15 @2400  plain   omega(n) distinct          beaufort  off=19671
+  -3.717 seg9  @480   diff    d(n) divisors              sub       off=0
+  -3.724 seg14 @1200  diff    phi(n) [rev]               add       off=10443
+  -3.725 seg13 @720   atbash  recaman [rev]              add       off=2655
+  -3.728 seg15 @1920  plain   sigma(n) [rev]             add       off=15295
+  -3.731 seg13 @1440  diff    phi(p)=p-1                 beaufort  off=1656
+  -3.732 seg12 @720   atbash  pi(n) prime count          sub       off=17578
+  -3.740 seg12 @240   atbash  liouville [rev]            beaufort  off=15576
+
+scores are BEST-60-RUNE-WINDOW means.
+calibration: real LP plaintext -0.90 ; uniform noise -4.84 ;
+the known page-71 totient solve scores -2.395 on this statistic
+(its whole-probe score is only -3.192 because of an unmodelled interrupter).
+VERDICT: no number-theoretic keystream found.
+(444s)
