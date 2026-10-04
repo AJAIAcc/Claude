@@ -50,3 +50,10 @@
 {"text": "y:egyptian-literature-book-of-the-dead", "best": [-4.2363668349439845, 15, 3120, "diff", "y:egyptian-literature-book-of-the-dead", "sub", 405387]}
 {"text": "inaugural-all", "best": [-4.214923038986064, 10, 0, "diff", "inaugural-all", "sub", 146094]}
 {"text": "gb:austen-emma.txt", "best": [-4.205655193114842, 10, 0, "atbash", "gb:austen-emma.txt", "sub", 67389]}
+{"text": "gb:edgeworth-parents.txt", "best": [-4.236068561984225, 10, 0, "atbash", "gb:edgeworth-parents.txt", "add", 562847]}
+{"text": "y:five-years-of-theosophy", "best": [-4.268217933056859, 10, 0, "diff", "y:five-years-of-theosophy", "sub", 593623]}
+{"text": "y:sacred-books-of-the-east", "best": [-4.280724080127494, 10, 0, "diff", "y:sacred-books-of-the-east", "beaufort", 685718]}
+{"text": "y:eliphas-levi-history-of-magic", "best": [-4.247285204920669, 10, 0, "plain", "y:eliphas-levi-history-of-magic", "add", 142316]}
+{"text": "y:plato-republic", "best": [-4.280302171833517, 10, 0, "atbash", "y:plato-republic", "add", 751941]}
+{"text": "y:hobbes-leviathan", "best": [-4.259913455051374, 8, 960, "plain", "y:hobbes-leviathan", "sub", 591691]}
+{"text": "gb:melville-moby_dick.txt", "best": [-4.237822097280138, 10, 0, "plain", "gb:melville-moby_dick.txt", "beaufort", 189918]}
