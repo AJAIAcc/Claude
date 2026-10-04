@@ -1,0 +1,22 @@
+DOUBLET POSITION ANALYSIS   corpus n=12956, doublets=86
+
+1. SPREAD ACROSS PAGES: 42 of 55 pages carry at least one doublet
+   chi-square of doublets-per-page against page length: 58.4 on 54 df
+   (critical at p=.05 is about 71) -> UNIFORM
+
+2. INTER-DOUBLET GAPS: n=85, mean=150.8, expected for random 150.7
+   min=6 max=712
+   gaps that are prime: 21/85
+   gaps divisible by 29: 0
+
+3. POSITION RESIDUES mod m (chi-square, want ~m-1 if uniform)
+   nothing flagged at p=.01 for any m in 2..40, 58, 87, 109
+
+4. POSITIONS THAT ARE PRIME: 7 of 86; expected 10.2; z=-1.08
+
+5. THE DOUBLED RUNES IN ORDER (86 of them):
+    THXEAJLAESNGGAENOEJFYGXUAEGIAOMHWDXJEAAEGIAOSNXULSELOERCFEOAEMTHEOFNTDHRATHJTAEFXWIOEWEANOEIAEOEXEOEPWWWYNGGTH
+   as a Gematria sum: 4200
+
+6. RELATIVE POSITION WITHIN PAGE: mean=0.511 (0.5 = no bias)
+   sd=0.275 (uniform gives 0.289)
