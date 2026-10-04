@@ -1,0 +1,27 @@
+KEYWORD-SPECIFIC NULL
+the same 414-key search, run on UNIFORM RANDOM ciphertext
+
+    n  trial     best   key
+   92      0   -4.245   w:PREPAREDr3/sub/id
+   92      1   -4.188   THELOSSOFDIVINITYr2/sub/atbash
+   92      2   -4.210   PRIMESr4/sub/id
+  137      0   -4.233   DOGMAr4/sub/id
+  137      1   -4.298   SURFACEr0/sub/atbash
+  137      2   -4.274   FREEDOMr3/sub/atbash
+  262      0   -4.400   w:GETTNGr2/add/atbash
+  262      1   -4.420   w:MOSTr0/add/atbash
+  262      2   -4.433   YOURSELFr0/add/id
+  273      0   -4.434   w:CHEDr0/sub/atbash
+  273      1   -4.432   w:NOWLEDGEr2/add/id
+  273      2   -4.441   w:THOUGHTr3/sub/id
+
+summary
+    n     mean      max
+   92   -4.214   -4.188
+  137   -4.268   -4.233
+  262   -4.418   -4.400
+  273   -4.435   -4.432
+
+A keyword hit on a real page must beat the max column to mean anything.
+Reference: real LP plaintext scores about -0.90 under this model.
+(207s)

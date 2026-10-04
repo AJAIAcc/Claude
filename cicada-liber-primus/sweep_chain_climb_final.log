@@ -1,0 +1,79 @@
+CONTROL: chain-encrypted real plaintext, random len-6 key
+  recovered score -1.223  key match True  plaintext match True
+  SOMEWISDOMTHEPRIMESARESACREDTHETOTIENTFUNCTIANISSACREDALLTHNGSSH
+  SOMEWISDOMTHEPRIMESARESACREDTHETOTIENTFUNCTIANISSACREDALLTHNGSSH
+
+ pg     n     best   L
+--------------------------
+ 15   262   -3.189   8
+ 16   266   -3.248  10
+ 17   201   -3.144  10
+ 18   217   -3.135  10
+ 19   261   -3.205  10
+ 20   263   -3.216  10
+ 21   196   -3.121  10
+ 22   208   -3.165  10
+ 23   255   -3.265  10
+ 24   268   -3.180   9
+ 25   263   -3.206   8
+ 26   273   -3.240  10
+ 27   261   -3.214  10
+ 28   272   -3.194  10
+ 29   137   -2.991  10
+ 30   159   -3.073  10
+ 31   267   -3.254   9
+ 32   273   -3.278  10
+ 33   260   -3.198   9
+ 34   271   -3.240   8
+ 35   269   -3.229   9
+ 36   273   -3.259   9
+ 37   131   -2.985  10
+ 38   213   -3.152   9
+ 39   270   -3.214   7
+ 40   273   -3.251  10
+ 41   265   -3.201  10
+ 42   234   -3.205  10
+ 43   269   -3.202  10
+ 44   277   -3.217  10
+ 45   263   -3.160  10
+ 46   269   -3.174   9
+ 47   121   -3.020   7
+ 48   214   -3.189   9
+ 49   261   -3.224   9
+ 50   271   -3.237  10
+ 51   238   -3.191   9
+ 52   228   -3.186  10
+ 53   228   -3.133  10
+ 54   240   -3.144  10
+ 55   231   -3.155  10
+ 56   273   -3.262   8
+ 57   272   -3.225   9
+ 58   274   -3.230   7
+ 59   273   -3.239   9
+ 60   270   -3.244   9
+ 61   270   -3.274   9
+ 62   274   -3.226  10
+ 63   271   -3.203  10
+ 64    66   -2.715  10
+ 66    92   -2.790   9
+ 67   263   -3.233   9
+ 68   179   -3.142   9
+ 69   232   -3.142  10
+ 70    76   -2.777   9
+
+BEST ACROSS ALL PAGES (chain hill-climb):
+  pg64  -2.715 at L=10
+  pg70  -2.777 at L=9
+  pg66  -2.790 at L=9
+  pg37  -2.985 at L=10
+  pg29  -2.991 at L=10
+  pg47  -3.020 at L=7
+  pg30  -3.073 at L=10
+  pg21  -3.121 at L=10
+
+control (true key on chain-encrypted plaintext): -1.223
+reference: correct -1.2 ; uniform noise -3.87
+VERDICT: CANDIDATE - inspect.
+(1818s)
+
+[exited with code 0]
