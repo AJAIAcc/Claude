@@ -48,3 +48,5 @@
 {"text": "y:egyptian-book-of-the-dead", "best": [-4.23754533451754, 10, 0, "plain", "y:egyptian-book-of-the-dead", "add", 419970]}
 {"text": "y:hebraic-literature-talmud-kabbala", "best": [-4.287746217026925, 10, 0, "plain", "y:hebraic-literature-talmud-kabbala", "add", 482867]}
 {"text": "y:egyptian-literature-book-of-the-dead", "best": [-4.2363668349439845, 15, 3120, "diff", "y:egyptian-literature-book-of-the-dead", "sub", 405387]}
+{"text": "inaugural-all", "best": [-4.214923038986064, 10, 0, "diff", "inaugural-all", "sub", 146094]}
+{"text": "gb:austen-emma.txt", "best": [-4.205655193114842, 10, 0, "atbash", "gb:austen-emma.txt", "sub", 67389]}
