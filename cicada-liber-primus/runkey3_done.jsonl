@@ -57,3 +57,7 @@
 {"text": "y:plato-republic", "best": [-4.280302171833517, 10, 0, "atbash", "y:plato-republic", "add", 751941]}
 {"text": "y:hobbes-leviathan", "best": [-4.259913455051374, 8, 960, "plain", "y:hobbes-leviathan", "sub", 591691]}
 {"text": "gb:melville-moby_dick.txt", "best": [-4.237822097280138, 10, 0, "plain", "gb:melville-moby_dick.txt", "beaufort", 189918]}
+{"text": "y:blavatsky-secret-doctrine-vol3", "best": [-4.167935442171916, 10, 0, "atbash", "y:blavatsky-secret-doctrine-vol3", "sub", 746245]}
+{"text": "y:blavatsky-isis-unveiled-vol1", "best": [-4.239041232948032, 10, 0, "diff", "y:blavatsky-isis-unveiled-vol1", "sub", 738988]}
+{"text": "y:blavatsky-secret-doctrine-vol1", "best": [-4.238610118418832, 10, 0, "plain", "y:blavatsky-secret-doctrine-vol1", "add", 992324]}
+{"text": "y:blavatsky-isis-unveiled-vol2", "best": [-4.2186144829227965, 10, 0, "atbash", "y:blavatsky-isis-unveiled-vol2", "sub", 923438]}
