@@ -215,7 +215,20 @@ def window_score(dec, M):
         if run > best: best = run
     return best / WIN
 
+CKPT = "seqkey_done.jsonl"
+
+def load_done():
+    import json, os
+    done = {}
+    if os.path.exists(CKPT):
+        for line in open(CKPT):
+            try:
+                r = json.loads(line); done[r["seq"]] = r
+            except Exception: pass
+    return done
+
 if __name__ == "__main__":
+    import json
     t0 = time.time()
     M = lm.model()
     print("building screen table + sequences...", flush=True)
@@ -227,8 +240,12 @@ if __name__ == "__main__":
     cov = sum(len(c) for _, _, c in all_tiles)
     print(f"tiles: {len(all_tiles)} covering {cov:,} runes\n", flush=True)
 
-    results = []
+    done = load_done()
+    results = [tuple(r["best"]) for r in done.values() if r.get("best")]
+    print(f"resuming: {len(done)} sequences already done\n", flush=True)
+    ck = open(CKPT, "a")
     for i, (sname, sv) in enumerate(sorted(seqs.items()), 1):
+        if sname in done: continue
         K = sv
         best = (-99,)
         for tsn, start, chunk in all_tiles:
@@ -246,6 +263,7 @@ if __name__ == "__main__":
                         results.append(r)
                         if r[0] > best[0]: best = r
         results.sort(reverse=True); results = results[:40]
+        ck.write(json.dumps({"seq": sname, "best": list(best)}) + "\n"); ck.flush()
         print(f"[{i}/{len(seqs)}] {sname:26s} best {best[0]:+.3f} "
               f"(seg{best[1]}@{best[2]} {best[3]}/{best[5]})  [{time.time()-t0:.0f}s]", flush=True)
 
