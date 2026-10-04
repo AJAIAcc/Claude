@@ -21,11 +21,41 @@ PROBE = 240
 STRIDE = 240          # end-to-end tiling; probe >> the 60-rune detection floor
 SCREEN_TOP = 8
 
-HIGH_PRIOR = ("x:", "gb:bible-kjv.txt", "war-and-peace")
+# Priority order. Cicada's own trail first, then the hermetic/esoteric corpus it
+# borrows its register from, then general literature. Texts are processed in this
+# order and results print per text, so a partial run still gives COMPLETE coverage
+# for everything it reached.
+PRIORITY = [
+    "x:agrippa-occult-philosophy", "x:mabinogion", "x:crowley-liber-al",
+    "x:machen-white-people", "x:emerson-self-reliance", "x:kybalion",
+    "x:sefer-ha-bahir-book-of-illumination", "x:cicada-liber-primus-translation",
+    "x:machen-house-of-souls", "x:emerson-essays-first-series",
+    "gb:bible-kjv.txt", "war-and-peace",
+    "y:the-kybalion", "y:eliphas-levi-history-of-magic", "y:ginsburg-the-kabbalah",
+    "y:hebraic-literature-talmud-kabbala", "y:mysteries-of-the-rosie-cross",
+    "y:rosicrucian-mysteries", "y:john-dee-private-diary",
+    "y:john-dee-mathematicall-praeface", "y:egyptian-book-of-the-dead",
+    "y:blavatsky-studies-in-occultism", "y:new-light-of-alchymie",
+    "y:book-of-quinte-essence", "y:mead-gnostic-crucifixion",
+]
+
+def extra2():
+    import glob
+    out = {}
+    d = os.path.join(os.path.dirname(os.path.abspath(__file__)), "texts2")
+    for p in sorted(glob.glob(os.path.join(d, "*.txt"))):
+        v = runkey.runeify(open(p, encoding="utf-8", errors="ignore").read())
+        if len(v) > 2000: out["y:" + os.path.basename(p)[:-4]] = v
+    return out
 
 def chosen_texts():
-    t = runkey.candidate_texts(); t.update(runkey2.extra_texts())
-    return {k: v for k, v in t.items() if k.startswith("x:") or k in HIGH_PRIOR}
+    t = runkey.candidate_texts(); t.update(runkey2.extra_texts()); t.update(extra2())
+    ordered = {}
+    for k in PRIORITY:
+        if k in t: ordered[k] = t[k]
+    for k, v in t.items():
+        if k not in ordered: ordered[k] = v
+    return ordered
 
 def tiles(seg):
     out = []
@@ -59,28 +89,29 @@ if __name__ == "__main__":
     print(f"tiles: {ntiles}, covering {covered:,} of {sum(len(v) for v in segs.values()):,} runes "
           f"({covered/sum(len(v) for v in segs.values())*100:.0f}%)\n", flush=True)
 
+    all_tiles = [(sn, st, ch) for sn, sv in sorted(segs.items()) for st, ch in tiles(sv)]
     results = []
-    for sname, sv in sorted(segs.items()):
-        for start, chunk in tiles(sv):
+    for ti, (tname, tv) in enumerate(texts.items(), 1):
+        K = np.array(tv, dtype=np.int64)
+        tbest = (-99,)
+        for sname, start, chunk in all_tiles:
             for form, C in streams(chunk).items():
                 Cv = np.array(C, dtype=np.int64)
-                for tname, tv in texts.items():
-                    K = np.array(tv, dtype=np.int64)
-                    sc = runkey.screen(Cv, K, "sub", tab)
-                    if sc is None: continue
-                    for mode in ("sub", "add", "beaufort"):
-                        s2 = sc if mode == "sub" else runkey.screen(Cv, K, mode, tab)
-                        if s2 is None: continue
-                        k = min(SCREEN_TOP, len(s2))
-                        for off in np.argpartition(s2, -k)[-k:]:
-                            off = int(off)
-                            dec = runkey.decrypt(list(Cv), tv, off, mode)
-                            if len(dec) < len(Cv): continue
-                            results.append((M.logp(dec)/len(dec), sname, start, form,
-                                            tname, mode, off))
-            results.sort(reverse=True); results = results[:40]
-        print(f"seg{sname:<3} done  best {results[0][0]:+.3f} "
-              f"({results[0][3]}/{results[0][4]})", flush=True)
+                for mode in ("sub", "add", "beaufort"):
+                    s2 = runkey.screen(Cv, K, mode, tab)
+                    if s2 is None: continue
+                    k = min(SCREEN_TOP, len(s2))
+                    for off in np.argpartition(s2, -k)[-k:]:
+                        off = int(off)
+                        dec = runkey.decrypt(list(Cv), tv, off, mode)
+                        if len(dec) < len(Cv): continue
+                        r = (M.logp(dec)/len(dec), sname, start, form, tname, mode, off)
+                        results.append(r)
+                        if r[0] > tbest[0]: tbest = r
+        results.sort(reverse=True); results = results[:40]
+        print(f"[{ti}/{len(texts)}] {tname:38s} best {tbest[0]:+.3f} "
+              f"(seg{tbest[1]}@{tbest[2]} {tbest[3]}/{tbest[5]})  "
+              f"[{time.time()-t0:.0f}s]", flush=True)
 
     print("\nTOP 20")
     for f, sname, start, form, tname, mode, off in results[:20]:
