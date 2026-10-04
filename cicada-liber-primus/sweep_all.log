@@ -1,0 +1,70 @@
+ pg     n    mono keyword  stream   best-hit
+------------------------------------------------------------------------------
+ 15   262  -3.614  -3.394  -3.411   kw:w:ANSWERED/add/id
+ 16   266  -3.550  -3.460  -3.436   st:primes+42/sub
+ 17   201  -3.509  -3.406  -3.431   kw:w:TRA/sub/atbash
+ 18   217  -3.573  -3.325  -3.418   kw:QUESTION/add/atbash
+ 19   261  -3.574  -3.432  -3.475   kw:AND/add/atbash
+ 20   263  -3.496  -3.492  -3.454   st:primes+20/sub
+ 21   196  -3.585  -3.440  -3.420   st:phi(n)+43/sub
+ 22   208  -3.468  -3.381  -3.485   kw:STUDENT/add/atbash
+ 23   255  -3.607  -3.452  -3.482   kw:CAUSE/add/atbash
+ 24   268  -3.588  -3.426  -3.435   kw:SOMEWISDOM/sub/id
+ 25   263  -3.613  -3.456  -3.458   kw:w:ENCRY/add/atbash
+ 26   273  -3.569  -3.432  -3.391   st:primes+125/add
+ 27   261  -3.572  -3.396  -3.456   kw:ANINSTRUCTION/add/atbash
+ 28   272  -3.571  -3.457  -3.442   st:primes+226/add
+ 29   137  -3.461  -3.362  -3.430   kw:w:ABOUT/add/atbash
+ 30   159  -3.488  -3.414  -3.365   st:phi(n)+122/sub
+ 31   267  -3.571  -3.480  -3.440   st:phi(n)+10/sub
+ 32   273  -3.555  -3.445  -3.411   st:phi(n)+27/add
+ 33   260  -3.566  -3.484  -3.459   st:phi(n)+217/sub
+ 34   271  -3.579  -3.421  -3.417   st:sq+2/add
+ 35   269  -3.526  -3.518  -3.465   st:primes+185/add
+ 36   273  -3.533  -3.489  -3.464   st:phi(n)+132/sub
+ 37   131  -3.409  -3.299  -3.297   st:phi(p)+215/sub
+ 38   213  -3.567  -3.458  -3.415   st:phi(n)+13/add
+ 39   270  -3.573  -3.479  -3.463   st:phi(n)+30/add
+ 40   273  -3.576  -3.424  -3.472   kw:w:FINALLY/add/atbash
+ 41   265  -3.604  -3.395  -3.356   st:primes+243/sub
+ 42   234  -3.549  -3.438  -3.416   st:primes+59/sub
+ 43   269  -3.583  -3.447  -3.462   kw:JOURNEY/sub/atbash
+ 44   277  -3.583  -3.457  -3.494   kw:SACRED/sub/id
+ 45   263  -3.538  -3.426  -3.425   st:primes+153/add
+ 46   269  -3.579  -3.514  -3.454   st:phi(p)+201/sub
+ 47   121  -3.406  -3.411  -3.296   st:primes+160/sub
+ 48   214  -3.608  -3.474  -3.395   st:phi(n)+215/add
+ 49   261  -3.545  -3.446  -3.484   kw:w:PREPARED/sub/atbash
+ 50   271  -3.532  -3.488  -3.498   kw:SHED/sub/atbash
+ 51   238  -3.545  -3.471  -3.492   kw:WORTH/sub/id
+ 52   228  -3.553  -3.447  -3.476   kw:w:RED/sub/atbash
+ 53   228  -3.545  -3.473  -3.538   kw:w:OUR/sub/atbash
+ 54   240  -3.506  -3.459  -3.505   kw:WORTH/sub/id
+ 55   231  -3.591  -3.437  -3.429   st:nat+0/sub
+ 56   273  -3.602  -3.457  -3.355   st:primes+179/sub
+ 57   272  -3.582  -3.376  -3.400   kw:CONSUMPTION/add/id
+ 58   274  -3.550  -3.438  -3.414   st:phi(p)+40/sub
+ 59   273  -3.568  -3.417  -3.401   st:phi(n)+3/add
+ 60   270  -3.608  -3.461  -3.459   st:phi(n)+153/sub
+ 61   270  -3.598  -3.469  -3.418   st:primes+19/sub
+ 62   274  -3.596  -3.471  -3.494   kw:w:STUDE/sub/atbash
+ 63   271  -3.562  -3.458  -3.433   st:primes+2/sub
+ 64    66  -3.380  -3.192  -3.232   kw:w:EX/add/id
+ 66    92  -3.396  -3.286  -3.223   st:primes+56/add
+ 67   263  -3.560  -3.449  -3.459   kw:w:WARNNG/add/atbash
+ 68   179  -3.501  -3.437  -3.415   st:phi(p)+83/add
+ 69   232  -3.582  -3.470  -3.529   kw:FIBONACCI/add/id
+ 70    76  -3.255  -3.173  -3.260   kw:IMPOSE/add/id
+
+BEST SCORE ACROSS ALL PAGES AND ALL FAMILIES:
+  pg70  -3.173  kw:IMPOSE/add/id
+  pg64  -3.192  kw:w:EX/add/id
+  pg66  -3.223  st:primes+56/add
+  pg47  -3.296  st:primes+160/sub
+  pg37  -3.297  st:phi(p)+215/sub
+  pg18  -3.325  kw:QUESTION/add/atbash
+  pg56  -3.355  st:primes+179/sub
+  pg41  -3.356  st:primes+243/sub
+
+reference: correct plaintext -1.2 .. -2.2 ; uniform noise -3.87
+VERDICT: no page decrypts under any tested family.

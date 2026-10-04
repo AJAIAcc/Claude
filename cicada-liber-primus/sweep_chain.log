@@ -1,0 +1,18 @@
+CONTROL  chain-encrypted real plaintext, random len-8 key
+  true key          : -1.223
+  best WRONG key    : -3.385  (w:NOTHNG)
+  separation        : +2.162  -> detector discriminates
+
+ pg     n  kw-chain  stream-chain   best-hit
+----------------------------------------------------------------------------
+ 15   262    -3.454        -3.452   st:phi(n)+75/id
+ 16   266    -3.410        -3.468   kw:CIRCUMFERENCEr6/id
+ 17   201    -3.398        -3.435   kw:CONSUMPTIONr9/atbash
+ 18   217    -3.388        -3.416   kw:SHAPEr0/id
+ 19   261    -3.385        -3.438   kw:w:CIRCUr1/id
+ 20   263    -3.408        -3.393   st:sq+7/atbash
+ 21   196    -3.447        -3.433   st:phi(n)+18/id
+ 22   208    -3.346        -3.363   kw:w:AREr0/id
+ 23   255    -3.459        -3.447   st:primes+17/atbash
+ 24   268    -3.435        -3.429   st:phi(p)+76/id
+ 25   263    -3.442        -3.423   st:primes+67/atbash
