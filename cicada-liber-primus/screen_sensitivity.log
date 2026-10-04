@@ -1,0 +1,15 @@
+SCREEN SENSITIVITY — how many runes of true running key are needed?
+
+ keyed runes  probe    rank of true offset         of
+         240    240                      0  2,991,080
+         180    240                      0  2,991,080
+         120    240                      0  2,991,080
+          90    240                      0  2,991,080
+          60    240                      0  2,991,080
+          40    240                     27  2,991,080
+          30    240                  3,216  2,991,080
+          20    240                655,875  2,991,080
+
+rank 0 = the true offset is the single best of ~3 million.
+A screen that still ranks 0 with only N keyed runes can detect a key
+used for just that much of the text.
