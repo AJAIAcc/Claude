@@ -1,0 +1,64 @@
+CHAIN-FORM KEYWORD SWEEP — new model, per-page matched nulls
+
+  pg     n     real     null  verdict   key
+  15   262   -4.380   -4.430    noise   EVERYr2/atbash
+  16   266   -4.416   -4.325    noise   w:PERIENCEr0/id
+  17   201   -4.403   -4.378    noise   w:ARBITRARYr4/atbash
+  18   217   -4.401   -4.371    noise   REASONr0/id
+  19   261   -4.425   -4.383    noise   EVERYr3/id
+  20   263   -4.457   -4.440    noise   BELONGr0/id
+  21   196   -4.412   -4.316    noise   EVERYr3/atbash
+  22   208   -4.318   -4.382    noise   w:NAMEr3/id
+  23   255   -4.424   -4.429    noise   w:PREPAREDr7/atbash
+  24   268   -4.428   -4.416    noise   WISDOMr2/atbash
+  25   263   -4.429   -4.429    noise   w:MOREr2/atbash
+  26   273   -4.437   -4.399    noise   GNUPGr1/atbash
+  27   261   -4.408   -4.372    noise   w:PERIENCEr6/atbash
+  28   272   -4.454   -4.413    noise   PRACTICESr6/id
+  29   137   -4.357   -4.175    noise   INNOCENCEr8/id
+  30   159   -4.335   -4.349    noise   w:ENCRYr2/id
+  31   267   -4.404   -4.416    noise   PRIMALr3/atbash
+  32   273   -4.408   -4.414    noise   w:MOMENTr2/id
+  33   260   -4.417   -4.428    noise   INSTARr4/atbash
+  34   271   -4.417   -4.429    noise   QUESTIONr1/atbash
+  35   269   -4.388   -4.420    noise   MOBIUSr1/id
+  36   273   -4.447   -4.421    noise   MASTERr0/id
+  37   131   -4.307   -4.281    noise   KWESTIONr2/atbash
+  38   213   -4.413   -4.326    noise   w:NHABITNGr3/atbash
+  39   270   -4.431   -4.409    noise   ANALOGr0/atbash
+  40   273   -4.423   -4.417    noise   w:LATERr3/atbash
+  41   265   -4.434   -4.414    noise   PRACTICESr2/atbash
+  42   234   -4.402   -4.404    noise   CARNALr3/atbash
+  43   269   -4.426   -4.454    noise   PRESERVEr5/id
+  44   277   -4.441   -4.363    noise   w:FOURr1/atbash
+  45   263   -4.447   -4.430    noise   w:DECIDEDr3/id
+  46   269   -4.421   -4.423    noise   CERTAINTYr6/id
+  47   121   -4.297   -4.266    noise   w:YOr1/atbash
+  48   214   -4.422   -4.370    noise   MESSAGEr5/atbash
+  49   261   -4.411   -4.393    noise   w:IRCUMFERENCESr6/id
+  50   271   -4.417   -4.419    noise   PARABLELIKEr6/atbash
+  51   238   -4.391   -4.345    noise   w:CONSCIAUSNESSr5/atbash
+  52   228   -4.400   -4.349    noise   ADHEREr4/atbash
+  53   228   -4.369   -4.391    noise   w:THREr1/id
+  54   240   -4.398   -4.410    noise   BODYr2/atbash
+  55   231   -4.429   -4.401    noise   FIRFUMFERENFEr2/id
+  56   273   -4.414   -4.433    noise   SUFFERINGr6/atbash
+  57   272   -4.394   -4.397    noise   FINDr1/atbash
+  58   274   -4.442   -4.401    noise   THATr1/atbash
+  59   273   -4.433   -4.416    noise   COMMANDr5/id
+  60   270   -4.419   -4.397    noise   w:HAUEr3/atbash
+  61   270   -4.404   -4.453    noise   TRUTHSr3/id
+  62   274   -4.460   -4.406    noise   w:CHANGEr3/atbash
+  63   271   -4.442   -4.412    noise   w:STUDYr2/atbash
+  64    66   -4.193   -4.012    noise   w:PRESERUATIANr10/id
+  66    92   -4.222   -4.189    noise   OUTGUESSr7/id
+  67   263   -4.452   -4.392    noise   PRIMALITYr1/atbash
+  68   179   -4.380   -4.303    noise   w:SOr1/id
+  69   232   -4.406   -4.409    noise   w:STARTEDr3/id
+  70    76   -4.182   -4.148    noise   w:RIGHr2/atbash
+
+flagged: 0
+
+real LP plaintext scores about -0.90 under this model
+VERDICT: chain-form keyword family excluded on every page.
+(1315s)
