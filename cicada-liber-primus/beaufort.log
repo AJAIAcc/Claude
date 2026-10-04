@@ -1,0 +1,17 @@
+LP PLAINTEXT LETTER FREQUENCIES (for the 'step 0 = rare letter' conjecture)
+  rarest: J=0.00%, EO=0.00%, OE=0.00%, X=0.10%, AE=0.10%, EA=0.53%, IA=0.68%
+  doublet rate to explain: 0.66%
+  plaintext distance-1 repeats 2.33%, distance-2 5.89%
+
+BEAUFORT SWEEP (p = k - c), not covered by sub/add
+  55 pages x 2235 key-rotations x 2 = 245850 trials
+  top 6:
+    pg70  -3.280  w:PTEDr1/id
+    pg64  -3.303  WELCOMEr4/id
+    pg66  -3.367  STRUGGLEr1/id
+    pg47  -3.379  NOTHINGr2/id
+    pg17  -3.427  DISCOVERr1/atbash
+    pg30  -3.431  w:BEHAUIARSr1/id
+  reference: correct -1.2, noise -3.87  -> EXCLUDED
+
+[exited with code 0]
