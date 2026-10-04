@@ -13,6 +13,46 @@ found it already documented (see [Prior work](#prior-work)). My numbers replicat
 
 ---
 
+## Final state — read this first
+
+Everything below this section was written against the **first** page attacked, using a
+language model built from 2,058 runes. The work then widened to the whole unsolved
+corpus and the model was replaced. **Where the body and this section disagree, this
+section is current.** The living record is the
+[decipherment ledger](https://claude.ai/code/artifact/6595b43d-ca27-4bdb-bc57-125de8686ed5).
+
+| | |
+|---|---|
+| Scope | all 55 unsolved pages, 12,956 runes, 98% tiled coverage |
+| Solved pages re-derived from the runes | 19 of 19 |
+| Language model | 2,341,076 runes (was 2,058) |
+| Reference scores | plaintext **−0.90**, noise **−4.84**, threshold **−2.6** |
+| Number-theoretic keystreams excluded | 84, best −3.484 |
+| Candidate texts excluded | 67 (32,046,644 runes), best −4.136 |
+
+**The threshold is calibrated on a known answer, not guessed.** The solved page 71
+(key φ(pₙ) = pₙ − 1) scores −2.395 on the best-60-rune-window statistic. An earlier
+cutoff of −3.0 would have *rejected* it, because that page's whole-probe score is only
+−3.192 — an unmodelled F-interrupter garbles its tail.
+
+**The 67-text result is a null, not a near miss.** Sixty hits sit inside a band 0.11
+wide with no separation, while a planted control key sits alone at −0.904, rank 0 of
+2,991,080. The ranking is ordered by generic English statistics — Nietzsche and two
+Austen novels lead, Agrippa and the Mabinogion sit mid-pack — and 15 of the top 18 land
+on the shortest tile. The detector is measuring English, not keys.
+
+**Four method errors, all caught by controls, all documented in the ledger:** a 17%
+coverage hole in the running-key search; the −3.0 threshold above; a `break` that should
+have been `continue` in the chain decoder; and a stage-1 offset overrun. The first two
+would have turned into false conclusions had the controls not caught them.
+
+**Operational note.** Detached background jobs do not survive container reclamation in
+this environment — one 4.5-hour window yielded 7 minutes of compute. The searches
+checkpoint per unit (`seqkey_done.jsonl`, `runkey3_done.jsonl`) and resume, and compute
+runs in foreground chunks.
+
+---
+
 ## 1. Which page this is
 
 | | |
