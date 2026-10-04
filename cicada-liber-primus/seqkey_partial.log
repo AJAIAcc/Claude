@@ -1,0 +1,22 @@
+building screen table + sequences...
+sequences: 84
+tiles: 54 covering 12,747 runes
+
+[1/84] (p-1)/2                    best -3.757 (seg15@1920 atbash/sub)  [62s]
+[2/84] (p-1)/2 [rev]              best -3.742 (seg8@720 atbash/sub)  [94s]
+[3/84] 2^n mod29                  best -4.044 (seg14@720 diff/beaufort)  [116s]
+[4/84] 2^n mod29 [rev]            best -3.948 (seg13@1200 plain/sub)  [137s]
+[5/84] 2p+1                       best -3.812 (seg12@240 diff/add)  [166s]
+[6/84] 2p+1 [rev]                 best -3.743 (seg11@240 plain/sub)  [194s]
+[7/84] Omega(n) with mult         best -3.651 (seg15@240 atbash/add)  [217s]
+[8/84] Omega(n) with mult [rev]   best -3.766 (seg15@240 plain/add)  [240s]
+[9/84] catalan                    best -3.758 (seg11@240 diff/beaufort)  [248s]
+[10/84] catalan [rev]              best -3.833 (seg15@2160 plain/sub)  [255s]
+[11/84] cubes                      best -3.914 (seg9@0 plain/sub)  [276s]
+[12/84] cubes [rev]                best -3.914 (seg9@0 plain/add)  [297s]
+[13/84] d(n) divisors              best -3.717 (seg9@480 diff/sub)  [322s]
+[14/84] d(n) divisors [rev]        best -3.770 (seg9@0 plain/add)  [347s]
+[15/84] digit_sum(n)               best -3.790 (seg9@960 diff/sub)  [369s]
+[16/84] digit_sum(n) [rev]         best -3.790 (seg9@960 diff/add)  [390s]
+[17/84] digits_e                   best -3.769 (seg11@240 diff/sub)  [402s]
+[18/84] digits_e [rev]             best -3.686 (seg13@1200 plain/add)  [415s]

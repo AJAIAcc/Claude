@@ -1,0 +1,83 @@
+building screen table...
+texts: 67  (32,046,644 runes)
+    x:agrippa-occult-philosophy
+    x:mabinogion
+    x:crowley-liber-al
+    x:machen-white-people
+    x:emerson-self-reliance
+    x:kybalion
+    x:sefer-ha-bahir-book-of-illumination
+    x:cicada-liber-primus-translation
+    x:machen-house-of-souls
+    x:emerson-essays-first-series
+    gb:bible-kjv.txt
+    war-and-peace
+    y:the-kybalion
+    y:eliphas-levi-history-of-magic
+    y:ginsburg-the-kabbalah
+    y:hebraic-literature-talmud-kabbala
+    y:mysteries-of-the-rosie-cross
+    y:rosicrucian-mysteries
+    y:john-dee-private-diary
+    y:john-dee-mathematicall-praeface
+    y:egyptian-book-of-the-dead
+    y:blavatsky-studies-in-occultism
+    y:new-light-of-alchymie
+    y:book-of-quinte-essence
+    y:mead-gnostic-crucifixion
+    gb:austen-emma.txt
+    gb:austen-persuasion.txt
+    gb:austen-sense.txt
+    gb:blake-poems.txt
+    gb:bryant-stories.txt
+    gb:burgess-busterbrown.txt
+    gb:carroll-alice.txt
+    gb:chesterton-ball.txt
+    gb:chesterton-brown.txt
+    gb:chesterton-thursday.txt
+    gb:edgeworth-parents.txt
+    gb:melville-moby_dick.txt
+    gb:milton-paradise.txt
+    gb:shakespeare-caesar.txt
+    gb:shakespeare-hamlet.txt
+    gb:shakespeare-macbeth.txt
+    gb:whitman-leaves.txt
+    inaugural-all
+    liber-primus-plaintext
+    y:bacon-new-atlantis
+    y:bhagavad-gita-song-celestial
+    y:blavatsky-isis-unveiled-vol1
+    y:blavatsky-isis-unveiled-vol2
+    y:blavatsky-secret-doctrine-vol1
+    y:blavatsky-secret-doctrine-vol2
+    y:blavatsky-secret-doctrine-vol3
+    y:egyptian-literature-book-of-the-dead
+    y:five-years-of-theosophy
+    y:frazer-golden-bough
+    y:gist-of-swedenborg
+    y:hobbes-leviathan
+    y:judge-ocean-of-theosophy
+    y:lao-tzu-study-chinese-philosophy
+    y:lao-tzu-tao-teh-king
+    y:marcus-aurelius-meditations
+    y:nietzsche-beyond-good-and-evil
+    y:nietzsche-thus-spake-zarathustra
+    y:plato-republic
+    y:plato-timaeus
+    y:sacred-books-of-the-east
+    y:the-upanishads
+    y:thoreau-walden
+POSITIVE CONTROL
+  key text gb:bible-kjv.txt, true offset 50000
+  screen put the true offset at rank 0 of 2991080 (0 = top)
+  argmax offset 50000 (CORRECT)
+  full-model score at the true offset: -0.904
+  -> the search can find a running key when one is there
+
+tiles: 54, covering 12,747 of 12,956 runes (98%)
+
+[1/67] x:agrippa-occult-philosophy            best -4.255 (seg10@0 plain/add)  [923s]
+[2/67] x:mabinogion                           best -4.263 (seg10@0 atbash/add)  [1432s]
+[3/67] x:crowley-liber-al                     best -4.324 (seg10@0 atbash/add)  [1460s]
+[4/67] x:machen-white-people                  best -4.302 (seg8@960 plain/sub)  [1530s]
+[5/67] x:emerson-self-reliance                best -4.298 (seg8@960 plain/sub)  [1576s]
