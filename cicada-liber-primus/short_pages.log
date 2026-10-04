@@ -1,0 +1,24 @@
+SHORT-PAGE RESOLUTION — chain hill-climb under the new model
+each page against a null of the SAME length and key length
+
+  pg     n   L     real     null    verdict
+  64    66   7   -3.854   -3.829      NOISE
+  64    66  10   -3.576   -3.677      CHECK
+      text: C AJ OOC LY NYPH MEHECL ES ARTEO RTHEO HAEUE AHOWIT TES ULT RUXM IDEXCL LPTHX DTH FEWXDS.
+  66    92   7   -3.906   -4.006      CHECK
+      text: ORA PIDIPG TONGWS REAWWD LDNG NEOP
+  66    92  10   -3.722   -3.870      CHECK
+      text: AEUA DEASLOU EAHOSP NYTHNO JTM DULA
+  47   121   7   -4.089   -4.083      NOISE
+  47   121  10   -3.937   -3.914      NOISE
+  37   131   7   -4.193   -4.110      NOISE
+  37   131  10   -4.089   -3.937      NOISE
+  29   137   7   -4.129   -4.093      NOISE
+  29   137  10   -3.981   -3.989      NOISE
+  30   159   7   -4.190   -4.196      NOISE
+  30   159  10   -4.198   -4.111      NOISE
+  21   196   7   -4.285   -4.219      NOISE
+  21   196  10   -4.154   -4.143      NOISE
+
+real LP plaintext scores about -0.90 under this model
+(247s)
