@@ -1,0 +1,79 @@
+building screen table...
+texts: 67  (32,046,644 runes)
+    liber-primus-plaintext
+    x:cicada-liber-primus-translation
+    x:crowley-liber-al
+    gb:blake-poems.txt
+    y:lao-tzu-tao-teh-king
+    x:emerson-self-reliance
+    y:blavatsky-studies-in-occultism
+    y:mead-gnostic-crucifixion
+    gb:burgess-busterbrown.txt
+    y:bacon-new-atlantis
+    y:book-of-quinte-essence
+    x:machen-white-people
+    y:gist-of-swedenborg
+    gb:shakespeare-macbeth.txt
+    y:the-upanishads
+    gb:shakespeare-caesar.txt
+    y:bhagavad-gita-song-celestial
+    gb:carroll-alice.txt
+    x:sefer-ha-bahir-book-of-illumination
+    gb:shakespeare-hamlet.txt
+    y:lao-tzu-study-chinese-philosophy
+    x:kybalion
+    y:the-kybalion
+    y:john-dee-mathematicall-praeface
+    gb:bryant-stories.txt
+    y:rosicrucian-mysteries
+    y:mysteries-of-the-rosie-cross
+    y:john-dee-private-diary
+    y:ginsburg-the-kabbalah
+    y:judge-ocean-of-theosophy
+    gb:chesterton-thursday.txt
+    y:nietzsche-beyond-good-and-evil
+    y:marcus-aurelius-meditations
+    gb:chesterton-brown.txt
+    y:plato-timaeus
+    x:emerson-essays-first-series
+    gb:chesterton-ball.txt
+    gb:milton-paradise.txt
+    x:machen-house-of-souls
+    gb:austen-persuasion.txt
+    y:new-light-of-alchymie
+    x:mabinogion
+    y:nietzsche-thus-spake-zarathustra
+    y:thoreau-walden
+    gb:austen-sense.txt
+    gb:whitman-leaves.txt
+    y:egyptian-book-of-the-dead
+    y:hebraic-literature-talmud-kabbala
+    y:egyptian-literature-book-of-the-dead
+    inaugural-all
+    gb:austen-emma.txt
+    gb:edgeworth-parents.txt
+    y:five-years-of-theosophy
+    x:agrippa-occult-philosophy
+    y:sacred-books-of-the-east
+    y:eliphas-levi-history-of-magic
+    y:plato-republic
+    y:hobbes-leviathan
+    gb:melville-moby_dick.txt
+    y:blavatsky-secret-doctrine-vol3
+    y:blavatsky-isis-unveiled-vol1
+    y:blavatsky-secret-doctrine-vol1
+    y:blavatsky-isis-unveiled-vol2
+    y:frazer-golden-bough
+    y:blavatsky-secret-doctrine-vol2
+    war-and-peace
+    gb:bible-kjv.txt
+POSITIVE CONTROL
+  key text gb:bible-kjv.txt, true offset 50000
+  screen put the true offset at rank 0 of 2991080 (0 = top)
+  argmax offset 50000 (CORRECT)
+  full-model score at the true offset: -0.904
+  -> the search can find a running key when one is there
+
+tiles: 54, covering 12,747 of 12,956 runes (98%)
+
+resuming: 65 texts already done
