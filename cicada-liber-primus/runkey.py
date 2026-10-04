@@ -79,18 +79,18 @@ def trigram_table():
             tab[base:base+N] = d
     return tab
 
-def screen(C, K, mode, tab):
-    """Vectorised trigram score of every offset. Returns float32 array of scores."""
+def screen(C, K, mode, tab, offsets=None):
+    """Vectorised trigram score. Scores every offset, or only `offsets` if given."""
     n = len(C); M = len(K) - n + 1
     if M <= 0: return None
     Kv = K
-    # p[i] as a function of offset, for each i: shape (M,)
+    # p[i] as a function of offset, for each i: shape (M,) or (len(offsets),)
     def p_at(i):
-        seg = Kv[i:i+M]
+        seg = Kv[offsets + i] if offsets is not None else Kv[i:i+M]
         if mode == "sub":  return (C[i] - seg) % N      # Vigenere
         if mode == "add":  return (C[i] + seg) % N      # variant
         return (seg - C[i]) % N                          # Beaufort
-    sc = np.zeros(M, dtype=np.float32)
+    sc = np.zeros(M if offsets is None else len(offsets), dtype=np.float32)
     p0 = p_at(0); p1 = p_at(1)
     for i in range(2, n):
         p2 = p_at(i)

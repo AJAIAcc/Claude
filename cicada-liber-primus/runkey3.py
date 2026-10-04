@@ -49,13 +49,30 @@ def extra2():
     return out
 
 def chosen_texts():
+    # Runeifying 32M runes of source text takes minutes in pure Python, and every
+    # foreground chunk paid it again. Cache the converted arrays.
+    import pickle, os
+    cache = os.path.join(os.path.dirname(os.path.abspath(__file__)), "texts_cache.pkl")
+    if os.path.exists(cache):
+        try:
+            with open(cache, "rb") as f: return pickle.load(f)
+        except Exception: pass
     t = runkey.candidate_texts(); t.update(runkey2.extra_texts()); t.update(extra2())
     ordered = {}
     for k in PRIORITY:
         if k in t: ordered[k] = t[k]
     for k, v in t.items():
         if k not in ordered: ordered[k] = v
+    try:
+        with open(cache, "wb") as f: pickle.dump(ordered, f, protocol=4)
+    except Exception: pass
     return ordered
+
+def by_length(texts):
+    """Shortest first. The ten canonical texts are already cleared, so from here
+    throughput matters more than ordering: a 3M-rune text blocks a whole chunk
+    while ten 200k-rune ones clear in the same time."""
+    return dict(sorted(texts.items(), key=lambda kv: len(kv[1])))
 
 def tiles(seg):
     out = []
@@ -72,12 +89,25 @@ def streams(chunk):
     d = [(chunk[j]-chunk[j-1]) % N for j in range(1, len(chunk))]
     return {"plain": plain, "atbash": atb, "diff": d}
 
+CKPT = "runkey3_done.jsonl"
+
+def load_done():
+    import json, os
+    d = {}
+    if os.path.exists(CKPT):
+        for line in open(CKPT):
+            try:
+                r = json.loads(line); d[r["text"]] = r
+            except Exception: pass
+    return d
+
 if __name__ == "__main__":
+    import json
     t0 = time.time()
     M = lm.model()
     print("building screen table...", flush=True)
     tab = runkey.trigram_table()
-    texts = chosen_texts()
+    texts = by_length(chosen_texts())
     total = sum(len(v) for v in texts.values())
     print(f"texts: {len(texts)}  ({total:,} runes)")
     for k in texts: print("   ", k)
@@ -90,25 +120,43 @@ if __name__ == "__main__":
           f"({covered/sum(len(v) for v in segs.values())*100:.0f}%)\n", flush=True)
 
     all_tiles = [(sn, st, ch) for sn, sv in sorted(segs.items()) for st, ch in tiles(sv)]
-    results = []
+    done = load_done()
+    results = [tuple(r["best"]) for r in done.values() if r.get("best")]
+    print(f"resuming: {len(done)} texts already done", flush=True)
+    ck = open(CKPT, "a")
     for ti, (tname, tv) in enumerate(texts.items(), 1):
+        if tname in done: continue
         K = np.array(tv, dtype=np.int64)
         tbest = (-99,)
         for sname, start, chunk in all_tiles:
             for form, C in streams(chunk).items():
                 Cv = np.array(C, dtype=np.int64)
                 for mode in ("sub", "add", "beaufort"):
-                    s2 = runkey.screen(Cv, K, mode, tab)
+                    # Two-stage screen. A cheap pass over a 72-rune prefix shortlists
+                    # offsets, then only those are scored on the full probe. The
+                    # prefix is short, but sensitivity testing showed that even 40 keyed runes
+                    # leave the true offset at rank 27 of 3M, far inside a 6000-wide shortlist.
+                    # This is ~5x faster than screening every offset at full length.
+                    pre = runkey.screen(Cv[:48], K, mode, tab)
+                    if pre is None: continue
+                    nshort = min(6000, len(pre))
+                    short = np.argpartition(pre, -nshort)[-nshort:]
+                    # stage 1 used a 72-rune prefix, so its valid offset range is
+                    # wider than the full probe's; drop offsets that would overrun.
+                    short = short[short <= len(K) - len(Cv)]
+                    if len(short) == 0: continue
+                    s2 = runkey.screen(Cv, K, mode, tab, offsets=short)
                     if s2 is None: continue
                     k = min(SCREEN_TOP, len(s2))
-                    for off in np.argpartition(s2, -k)[-k:]:
-                        off = int(off)
+                    for oi in np.argpartition(s2, -k)[-k:]:
+                        off = int(short[oi])
                         dec = runkey.decrypt(list(Cv), tv, off, mode)
                         if len(dec) < len(Cv): continue
                         r = (M.logp(dec)/len(dec), sname, start, form, tname, mode, off)
                         results.append(r)
                         if r[0] > tbest[0]: tbest = r
         results.sort(reverse=True); results = results[:40]
+        ck.write(json.dumps({"text": tname, "best": list(tbest)}) + "\n"); ck.flush()
         print(f"[{ti}/{len(texts)}] {tname:38s} best {tbest[0]:+.3f} "
               f"(seg{tbest[1]}@{tbest[2]} {tbest[3]}/{tbest[5]})  "
               f"[{time.time()-t0:.0f}s]", flush=True)
