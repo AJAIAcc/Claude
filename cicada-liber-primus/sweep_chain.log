@@ -16,3 +16,23 @@ CONTROL  chain-encrypted real plaintext, random len-8 key
  23   255    -3.459        -3.447   st:primes+17/atbash
  24   268    -3.435        -3.429   st:phi(p)+76/id
  25   263    -3.442        -3.423   st:primes+67/atbash
+ 26   273    -3.412        -3.420   kw:PILGRIMr2/atbash
+ 27   261    -3.406        -3.378   st:phi(p)+80/atbash
+ 28   272    -3.453        -3.470   kw:w:BELEIUEr2/atbash
+ 29   137    -3.326        -3.376   kw:PRIMALITYr2/atbash
+ 30   159    -3.373        -3.360   st:primes+136/atbash
+ 31   267    -3.370        -3.442   kw:w:ANYTHNGr4/atbash
+ 32   273    -3.446        -3.445   st:primes+173/id
+ 33   260    -3.453        -3.452   st:tri+21/atbash
+ 34   271    -3.369        -3.411   kw:w:STARTEDr1/atbash
+ 35   269    -3.418        -3.455   kw:MOBIUSr1/id
+ 36   273    -3.432        -3.450   kw:w:WENTr1/id
+ 37   131    -3.289        -3.332   kw:w:TRUr2/id
+ 38   213    -3.407        -3.414   kw:ANINSTRUCTIONr3/id
+ 39   270    -3.420        -3.420   kw:w:DECEPTIANr2/id
+ 40   273    -3.409        -3.460   kw:w:ENCRYr2/atbash
+ 41   265    -3.455        -3.396   st:primes+184/atbash
+ 42   234    -3.432        -3.446   kw:w:REPLIEDr0/atbash
+ 43   269    -3.388        -3.466   kw:FIBONACCIr4/id
+ 44   277    -3.421        -3.445   kw:SURFACEr4/id
+ 45   263    -3.477        -3.449   st:phi(p)+134/atbash
