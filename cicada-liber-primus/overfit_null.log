@@ -1,0 +1,16 @@
+OVERFITTING NULL for the chain hill-climb
+hill-climb run on UNIFORM RANDOM text (no signal present at all)
+
+    n   L  best on random
+  137   8          -2.995
+  137  10          -3.014
+  159   8          -3.110
+  159  10          -3.003
+  262   8          -3.235
+  262  10          -3.192
+  273   8          -3.325
+  273  10          -3.202
+
+observed on real pages: pg29 (n=137,L=10) = -2.991, pg30 (n=159,L=10) = -3.073
+
+[exited with code 0]
