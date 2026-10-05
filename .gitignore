@@ -8,3 +8,6 @@ out/syncheck.png
 out/jaw.png
 out/chorus.png
 out/stills/
+
+__pycache__/
+painting/__pycache__/
