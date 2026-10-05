@@ -11,16 +11,46 @@ import scene
 from scene import studio, KEY_DIR, KEY_COL, grids, lerp3
 
 
-def S_():
-    return scene.S
+# Each figure is drawn in its own design frame and then placed on the canvas.
+# XF = (scale, dx, dy): a figure can be enlarged and moved without rewriting
+# every coordinate in its anatomy.
+# (scale, dx, dy, rot_degrees, pivot_x, pivot_y)
+XF = (1.0, 0.0, 0.0, 0.0, 1000.0, 1300.0)
+
+
+def TX(x, y):
+    sx, dx, dy, rot, px, py = XF
+    u, v = x - px, y - py
+    if rot:
+        ca, sa = np.cos(np.radians(rot)), np.sin(np.radians(rot))
+        u, v = u * ca - v * sa, u * sa + v * ca
+    return (px + u * sx + dx, py + v * sx + dy)
+
+
+def TS(v):
+    return v * XF[0]
+
+
+def TR(rot):
+    return rot + XF[3]
 
 
 def sc(v):
-    return v * scene.S
+    return v * XF[0] * scene.S
 
 
 def P(x, y):
-    return (x * scene.S, y * scene.S)
+    X, Y = TX(x, y)
+    return (X * scene.S, Y * scene.S)
+
+
+def TP(pts):
+    """transform a tube's (x, y, r) list into canvas pixels"""
+    return [(P(x, y)[0], P(x, y)[1], sc(r)) for x, y, r in pts]
+
+
+def TPoly(polys):
+    return [[TX(x, y) for x, y in poly] for poly in polys]
 from sculpt import Form, light, shade
 
 # ---- flesh ---------------------------------------------------------------
@@ -34,8 +64,8 @@ FLESH_M_COOL = mix('lead_white', 3.0, 'ochre', 1.4, 'light_red', 1.1, 'terre_ver
 
 HAIR_DARK = mix('burnt_umber', 2.4, 'vandyke', 1.6, 'burnt_sienna', 1.0, 'ivory_black', 0.8)
 HAIR_LIT = mix('raw_sienna', 2.0, 'burnt_sienna', 1.4, 'naples', 0.8)
-LINEN_W = mix('lead_white', 4.4, 'naples', 1.6, 'ochre', 0.45, 'ultramarine', 0.30)
-CLOAK = mix('madder', 2.6, 'vermilion', 1.3, 'burnt_sienna', 0.9, 'alizarin', 0.6)
+LINEN_W = mix('lead_white', 3.6, 'naples', 1.8, 'ochre', 0.80, 'ultramarine', 0.35)
+CLOAK = mix('madder', 2.4, 'vermilion', 0.9, 'burnt_sienna', 1.4, 'alizarin', 1.0)
 BRONZE = mix('ochre', 2.2, 'raw_sienna', 1.4, 'burnt_sienna', 0.8, 'lead_white', 0.7)
 STEEL = mix('lead_white', 2.0, 'ultramarine', 0.6, 'ivory_black', 0.9)
 IRON = mix('ivory_black', 2.4, 'burnt_umber', 1.2, 'ultramarine', 0.5, 'lead_white', 0.45)
@@ -109,8 +139,7 @@ def andromeda(W, H, rng):
     B = 0.045 / scene.S
 
     def T(pts, alb=sk, mat='skin', zk=0.86, aspect=1.0):
-        f.tube([(x * scene.S, y * scene.S, r * scene.S) for x, y, r in pts],
-               alb, mat, zk=zk, blendk=B, aspect=aspect)
+        f.tube(TP(pts), alb, mat, zk=zk, blendk=B, aspect=aspect)
 
     def ell(c, r, alb=sk, mat='skin', zk=1.0, **kw):
         return f.ellipsoid(P(*c), (sc(r[0]), sc(r[1]), sc(r[2])), alb, mat,
@@ -149,22 +178,30 @@ def andromeda(W, H, rng):
     # ---------------- arms ----------------
     T([(1190, 1206, 39), (1164, 1132, 34), (1142, 1062, 30), (1126, 1012, 26),
        (1138, 964, 25), (1164, 912, 22), (1188, 874, 18), (1200, 854, 15)], sk, zk=0.86)
-    T([(1200, 850, 16), (1208, 828, 17), (1218, 804, 15), (1230, 782, 11),
-       (1236, 768, 8)], skw, zk=0.8)
+    T([(1200, 852, 16), (1208, 830, 18), (1216, 810, 18)], skw, zk=0.8)   # palm
+    for fx, fy, ex, ey, r0 in ((1206, 806, 1214, 776, 6.5), (1216, 804, 1226, 772, 6.8),
+                               (1226, 806, 1236, 778, 6.4), (1234, 812, 1242, 790, 5.6),
+                               (1200, 812, 1192, 788, 5.8)):
+        T([(fx, fy, r0), ((fx + ex) / 2, (fy + ey) / 2, r0 * 0.88), (ex, ey, r0 * 0.6)],
+          skw, zk=0.75)
     T([(1338, 1212, 39), (1374, 1140, 34), (1410, 1076, 30), (1440, 1030, 26),
        (1438, 984, 25), (1416, 938, 22), (1396, 902, 18), (1384, 882, 15)], sk, zk=0.86)
-    T([(1384, 878, 16), (1374, 856, 17), (1362, 832, 15), (1352, 808, 11),
-       (1346, 794, 8)], skw, zk=0.8)
+    T([(1384, 880, 16), (1376, 858, 18), (1368, 838, 18)], skw, zk=0.8)   # palm
+    for fx, fy, ex, ey, r0 in ((1360, 832, 1352, 802, 6.5), (1370, 830, 1364, 798, 6.8),
+                               (1380, 832, 1376, 802, 6.4), (1388, 838, 1386, 814, 5.6),
+                               (1356, 840, 1342, 820, 5.8)):
+        T([(fx, fy, r0), ((fx + ex) / 2, (fy + ey) / 2, r0 * 0.88), (ex, ey, r0 * 0.6)],
+          skw, zk=0.75)
 
     f.smooth_z(5.0 * scene.S)
 
     # ---------------- secondary forms, after the thumb ----------------
-    ell((1212, 1300), (46, 39, 34), skw, rot=-22, zk=1.0, zoff=sc(7))   # breasts
-    ell((1322, 1288), (45, 38, 33), skw, rot=20, zk=1.0, zoff=sc(7))
+    ell((1212, 1300), (46, 39, 34), skw, rot=TR(-22), zk=1.0, zoff=sc(7))   # breasts
+    ell((1322, 1288), (45, 38, 33), skw, rot=TR(20), zk=1.0, zoff=sc(7))
     sph((1232, 1796), 18, skw, zk=0.5)                         # kneecaps
     sph((1412, 1790), 18, skw, zk=0.5)
     # head
-    ell(HEAD_C, HEAD_R, sk, rot=HEAD_ROT, zk=0.95)
+    ell(HEAD_C, HEAD_R, sk, rot=TR(HEAD_ROT), zk=0.95)
     sph(hl(-2, 52), 16, skw, zk=0.42)
     T([(hl(-30, 28)[0], hl(-30, 28)[1], 14), (hl(-4, 46)[0], hl(-4, 46)[1], 15),
        (hl(28, 26)[0], hl(28, 26)[1], 14)], sk, zk=0.22)       # jaw
@@ -177,8 +214,8 @@ def andromeda(W, H, rng):
     skin = f.mask.copy()
 
     # ---------------- the face ----------------
-    face_alb, face_rel = face(W, H, HEAD_C, HEAD_R, HEAD_ROT, skin,
-                              dark=HAIR_DARK,
+    face_alb, face_rel = face(W, H, TX(*HEAD_C), HEAD_R, HEAD_ROT, skin,
+                              dark=HAIR_DARK, fs=XF[0],
                               lip=mix('madder', 1.4, 'light_red', 1.5, 'lead_white', 1.5))
     a4 = face_alb[..., 3:4]
     f.alb = f.alb * (1 - a4) + face_alb[..., :3] * a4
@@ -208,7 +245,7 @@ def andromeda(W, H, rng):
     hcol = np.asarray(HAIR_DARK, np.float32)
     hc = local(HEAD_C, HEAD_ROT)(0, -34)
     hair.ellipsoid(P(*hc), (sc(58), sc(44), sc(48)), hcol, 'hair',
-                   rot=HEAD_ROT, blendk=hb, zk=0.8)
+                   rot=TR(HEAD_ROT), blendk=hb, zk=0.8)
     for pts in (
         [(1204, 1000, 26), (1186, 1036, 25), (1176, 1082, 23), (1166, 1132, 20),
          (1150, 1186, 16), (1132, 1240, 11), (1116, 1288, 6)],
@@ -216,41 +253,42 @@ def andromeda(W, H, rng):
          (1178, 1156, 10)],
         [(1296, 1012, 22), (1312, 1058, 19), (1322, 1104, 14), (1330, 1146, 8)],
         [(1252, 968, 26), (1284, 982, 22), (1302, 1008, 16)]):
-        hair.tube([(x * scene.S, y * scene.S, r * scene.S) for x, y, r in pts],
-                  hcol, 'hair', zk=0.78, blendk=hb)
+        hair.tube(TP(pts), hcol, 'hair', zk=0.78, blendk=hb)
     hair.smooth_z(4.0 * scene.S)
     # keep the face clear: hair frames it, it does not swallow it
     hf = local(HEAD_C, HEAD_ROT)
     X, Y, _, _ = grids(W, H)
-    ca, sa = np.cos(np.radians(HEAD_ROT)), np.sin(np.radians(HEAD_ROT))
-    du, dv = X - HEAD_C[0], Y - HEAD_C[1]
+    ca, sa = np.cos(np.radians(TR(HEAD_ROT))), np.sin(np.radians(TR(HEAD_ROT)))
+    hcx, hcy = TX(*HEAD_C)
+    du, dv = (X - hcx) / XF[0], (Y - hcy) / XF[0]
     uu, vv = du * ca + dv * sa, -du * sa + dv * ca
     face_oval = ((uu - 0) / 47.0) ** 2 + ((vv - 14) / 50.0) ** 2 < 1.0
     hair_mask = hair.mask & ~face_oval
 
     # ---------------- cloth ----------------
     from scene import poly_mask
-    cloth_poly = [[(1282, 1506), (1360, 1484), (1430, 1496), (1460, 1540),
-                   (1452, 1590), (1402, 1610), (1340, 1598), (1292, 1562)],
-                  [(1416, 1582), (1464, 1606), (1478, 1692), (1468, 1794),
-                   (1442, 1880), (1412, 1936), (1384, 1920), (1416, 1834),
-                   (1438, 1740), (1436, 1654)],
-                  [(1290, 1548), (1238, 1578), (1210, 1626), (1224, 1664),
-                   (1258, 1622), (1294, 1586)]]
-    cloth = poly_mask(W, H, cloth_poly, rng, jag=12, scale=80)
+    cloth_poly = [
+        # a slip of cloth low on the hips, and a short fall - no more
+        [(1234, 1520), (1292, 1498), (1360, 1496), (1420, 1512), (1446, 1542),
+         (1440, 1588), (1396, 1600), (1330, 1592), (1268, 1584), (1234, 1562)],
+        [(1414, 1580), (1444, 1596), (1446, 1664), (1434, 1736), (1416, 1796),
+         (1396, 1832), (1378, 1824), (1396, 1760), (1408, 1690), (1410, 1626)],
+        [(1246, 1562), (1206, 1586), (1178, 1624), (1168, 1664), (1198, 1650),
+         (1230, 1614), (1254, 1584)]]
+    cloth = poly_mask(W, H, TPoly(cloth_poly), rng, jag=12, scale=80)
 
     return dict(form=f, skin=skin, relief=relief, hair=hair, hair_mask=hair_mask,
                 cloth=cloth, head=(HEAD_C, HEAD_R, HEAD_ROT))
 
 
 # --------------------------------------------------------------------------
-def face(W, H, c, r, rot, skin, dark, lip, male=False, mid=-5.0, eye_v=4.0):
+def face(W, H, c, r, rot, skin, dark, lip, male=False, mid=-5.0, eye_v=4.0, fs=1.0):
     """features in head-local coordinates; albedo overlay + relief"""
     X, Y, xx, yy = grids(W, H)
     ca, sa = np.cos(np.radians(rot)), np.sin(np.radians(rot))
     dx, dy = X - c[0], Y - c[1]
-    u = dx * ca + dy * sa
-    v = -dx * sa + dy * ca
+    u = (dx * ca + dy * sa) / fs
+    v = (-dx * sa + dy * ca) / fs
     out = np.zeros((H, W, 4), np.float32)
     rel = np.zeros((H, W), np.float32)
 
@@ -265,7 +303,7 @@ def face(W, H, c, r, rot, skin, dark, lip, male=False, mid=-5.0, eye_v=4.0):
 
     ew = 10.5 if not male else 11.5
     # sockets, brow ridge, nose, mouth: relief only
-    rel -= (el(mid - 19, eye_v, 16, 11) + el(mid + 14, eye_v, 15, 11)) * 0.30
+    rel -= (el(mid - 19, eye_v, 16, 11) + el(mid + 14, eye_v, 15, 11)) * 0.34
     rel += (el(mid - 19, eye_v - 13, 17, 6) + el(mid + 14, eye_v - 13, 16, 6)) * 0.26
     rel += el(mid - 3, eye_v + 10, 5.5, 20) * 0.26
     rel -= (el(mid - 11, eye_v + 27, 4, 3) + el(mid + 6, eye_v + 27, 4, 3)) * 0.40
@@ -277,17 +315,30 @@ def face(W, H, c, r, rot, skin, dark, lip, male=False, mid=-5.0, eye_v=4.0):
     for cu, s in ((mid - 19, -1), (mid + 14, 1)):
         e = el(cu, eye_v, ew, 5.6, soft=1.0)
         put(e, sclera, 0.80)
-        put(el(cu + 1.2 * s, eye_v + 0.6, 5.0, 5.0, soft=0.9) * e, iris, 0.92)
-        put(el(cu + 1.2 * s, eye_v + 0.6, 2.1, 2.1, soft=0.9) * e, (0.06, 0.055, 0.06), 0.95)
-        put(el(cu - 1.8, eye_v - 1.8, 1.2, 1.2, soft=0.9) * e, (0.99, 0.97, 0.92), 0.85)
+        # the eyes are turned up: the iris rides high under the lid
+        iy = eye_v - 1.6 if not male else eye_v + 0.6
+        put(el(cu + 1.2 * s, iy, 5.0, 5.0, soft=0.9) * e, iris, 0.92)
+        put(el(cu + 1.2 * s, iy, 2.1, 2.1, soft=0.9) * e, (0.06, 0.055, 0.06), 0.95)
+        put(el(cu - 1.8, iy - 1.8, 1.2, 1.2, soft=0.9) * e, (0.99, 0.97, 0.92), 0.85)
         put(el(cu, eye_v - 4.0, ew, 2.4, soft=0.9) * e, tint(dark, 1.3), 0.30)
         put(el(cu, eye_v - 4.8, ew + 0.5, 0.9, soft=0.9), tint(dark, 1.0), 0.42)
         put(el(cu, eye_v + 5.4, ew * 0.9, 1.0, soft=0.9), tint(dark, 1.5), 0.30)
-    for cu in (mid - 20, mid + 15):
-        put(el(cu, eye_v - 12, 15, 2.8, soft=1.1), tint(dark, 1.25), 0.45)
-    put(el(mid - 3, eye_v + 35, 9.0, 3.3), lip, 0.60)
-    put(el(mid - 3, eye_v + 41.5, 9.8, 3.9), tint(lip, 1.16), 0.60)
-    put(el(mid - 3, eye_v + 38.5, 9.5, 0.8), tint(lip, 0.72), 0.55)
+    # brows lifted and drawn together: the expression does most of the work
+    brow_lift = 0.0 if male else 2.6
+    for cu, tilt in ((mid - 20, 2.2), (mid + 15, -2.2)):
+        put(el(cu, eye_v - 12 - brow_lift - tilt * 0.4, 15, 2.8, soft=1.1),
+            tint(dark, 1.25), 0.45)
+        put(el(cu + 7 * np.sign(tilt), eye_v - 11 - brow_lift, 7, 2.0, soft=1.1),
+            tint(dark, 1.15), 0.30)
+    # the mouth is open - she is calling out
+    gap = 0.0 if male else 2.3
+    put(el(mid - 3, eye_v + 35 - gap, 9.0, 3.3), lip, 0.60)
+    put(el(mid - 3, eye_v + 42.5 + gap, 9.8, 4.1), tint(lip, 1.16), 0.60)
+    if not male:
+        put(el(mid - 3, eye_v + 39, 7.4, 2.6), tint(dark, 0.95), 0.72)
+        put(el(mid - 3, eye_v + 41.4, 6.0, 1.1), (0.72, 0.60, 0.56), 0.35)
+    else:
+        put(el(mid - 3, eye_v + 38.5, 9.5, 0.8), tint(lip, 0.72), 0.55)
     put(el(mid - 10, eye_v + 27, 2.6, 2.0), tint(dark, 1.1), 0.38)
     put(el(mid + 5, eye_v + 27, 2.6, 2.0), tint(dark, 1.1), 0.38)
 
@@ -302,9 +353,9 @@ def shade_andromeda(W, H, rng, parts, key=1.14):
                      ao_radius=26 * scene.S, ao_k=0.95, normal_scale=1.0,
                      normal_smooth=2.6 * scene.S, sky_k=0.24,
                      rim=dict(d=(0.84, -0.24, 0.48), c=tint(scene.SKY_COL, 0.9),
-                              k=0.17, p=3.4),
+                              k=0.11, p=3.8),
                      bump=parts['relief'] * 7.0 * scene.S + pores * 0.8 * scene.S,
-                     bump_k=1.0)
+                     bump_k=1.0, edge_turn=5.0 * scene.S * XF[0])
     return rgb, nrm
 
 
@@ -363,7 +414,7 @@ class Mod:
                 d.line([P(*p) for p in shp[1]], fill=255,
                        width=max(1, int(round(sc(shp[2])))), joint='curve')
             elif shp[0] == 'blob':
-                (x, y), rx, ry, rot = shp[1], shp[2], shp[3], shp[4]
+                (x, y), rx, ry, rot = shp[1], shp[2], shp[3], TR(shp[4])
                 n = 28
                 th = np.linspace(0, 2 * np.pi, n, endpoint=False)
                 ca, sa = np.cos(np.radians(rot)), np.sin(np.radians(rot))
@@ -406,73 +457,98 @@ REFLECT_W = mix('ochre', 1.4, 'light_red', 1.0, 'lead_white', 1.2)
 
 
 def model_andromeda(W, H):
-    """drawn by hand: her shadow side is her left, the light rakes in from
-    upper left, and the sea throws a cool reflected light up her right edge"""
+    """Drawn by hand.  One light, from the upper left and a little in front,
+    so the light family runs down her right side (our left) and the shadow
+    family down her left.  The terminator is kept crisp where the form turns
+    hard and soft where it turns slowly - which is most of the drawing."""
     m = Mod(W, H)
     B = lambda c, rx, ry, rot=0: ('blob', c, rx, ry, rot)
     L = lambda pts, w: ('line', pts, w)
     PO = lambda pts: ('poly', pts)
 
-    # ---- the big shadow side: her left flank, from armpit to ankle ----
-    m.shade_(SHADOW_WARM, 0.94, 9, PO([
-        (1352, 1210), (1398, 1240), (1412, 1350), (1396, 1452), (1404, 1536),
-        (1436, 1640), (1448, 1760), (1434, 1880), (1424, 1990), (1408, 2048),
-        (1370, 2040), (1368, 1900), (1356, 1760), (1340, 1620), (1340, 1480),
-        (1346, 1360), (1334, 1250)]))
-    m.shade_(SHADOW_DEEP, 0.52, 7, PO([
-        (1400, 1260), (1416, 1360), (1404, 1450), (1412, 1540), (1444, 1660),
-        (1452, 1790), (1436, 1920), (1420, 2030), (1398, 2032), (1404, 1900),
-        (1398, 1740), (1382, 1600), (1382, 1450), (1388, 1330)]))
-    # ---- cast shadows ----
-    m.shade_(SHADOW_DEEP, 0.55, 7, B((1248, 1140), 46, 22, -8))        # chin on neck
-    m.shade_(SHADOW_WARM, 0.86, 6, B((1216, 1332), 42, 16, -16))       # under breasts
-    m.shade_(SHADOW_WARM, 0.80, 6, B((1324, 1318), 40, 15, 14))
-    m.shade_(SHADOW_WARM, 0.60, 12, B((1300, 1486), 86, 26, -4))       # under belly
-    m.shade_(SHADOW_DEEP, 0.60, 12, B((1318, 1556), 54, 40, 0))        # the groin
-    m.shade_(SHADOW_WARM, 0.55, 14, B((1322, 1700), 40, 150, -2))      # between thighs
-    m.shade_(SHADOW_WARM, 0.55, 8, B((1186, 1232), 34, 24, 20))        # armpits
-    m.shade_(SHADOW_WARM, 0.55, 8, B((1386, 1246), 34, 24, -20))
-    m.shade_(SHADOW_WARM, 0.50, 9, B((1232, 1842), 36, 24, 0))         # behind knees
-    m.shade_(SHADOW_WARM, 0.50, 9, B((1404, 1834), 36, 24, 0))
-    m.shade_(SHADOW_DEEP, 0.45, 7, B((1246, 2066), 44, 12, -6))        # under the feet
-    m.shade_(SHADOW_DEEP, 0.45, 7, B((1430, 2072), 44, 12, -6))
-    # hair shadow across the brow and cheek
-    m.shade_(SHADOW_WARM, 0.60, 7, B((1256, 1004), 48, 20, -16))
-    m.shade_(SHADOW_WARM, 0.40, 9, B((1300, 1060), 26, 34, -14))
-    # arms casting onto the shoulders
-    m.shade_(SHADOW_WARM, 0.45, 9, B((1196, 1180), 30, 22, -40))
-    m.shade_(SHADOW_WARM, 0.45, 9, B((1392, 1180), 30, 22, 40))
+    # ---------------- the shadow family ----------------
+    m.shade_(SHADOW_WARM, 0.92, 7, PO([
+        (1296, 1130), (1352, 1180), (1392, 1250), (1398, 1330), (1386, 1420),
+        (1390, 1500), (1420, 1560), (1444, 1650), (1452, 1760), (1442, 1880),
+        (1428, 1990), (1412, 2055), (1366, 2052), (1374, 1930), (1378, 1800),
+        (1366, 1680), (1348, 1560), (1340, 1440), (1344, 1330), (1330, 1230),
+        (1300, 1170)]))
+    # the core of it, deeper and tighter
+    m.shade_(SHADOW_DEEP, 0.50, 5, PO([
+        (1352, 1240), (1392, 1300), (1392, 1400), (1386, 1490), (1416, 1570),
+        (1444, 1680), (1448, 1800), (1436, 1920), (1420, 2020), (1392, 2020),
+        (1402, 1900), (1404, 1770), (1388, 1650), (1370, 1530), (1366, 1400),
+        (1362, 1300)]))
+    # the arms
+    m.shade_(SHADOW_WARM, 0.72, 6, PO([
+        (1400, 1200), (1444, 1140), (1472, 1060), (1470, 1000), (1442, 960),
+        (1414, 980), (1428, 1040), (1416, 1110), (1376, 1180)]))
+    m.shade_(SHADOW_WARM, 0.55, 6, PO([
+        (1182, 1180), (1156, 1100), (1142, 1020), (1152, 980), (1178, 996),
+        (1172, 1060), (1186, 1130), (1212, 1182)]))
+    m.shade_(SHADOW_WARM, 0.60, 5, PO([
+        (1452, 1000), (1420, 940), (1392, 892), (1374, 868), (1392, 856),
+        (1416, 902), (1446, 960), (1468, 1004)]))
 
-    # ---- the light ----
-    m.light_(LIGHT_HOT, 0.34, 6, B((1226, 994), 22, 11, -26))         # forehead
-    m.light_(LIGHT_HOT, 0.26, 5, B((1222, 1042), 11, 8, -20))         # cheekbone
-    m.light_(LIGHT_HOT, 0.22, 4, B((1240, 1058), 5, 7, -14))           # bridge of nose
-    m.light_(LIGHT_SOFT, 0.40, 9, B((1230, 1196), 40, 12, -6))         # collarbone
-    m.light_(LIGHT_SOFT, 0.52, 7, B((1196, 1282), 24, 27, -24))        # her right breast
-    m.light_(LIGHT_SOFT, 0.30, 9, B((1300, 1268), 22, 24, 16))
-    m.light_(LIGHT_SOFT, 0.34, 14, B((1266, 1372), 46, 64, -6))        # ribs / flank
-    m.light_(LIGHT_SOFT, 0.26, 14, B((1280, 1482), 40, 36, -4))        # belly
-    m.light_(LIGHT_SOFT, 0.32, 14, B((1254, 1636), 36, 84, -4))        # her right thigh
-    m.light_(LIGHT_SOFT, 0.30, 12, B((1372, 1640), 34, 86, 4))
-    m.light_(LIGHT_SOFT, 0.40, 10, B((1240, 1900), 26, 66, -3))        # her right shin
-    m.light_(LIGHT_SOFT, 0.26, 10, B((1392, 1900), 22, 62, 2))
-    m.light_(LIGHT_SOFT, 0.40, 8, B((1156, 1090), 20, 70, 14))         # her right arm
-    m.light_(LIGHT_SOFT, 0.40, 8, B((1164, 920), 18, 60, -30))
-    m.light_(LIGHT_SOFT, 0.26, 8, B((1420, 1110), 18, 66, -12))
-    m.light_(LIGHT_SOFT, 0.26, 8, B((1414, 944), 16, 56, 34))
-    m.light_(LIGHT_HOT, 0.30, 5, B((1226, 1792), 16, 11, 0))           # kneecaps
-    m.light_(LIGHT_HOT, 0.26, 5, B((1410, 1786), 15, 11, 0))
+    # ---------------- cast shadows and the places form meets form ----------
+    m.shade_(SHADOW_DEEP, 0.72, 5, B((1252, 1134), 42, 17, -10))      # chin on the neck
+    m.shade_(SHADOW_WARM, 0.58, 6, B((1298, 1168), 30, 20, 20))       # neck into the pit
+    m.shade_(SHADOW_DEEP, 0.52, 6, B((1216, 1208), 44, 16, -8))       # hair on the shoulder
+    m.shade_(SHADOW_WARM, 0.46, 7, B((1176, 1270), 26, 40, -12))
+    m.shade_(SHADOW_DEEP, 0.80, 4, B((1212, 1330), 40, 13, -16))      # under the breasts
+    m.shade_(SHADOW_DEEP, 0.74, 4, B((1324, 1318), 38, 12, 14))
+    m.shade_(SHADOW_WARM, 0.52, 5, B((1194, 1300), 15, 22, -24))      # their far sides
+    m.shade_(SHADOW_WARM, 0.60, 6, B((1186, 1236), 30, 22, 24))       # armpits
+    m.shade_(SHADOW_WARM, 0.60, 6, B((1382, 1240), 30, 22, -24))
+    m.shade_(SHADOW_WARM, 0.40, 7, B((1256, 1394), 46, 18, -4))       # the rib arch
+    m.shade_(SHADOW_WARM, 0.40, 7, B((1346, 1386), 40, 16, 6))
+    m.shade_(SHADOW_DEEP, 0.55, 3, B((1304, 1450), 8, 7, 0))          # the navel
+    m.shade_(SHADOW_WARM, 0.46, 7, B((1300, 1492), 70, 16, -3))       # under the belly
+    m.shade_(SHADOW_DEEP, 0.66, 8, B((1318, 1556), 46, 34, 0))        # the groin
+    m.shade_(SHADOW_WARM, 0.62, 9, B((1318, 1700), 30, 140, -2))      # between the thighs
+    m.shade_(SHADOW_WARM, 0.48, 6, B((1252, 1552), 24, 30, 16))       # the inguinal folds
+    m.shade_(SHADOW_WARM, 0.48, 6, B((1372, 1540), 24, 30, -16))
+    m.shade_(SHADOW_WARM, 0.52, 6, B((1234, 1846), 32, 20, 0))        # behind the knees
+    m.shade_(SHADOW_WARM, 0.52, 6, B((1404, 1838), 32, 20, 0))
+    m.shade_(SHADOW_WARM, 0.40, 5, B((1246, 1792), 22, 12, -8))       # above the kneecaps
+    m.shade_(SHADOW_WARM, 0.40, 5, B((1392, 1786), 22, 12, 8))
+    m.shade_(SHADOW_DEEP, 0.52, 5, B((1240, 2062), 40, 11, -6))       # under the feet
+    m.shade_(SHADOW_DEEP, 0.52, 5, B((1430, 2068), 42, 11, -6))
+    m.shade_(SHADOW_WARM, 0.46, 5, B((1258, 1004), 40, 16, -18))      # hair across the brow
+    m.shade_(SHADOW_WARM, 0.34, 6, B((1292, 1058), 20, 28, -14))      # the far cheek
 
-    # ---- reflected light: cool from the sky on her right edge,
-    #      warm off the lit water low down ----
-    m.shade_(SHADOW_WARM, 0.52, 7, B((1352, 1420), 26, 60, 6))         # the waist turning
-    m.shade_(SHADOW_WARM, 0.46, 6, B((1238, 1434), 20, 46, -6))
-    m.light_(LIGHT_SOFT, 0.30, 7, B((1300, 1332), 34, 40, 0))          # the ribs
-    m.glow_(REFLECT_C, 0.22, 7, L([(1416, 1270), (1428, 1400), (1424, 1500)], 14))
-    m.glow_(REFLECT_C, 0.20, 7, L([(1452, 1620), (1458, 1760), (1444, 1900)], 14))
-    m.glow_(REFLECT_W, 0.26, 9, L([(1392, 1960), (1410, 2030)], 18))
-    m.glow_(REFLECT_W, 0.22, 9, L([(1330, 1930), (1300, 1990)], 16))
-    m.glow_(REFLECT_W, 0.18, 10, L([(1346, 1560), (1360, 1680)], 16))
+    # ---------------- the light family ----------------
+    m.light_(LIGHT_HOT, 0.36, 5, B((1228, 992), 21, 11, -26))         # the forehead
+    m.light_(LIGHT_HOT, 0.28, 4, B((1222, 1040), 11, 8, -20))         # the cheekbone
+    m.light_(LIGHT_HOT, 0.24, 3, B((1240, 1056), 5, 7, -14))          # the bridge
+    m.light_(LIGHT_SOFT, 0.38, 5, B((1234, 1198), 36, 9, -5))         # the collarbone
+    m.light_(LIGHT_SOFT, 0.30, 5, B((1194, 1216), 22, 14, -22))       # the shoulder cap
+    m.light_(LIGHT_SOFT, 0.56, 6, B((1194, 1282), 23, 25, -24))       # the near breast
+    m.light_(LIGHT_SOFT, 0.26, 6, B((1304, 1270), 20, 21, 16))
+    m.light_(LIGHT_SOFT, 0.34, 8, B((1262, 1348), 40, 48, -5))        # the ribs in front
+    m.light_(LIGHT_SOFT, 0.30, 9, B((1278, 1464), 38, 34, -4))        # the belly
+    m.light_(LIGHT_SOFT, 0.26, 8, B((1242, 1524), 34, 24, -8))        # the hip plane
+    m.light_(LIGHT_SOFT, 0.34, 10, B((1250, 1640), 32, 80, -4))       # the near thigh
+    m.light_(LIGHT_SOFT, 0.22, 9, B((1366, 1630), 26, 76, 4))
+    m.light_(LIGHT_HOT, 0.30, 4, B((1232, 1800), 15, 10, 0))          # the kneecaps
+    m.light_(LIGHT_HOT, 0.24, 4, B((1406, 1792), 14, 10, 0))
+    m.light_(LIGHT_SOFT, 0.36, 7, B((1244, 1912), 20, 58, -3))        # the shin crests
+    m.light_(LIGHT_SOFT, 0.22, 7, B((1392, 1908), 17, 54, 2))
+    m.light_(LIGHT_SOFT, 0.34, 6, B((1156, 1096), 16, 62, 14))        # the near arm
+    m.light_(LIGHT_SOFT, 0.34, 6, B((1160, 930), 14, 52, -28))
+    m.light_(LIGHT_SOFT, 0.20, 6, B((1424, 1104), 14, 58, -12))
+    m.light_(LIGHT_SOFT, 0.20, 6, B((1410, 940), 13, 48, 32))
+    m.light_(LIGHT_HOT, 0.26, 4, B((1222, 800), 14, 14, 0))           # the hands
+    m.light_(LIGHT_HOT, 0.20, 4, B((1372, 826), 13, 13, 0))
+
+    # ---------------- reflected light ----------------
+    # cool off the sky down her shadow contour, warm off the lit rock low down
+    m.glow_(REFLECT_C, 0.26, 5, L([(1400, 1230), (1420, 1330), (1414, 1430)], 11))
+    m.glow_(REFLECT_C, 0.22, 5, L([(1452, 1620), (1460, 1740), (1450, 1860)], 11))
+    m.glow_(REFLECT_W, 0.30, 7, L([(1424, 1900), (1432, 2010)], 15))
+    m.glow_(REFLECT_W, 0.26, 7, L([(1352, 1930), (1322, 2000)], 14))
+    m.glow_(REFLECT_W, 0.20, 8, L([(1352, 1560), (1366, 1680)], 14))
+    m.glow_(REFLECT_C, 0.18, 5, L([(1452, 1020), (1468, 1110)], 10))
     return m
 
 
@@ -496,8 +572,7 @@ def perseus(W, H, rng):
     B = 0.055 / scene.S
 
     def T(pts, alb=sk, mat='skin', zk=0.86):
-        f.tube([(x * scene.S, y * scene.S, r * scene.S) for x, y, r in pts],
-               alb, mat, zk=zk, blendk=B)
+        f.tube(TP(pts), alb, mat, zk=zk, blendk=B)
 
     def ell(c, r, alb=sk, mat='skin', zk=1.0, **kw):
         return f.ellipsoid(P(*c), (sc(r[0]), sc(r[1]), sc(r[2])), alb, mat,
@@ -509,12 +584,13 @@ def perseus(W, H, rng):
     hl = local(P_HEAD_C, P_HEAD_ROT)
 
     # ---- legs, trailing back and up to the left ----
-    T([(730, 1208, 44), (678, 1202, 40), (626, 1192, 31), (580, 1184, 27),
-       (542, 1180, 20), (514, 1176, 14)], skc)                      # his right leg
-    T([(512, 1176, 15), (486, 1186, 13), (464, 1196, 9)], skw)      # foot
-    T([(732, 1238, 45), (682, 1256, 41), (634, 1278, 32), (598, 1298, 28),
-       (608, 1336, 24), (632, 1374, 19), (650, 1404, 13)], skc)     # his left, bent
-    T([(646, 1408, 14), (668, 1424, 12), (688, 1434, 9)], skw)
+    T([(734, 1206, 46), (686, 1200, 42), (640, 1192, 34), (596, 1184, 26),
+       (556, 1180, 20), (522, 1176, 15), (500, 1174, 11)], skc)     # his right leg
+    T([(500, 1174, 11), (476, 1184, 11), (452, 1194, 8)], skw)      # foot
+    T([(736, 1236, 47), (690, 1254, 43), (644, 1276, 34), (606, 1296, 27),
+       (610, 1330, 25), (628, 1366, 20), (648, 1400, 15), (660, 1422, 11)],
+      skc)                                                          # his left, bent
+    T([(660, 1422, 11), (682, 1436, 11), (702, 1446, 8)], skw)
 
     # ---- torso along the dive ----
     T([(846, 1068, 56), (810, 1104, 60), (776, 1142, 57), (744, 1180, 50),
@@ -522,7 +598,7 @@ def perseus(W, H, rng):
     sph((866, 1056), 34, sk, zk=0.7)                                # deltoids
     sph((826, 1126), 33, sk, zk=0.7)
     T([(852, 1058, 21), (868, 1046, 20), (880, 1036, 19)], skc)      # neck
-    ell(P_HEAD_C, P_HEAD_R, sk, rot=P_HEAD_ROT, zk=0.95)
+    ell(P_HEAD_C, P_HEAD_R, sk, rot=TR(P_HEAD_ROT), zk=0.95)
     sph(hl(0, 36), 12, skw, zk=0.45)                                # chin
     T([(hl(-20, 20)[0], hl(-20, 20)[1], 11), (hl(-2, 32)[0], hl(-2, 32)[1], 11),
        (hl(20, 18)[0], hl(20, 18)[1], 11)], sk, zk=0.22)            # jaw
@@ -544,7 +620,7 @@ def perseus(W, H, rng):
     f.smooth_z(1.4 * scene.S)
     skin = f.mask.copy()
 
-    face_alb, face_rel = face(W, H, P_HEAD_C, P_HEAD_R, P_HEAD_ROT, skin,
+    face_alb, face_rel = face(W, H, TX(*P_HEAD_C), P_HEAD_R, P_HEAD_ROT, skin, fs=XF[0],
                               dark=mix('ivory_black', 2.0, 'burnt_umber', 1.0),
                               lip=mix('light_red', 1.6, 'burnt_sienna', 1.0,
                                       'lead_white', 1.0),
@@ -558,15 +634,15 @@ def perseus(W, H, rng):
                       np.float32)
     hb = 0.08 / scene.S
     hair.ellipsoid(P(*hl(-2, -20)), (sc(38), sc(29), sc(32)), hcol, 'hair',
-                   rot=P_HEAD_ROT, blendk=hb, zk=0.75)
+                   rot=TR(P_HEAD_ROT), blendk=hb, zk=0.75)
     for pts in ([(872, 976, 16), (854, 976, 14), (838, 982, 10), (826, 990, 6)],
                 [(866, 1000, 13), (848, 1008, 10), (836, 1016, 6)]):
-        hair.tube([(x * scene.S, y * scene.S, r * scene.S) for x, y, r in pts],
-                  hcol, 'hair', zk=0.8, blendk=hb)
+        hair.tube(TP(pts), hcol, 'hair', zk=0.8, blendk=hb)
     hair.smooth_z(3.0 * scene.S)
-    ca, sa = np.cos(np.radians(P_HEAD_ROT)), np.sin(np.radians(P_HEAD_ROT))
+    ca, sa = np.cos(np.radians(TR(P_HEAD_ROT))), np.sin(np.radians(TR(P_HEAD_ROT)))
     X, Y, _, _ = grids(W, H)
-    du, dv = X - P_HEAD_C[0], Y - P_HEAD_C[1]
+    pcx, pcy = TX(*P_HEAD_C)
+    du, dv = (X - pcx) / XF[0], (Y - pcy) / XF[0]
     uu, vv = du * ca + dv * sa, -du * sa + dv * ca
     face_oval = (uu / 32.0) ** 2 + ((vv - 10) / 34.0) ** 2 < 1.0
     hair_mask = hair.mask & ~face_oval
@@ -574,15 +650,16 @@ def perseus(W, H, rng):
     # ---- the cloak, dragging up and to the left ----
     from scene import poly_mask
     cloak_poly = [
-        [(874, 1034), (818, 1010), (744, 1000), (664, 1008), (586, 996),
-         (512, 1004), (448, 1032), (404, 1076), (448, 1086), (512, 1062),
-         (586, 1054), (654, 1062), (716, 1080), (788, 1096), (848, 1086)],
-        [(846, 1082), (770, 1092), (692, 1108), (614, 1134), (544, 1172),
-         (490, 1216), (456, 1264), (506, 1266), (560, 1222), (628, 1182),
-         (702, 1152), (776, 1134), (836, 1120)],
-        [(826, 1096), (762, 1126), (700, 1168), (656, 1216), (692, 1222),
-         (746, 1178), (806, 1140)]]
-    cloak = poly_mask(W, H, cloak_poly, rng, jag=16, scale=120) & ~skin
+        [(884, 1012), (830, 974), (756, 948), (676, 940), (594, 948), (512, 970),
+         (436, 1008), (376, 1060), (338, 1124), (316, 1192), (362, 1206),
+         (398, 1136), (446, 1078), (510, 1036), (584, 1012), (664, 1004),
+         (744, 1012), (818, 1034), (872, 1060)],
+        [(856, 1064), (778, 1080), (698, 1106), (624, 1144), (558, 1192),
+         (504, 1248), (464, 1312), (436, 1382), (482, 1392), (514, 1320),
+         (562, 1256), (624, 1202), (698, 1160), (776, 1126), (844, 1104)],
+        [(372, 1092), (306, 1118), (252, 1158), (220, 1208), (256, 1222),
+         (298, 1176), (352, 1134)]]
+    cloak = poly_mask(W, H, TPoly(cloak_poly), rng, jag=16, scale=120) & ~skin
 
     # ---- harpe and shield ----
     gear = Form(H, W)
@@ -590,23 +667,20 @@ def perseus(W, H, rng):
     stl = np.asarray(STEEL, np.float32)
     brz = np.asarray(BRONZE, np.float32)
     # the hooked blade
-    gear.tube([(x * scene.S, y * scene.S, r * scene.S) for x, y, r in
-               [(1000, 884, 13), (1034, 842, 14), (1070, 798, 14), (1106, 754, 13),
-                (1140, 712, 11), (1168, 678, 8)]], stl, 'steel', zk=0.45, blendk=gb)
-    gear.tube([(x * scene.S, y * scene.S, r * scene.S) for x, y, r in
-               [(1086, 772, 11), (1124, 766, 12), (1158, 780, 10), (1178, 806, 7),
-                (1182, 834, 5)]], stl, 'steel', zk=0.45, blendk=gb)   # the hook
-    gear.tube([(x * scene.S, y * scene.S, r * scene.S) for x, y, r in
-               [(974, 906, 7), (992, 886, 8), (1006, 872, 7)]], brz, 'bronze',
+    gear.tube(TP([(1000, 884, 13), (1034, 842, 14), (1070, 798, 14), (1106, 754, 13),
+                  (1140, 712, 11), (1168, 678, 8)]), stl, 'steel', zk=0.45, blendk=gb)
+    gear.tube(TP([(1086, 772, 11), (1124, 766, 12), (1158, 780, 10), (1178, 806, 7),
+                  (1182, 834, 5)]), stl, 'steel', zk=0.45, blendk=gb)   # the hook
+    gear.tube(TP([(974, 906, 7), (992, 886, 8), (1006, 872, 7)]), brz, 'bronze',
               zk=0.6, blendk=gb)                                    # grip
     gear.capsule(P(962, 918), P(1012, 866), sc(13), sc(13), brz, 'bronze',
                  zk=0.35, blendk=gb)                                # guard
     gear.ellipsoid(P(988, 1192), (sc(62), sc(86), sc(27)),
                    np.asarray(tint(BRONZE, 0.80), np.float32), 'bronze',
-                   rot=-24, zk=1.0, blendk=gb)
+                   rot=TR(-24), zk=1.0, blendk=gb)
     gear.ellipsoid(P(988, 1192), (sc(50), sc(72), sc(22)),
                    np.asarray(tint(BRONZE, 0.95), np.float32), 'bronze',
-                   rot=-24, zk=0.9, blendk=gb, zoff=sc(5))
+                   rot=TR(-24), zk=0.9, blendk=gb, zoff=sc(5))
     gear.sphere(P(988, 1192), sc(13), np.asarray(tint(BRONZE, 1.3), np.float32),
                 'bronze', zk=1.0, blendk=gb, zoff=sc(16))
     gear.smooth_z(1.6 * scene.S)
@@ -634,35 +708,66 @@ def shade_perseus(W, H, rng, parts, key=0.80):
                    ao_radius=20 * scene.S, ao_k=0.95, normal_scale=1.0,
                    normal_smooth=2.2 * scene.S, sky_k=0.30,
                    rim=dict(d=(-0.62, -0.60, 0.50), c=tint(KEY_COL, 1.35), k=0.95, p=2.0),
-                   bump=parts['relief'] * 7.0 * scene.S, bump_k=1.0)
+                   bump=parts['relief'] * 7.0 * scene.S, bump_k=1.0,
+                   edge_turn=4.0 * scene.S * XF[0])
     return rgb
 
 
 def model_perseus(W, H):
+    """He is against the light.  Almost all of him is in shadow; the drawing
+    is done by the warm edge running along his back, shoulder and sword arm."""
     m = Mod(W, H)
     B = lambda c, rx, ry, rot=0: ('blob', c, rx, ry, rot)
     L = lambda pts, w: ('line', pts, w)
     PO = lambda pts: ('poly', pts)
-    # he is against the light: start by putting the whole figure down a key
-    m.shade_((0.70, 0.60, 0.60), 0.85, 3, B((760, 1200), 420, 300, 0))
-    # he is lit from behind: the whole front of him is in shadow
-    m.shade_(SHADOW_WARM, 0.78, 12, PO([
-        (870, 1040), (900, 1060), (880, 1100), (842, 1140), (800, 1180),
-        (766, 1216), (742, 1252), (700, 1258), (716, 1206), (748, 1160),
-        (786, 1120), (826, 1080)]))
-    m.shade_(SHADOW_DEEP, 0.40, 9, B((790, 1170), 44, 30, -40))
-    m.shade_(SHADOW_WARM, 0.60, 8, B((896, 1044), 30, 18, 20))      # chin on chest
-    m.shade_(SHADOW_WARM, 0.55, 9, B((940, 1180), 40, 30, -20))     # shield on arm
-    m.shade_(SHADOW_DEEP, 0.45, 9, B((726, 1232), 40, 26, -10))     # hip crease
-    m.light_(LIGHT_HOT, 0.42, 6, B((868, 982), 22, 14, 26))         # top of the head
-    m.light_(LIGHT_HOT, 0.52, 7, B((846, 1052), 30, 14, -40))       # shoulder
-    m.light_(LIGHT_SOFT, 0.44, 9, B((790, 1098), 34, 22, -42))      # back and flank
-    m.light_(LIGHT_SOFT, 0.40, 9, B((742, 1152), 30, 20, -42))
-    m.light_(LIGHT_SOFT, 0.38, 8, B((916, 992), 18, 30, 40))        # sword arm
-    m.light_(LIGHT_SOFT, 0.34, 8, B((648, 1196), 60, 16, 4))        # trailing leg
-    m.light_(LIGHT_SOFT, 0.30, 8, B((636, 1272), 56, 15, 14))
-    m.glow_(REFLECT_C, 0.26, 7, L([(876, 1082), (830, 1136), (780, 1186)], 12))
-    m.glow_(REFLECT_W, 0.20, 9, L([(740, 1226), (700, 1250)], 14))
+
+    # the whole figure comes down a key first
+    m.shade_((0.66, 0.56, 0.56), 0.88, 3, B((740, 1180), 460, 330, 0))
+    # then the front of him goes further down
+    m.shade_(SHADOW_WARM, 0.72, 7, PO([
+        (896, 1034), (918, 1070), (884, 1108), (840, 1148), (796, 1190),
+        (760, 1226), (736, 1262), (694, 1268), (704, 1216), (740, 1168),
+        (782, 1126), (826, 1082), (868, 1050)]))
+    m.shade_(SHADOW_DEEP, 0.44, 6, B((796, 1176), 40, 26, -42))
+    m.shade_(SHADOW_DEEP, 0.60, 5, B((900, 1046), 26, 15, 22))      # chin on the chest
+    m.shade_(SHADOW_WARM, 0.55, 7, B((944, 1180), 38, 28, -22))     # the shield's shadow
+    m.shade_(SHADOW_DEEP, 0.48, 7, B((726, 1236), 38, 24, -12))     # the hip crease
+    m.shade_(SHADOW_WARM, 0.46, 6, B((650, 1206), 56, 15, 3))       # under the trailing leg
+    m.shade_(SHADOW_WARM, 0.46, 6, B((640, 1292), 52, 14, 14))
+    m.shade_(SHADOW_WARM, 0.40, 5, B((612, 1332), 20, 26, 20))      # behind the bent knee
+
+    # the light that describes him: a warm edge along back, shoulder, arm
+    m.light_(LIGHT_HOT, 0.55, 4, L([(866, 974), (892, 992), (906, 1016)], 9))
+    m.light_(LIGHT_HOT, 0.62, 5, L([(852, 1040), (826, 1072), (800, 1100)], 12))
+    m.light_(LIGHT_SOFT, 0.50, 6, L([(800, 1098), (768, 1134), (740, 1172)], 13))
+    m.light_(LIGHT_SOFT, 0.44, 6, L([(740, 1172), (718, 1206), (710, 1238)], 12))
+    m.light_(LIGHT_HOT, 0.46, 4, L([(880, 1048), (912, 1008), (944, 968)], 10))
+    m.light_(LIGHT_HOT, 0.40, 4, L([(944, 968), (966, 936), (982, 906)], 9))
+    m.light_(LIGHT_SOFT, 0.38, 5, L([(718, 1200), (660, 1192), (600, 1184)], 11))
+    m.light_(LIGHT_SOFT, 0.32, 5, L([(560, 1182), (524, 1180), (496, 1178)], 9))
+    m.light_(LIGHT_SOFT, 0.34, 5, L([(726, 1250), (672, 1266), (618, 1286)], 11))
+    m.light_(LIGHT_SOFT, 0.28, 5, L([(600, 1300), (610, 1340), (634, 1382)], 9))
+    m.light_(LIGHT_HOT, 0.34, 4, B((870, 980), 18, 11, 24))         # the top of the head
+    m.light_(LIGHT_SOFT, 0.30, 5, B((790, 1116), 22, 15, -42))      # the back plane
+    m.light_(LIGHT_SOFT, 0.24, 5, B((756, 1158), 20, 14, -42))
+
+    # the trailing legs
+    m.shade_(SHADOW_WARM, 0.50, 6, PO([
+        (700, 1226), (650, 1222), (596, 1212), (548, 1204), (510, 1198),
+        (502, 1180), (548, 1188), (600, 1196), (652, 1206), (702, 1210)]))
+    m.shade_(SHADOW_WARM, 0.50, 6, PO([
+        (706, 1272), (658, 1290), (612, 1308), (592, 1340), (608, 1382),
+        (632, 1414), (612, 1418), (586, 1382), (572, 1336), (590, 1292),
+        (646, 1268), (700, 1250)]))
+    m.light_(LIGHT_SOFT, 0.34, 5, B((644, 1192), 58, 10, 2))
+    m.light_(LIGHT_SOFT, 0.26, 5, B((648, 1272), 54, 9, 12))
+    m.light_(LIGHT_SOFT, 0.22, 4, B((616, 1350), 9, 30, 10))
+    m.shade_(SHADOW_DEEP, 0.36, 4, B((520, 1196), 26, 8, 4))
+
+    # reflected: cool off the sky into his shadow side, warm off the water
+    m.glow_(REFLECT_C, 0.30, 6, L([(876, 1086), (832, 1138), (786, 1186)], 11))
+    m.glow_(REFLECT_W, 0.26, 7, L([(744, 1232), (702, 1256)], 13))
+    m.glow_(REFLECT_W, 0.20, 6, L([(640, 1300), (600, 1310)], 11))
     return m
 
 
@@ -687,8 +792,7 @@ def cetus(W, H, rng):
     B = 0.04 / scene.S
 
     def T(pts, alb=scl, mat='scale', zk=0.9):
-        f.tube([(x * scene.S, y * scene.S, r * scene.S) for x, y, r in pts],
-               alb, mat, zk=zk, blendk=B)
+        f.tube(TP(pts), alb, mat, zk=zk, blendk=B)
 
     # ---- the body: out of the water on the left, up into a rearing neck ----
     T([(150, 2430, 120), (300, 2372, 128), (450, 2300, 126), (560, 2214, 116),
@@ -707,7 +811,7 @@ def cetus(W, H, rng):
     T([(898, 1656, 42), (952, 1680, 36), (1010, 1700, 29), (1062, 1716, 21),
        (1098, 1726, 12)], sclL)                                  # lower jaw, dropped
     f.ellipsoid(P(982, 1626), (sc(78), sc(38), sc(18)),
-                np.asarray(MAW, np.float32), 'scale', rot=-18, zk=0.5, blendk=B)
+                np.asarray(MAW, np.float32), 'scale', rot=TR(-18), zk=0.5, blendk=B)
     f.sphere(P(884, 1596), sc(28), sclL, 'scale', zk=0.7, blendk=B)   # brow
     f.smooth_z(3.0 * scene.S)
     # horns and the dorsal comb, set on after the thumb so they stay sharp
@@ -763,5 +867,6 @@ def shade_cetus(W, H, rng, parts):
                    ao_radius=30 * scene.S, ao_k=1.0, normal_scale=1.0,
                    normal_smooth=2.6 * scene.S, sky_k=0.30,
                    rim=dict(d=KEY_DIR, c=tint(KEY_COL, 1.1), k=0.75, p=2.4),
-                   bump=scales * 3.5 * scene.S, bump_k=1.0)
+                   bump=scales * 3.5 * scene.S, bump_k=1.0,
+                   edge_turn=5.0 * scene.S * XF[0])
     return rgb

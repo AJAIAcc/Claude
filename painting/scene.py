@@ -116,19 +116,19 @@ def paint_sky(W, H, rng):
     sky *= (1 - 0.60 * storm)[..., None]
 
     layers = [
-        dict(scale=430, octv=4, thresh=0.44, soft=0.30, squash=1.9, tau_k=1.5, drift=22,
+        dict(scale=620, octv=3, thresh=0.46, soft=0.26, squash=1.9, tau_k=2.2, drift=26,
              cover=smoothstep(0.0, 0.52, 1 - t) * 0.55,
              dark=mix('ultramarine', 1.3, 'burnt_umber', 1.2, 'lead_white', 1.9),
              lite=mix('lead_white', 2.6, 'naples', 1.0),
              hot=mix('lead_white', 3.0, 'naples', 1.4)),
-        dict(scale=250, octv=4, thresh=0.455, soft=0.24, squash=1.55, tau_k=2.9, drift=30,
+        dict(scale=400, octv=3, thresh=0.48, soft=0.20, squash=1.55, tau_k=4.0, drift=34,
              cover=np.clip(smoothstep(-0.05, 0.72, 1 - t)
                            * (0.48 + 0.60 * smoothstep(0.05, 0.95, X / 2000)), 0, 1),
              dark=mix('ultramarine', 1.6, 'burnt_umber', 2.6, 'ivory_black', 0.5,
                       'lead_white', 0.85),
              lite=mix('lead_white', 2.2, 'naples', 1.5, 'light_red', 0.55),
              hot=mix('lead_white', 2.8, 'naples', 1.8, 'light_red', 0.6)),
-        dict(scale=150, octv=4, thresh=0.50, soft=0.19, squash=1.25, tau_k=3.6, drift=40,
+        dict(scale=235, octv=4, thresh=0.52, soft=0.16, squash=1.25, tau_k=5.0, drift=44,
              cover=np.clip(smoothstep(0.08, 0.60, 1 - t) * 0.42
                            + smoothstep(0.42, 1.0, X / 2000)
                            * smoothstep(-0.1, 0.72, 1 - t) * 0.72, 0, 1),
@@ -145,9 +145,9 @@ def paint_sky(W, H, rng):
     ang = np.arctan2(yy - SUN[1], xx - SUN[0])
     ray = fbm(H, W, 30 * S, rng, 3)
     ri = np.clip(np.sin(ang * 17 + ray * 7.0) * 0.5 + 0.5, 0, 1) ** 2.6
-    ri *= np.exp(-d_sun * 1.35) * smoothstep(0.03, 0.40, d_sun)
+    ri *= np.exp(-d_sun * 1.25) * smoothstep(0.03, 0.40, d_sun)
     sky += ri[..., None] * np.asarray(
-        mix('naples', 2.0, 'lead_white', 1.8), np.float32) * 0.22
+        mix('naples', 2.0, 'lead_white', 1.8), np.float32) * 0.34
 
     # rain squall trailing from the right-hand cloud mass
     sq = fbm(H, W, 60 * S, rng, 4)
@@ -195,6 +195,19 @@ def paint_sea(img, W, H, rng):
     glint = smoothstep(0.72, 0.99, crest) * road * (0.25 + 0.75 * (1 - v) ** 2)
     sea += glint[..., None] * np.asarray(mix('lead_white', 2.4, 'naples', 1.9), np.float32) * 1.05
 
+    # a swell breaking across the middle distance
+    bx = fbm(H, W, 320 * S, rng, 3)
+    for cy, amp, thick, bright in ((1700, 0.75, 30, 0.9), (1900, 0.5, 40, 0.7),
+                                   (2150, 0.35, 54, 0.5)):
+        line = cy + (bx - 0.5) * 150
+        band = np.exp(-((Y - line) / thick) ** 2)
+        crestm = band * smoothstep(0.46, 0.86, fbm(H, W, 110 * S, rng, 4)) * amp
+        sea = sea * (1 - 0.70 * crestm[..., None]) + np.asarray(
+            mix('lead_white', 2.3, 'naples', 1.0, 'cerulean', 0.5),
+            np.float32)[None, None, :] * 0.70 * crestm[..., None] * bright
+        trough = np.exp(-((Y - line - thick * 2.2) / (thick * 1.7)) ** 2) * amp
+        sea *= (1 - 0.22 * trough)[..., None]
+
     capn = fbm(H, W, 26 * S, rng, 5)
     caps = smoothstep(0.76, 0.88, capn * 0.42 + crest * 0.72) * smoothstep(0.012, 0.12, v)
     caps *= (0.40 + 0.60 * road) * smoothstep(0.75, 0.22, v)
@@ -232,14 +245,14 @@ def poly_mask(W, H, polys, rng, jag=70, scale=140, octv=5, feather=0.0):
     return m > 0.5
 
 
-CRAG = [[(2000, 180), (1860, 322), (1742, 470), (1648, 604), (1552, 700),
-         (1452, 816), (1386, 980), (1358, 1180), (1344, 1420), (1322, 1680),
-         (1312, 1920), (1382, 2180), (1300, 2600), (2000, 2600)],
-        [(1300, 848), (1452, 742), (1700, 706), (1912, 764), (1886, 980),
-         (1600, 1040), (1372, 1000)]]
-LEDGE = [[(760, 2420), (1000, 2250), (1210, 2124), (1500, 2082), (1820, 2098),
-          (2000, 2150), (2000, 2600), (560, 2600)]]
-FORE = [[(-40, 2330), (230, 2452), (430, 2570), (580, 2600), (-40, 2600)]]
+CRAG = [[(2000, 90), (1836, 186), (1664, 286), (1498, 372), (1366, 452),
+         (1276, 548), (1238, 660), (1252, 840), (1214, 1060), (1196, 1300),
+         (1178, 1560), (1168, 1850), (1226, 2130), (1150, 2600), (2000, 2600)],
+        [(1176, 598), (1330, 520), (1560, 498), (1760, 540), (1742, 712),
+         (1486, 760), (1250, 726)]]
+LEDGE = [[(560, 2600), (700, 2492), (900, 2420), (1140, 2372), (1420, 2348),
+          (1700, 2346), (2000, 2372), (2000, 2600)]]
+FORE = [[(-40, 2430), (180, 2520), (380, 2596), (470, 2600), (-40, 2600)]]
 
 
 def rock_masks(W, H, rng):
@@ -250,17 +263,36 @@ def rock_masks(W, H, rng):
     }
 
 
-def _rock_relief(W, H, rng, strike=0.38):
-    """broad masses, bedding planes, a few faults - not noise-porridge"""
+def _rock_relief(W, H, rng, strike=0.38, blocky=0.0):
+    """broad masses, bedding planes, cleavage, a few faults"""
     X, Y, xx, yy = grids(W, H)
     broad = fbm(H, W, 420 * S, rng, 3)
     med = fbm(H, W, 165 * S, rng, 3)
     grit = fbm(H, W, 22 * S, rng, 3)
     bed = np.sin((Y * 1.0 - X * strike) / 112.0 + (fbm(H, W, 300 * S, rng, 3) - 0.5) * 7.0)
     bed = (bed * 0.5 + 0.5) ** 1.6
-    fault = smoothstep(0.955, 0.985, fbm(H, W, 230 * S, rng, 5, ridged=True))
+    fault = smoothstep(0.978, 0.996, fbm(H, W, 230 * S, rng, 5, ridged=True))
     relief = broad * 1.0 + med * 0.42 + bed * 0.30 + grit * 0.07
-    return relief, bed, fault, grit
+    if blocky:
+        # cleavage: stone breaks along planes, so give it hard-edged facets
+        # cleavage planes: each facet is a plane, and the step between two
+        # facets is kept small - a big step reads as a crack, not a ridge
+        blk = np.zeros((H, W), np.float32)
+        for ang, w, amp, tilt in ((22, 210, 1.0, 0.55), (-64, 270, 0.75, 0.40),
+                                  (78, 150, 0.45, 0.30)):
+            a = np.radians(ang)
+            u = (X * np.cos(a) + Y * np.sin(a)) / w
+            u = u + (fbm(H, W, 260 * S, rng, 3) - 0.5) * 2.0
+            cell = np.floor(u)
+            frac = u - cell
+            step = ((cell * 37.0) % 7.0) / 7.0            # each facet its own height
+            blk += amp * (step * 0.55 + frac * tilt)
+        blk = blur(norm01(blk), 6.0 * S)
+        # facets belong in the *value*, not the height: a height step reads as
+        # a crack, a value step reads as a plane turning away from the light
+        relief = relief * (1 - blocky * 0.22) + blur(blk, 26 * S) * blocky * 0.30
+        return relief, bed, fault, grit, blk
+    return relief, bed, fault, grit, None
 
 
 def paint_rock(img, W, H, rng, masks=None, parts=('crag', 'ledge', 'fore')):
@@ -269,13 +301,13 @@ def paint_rock(img, W, H, rng, masks=None, parts=('crag', 'ledge', 'fore')):
     spec = {
         'crag': dict(base=mix('burnt_umber', 3.0, 'ultramarine', 0.7, 'ivory_black', 7.0,
                               'raw_sienna', 0.5, 'lead_white', 0.40), key=0.80, relief=215, rim=0.50,
-                     strike=0.40),
+                     strike=0.40, blocky=0.72),
         'ledge': dict(base=mix('burnt_umber', 2.0, 'raw_umber', 0.8, 'ivory_black', 6.0,
                                'raw_sienna', 0.3, 'lead_white', 0.34), key=0.68, relief=130, rim=0.30,
-                      strike=0.10),
+                      strike=0.10, blocky=0.60),
         'fore': dict(base=mix('vandyke', 1.6, 'ivory_black', 7.0, 'ultramarine', 0.4,
                               'lead_white', 0.12), key=0.38, relief=90, rim=0.12,
-                     strike=0.60),
+                     strike=0.60, blocky=0.55),
     }
     for which in parts:
         p = spec[which]
@@ -283,18 +315,22 @@ def paint_rock(img, W, H, rng, masks=None, parts=('crag', 'ledge', 'fore')):
         if not m.any():
             continue
         f = Form(H, W)
-        relief, bed, fault, grit = _rock_relief(W, H, rng, p['strike'])
+        relief, bed, fault, grit, blk = _rock_relief(W, H, rng, p['strike'],
+                                                     p.get('blocky', 0.0))
+        tone = 0.46 * norm01(relief) + 0.22 * bed + 0.12 * grit
+        if blk is not None:
+            tone = tone + 0.42 * blk
         alb = (np.asarray(p['base'], np.float32)[None, None, :]
-               * (0.40 + 1.05 * (0.54 * norm01(relief) + 0.30 * bed + 0.16 * grit))[..., None])
-        alb *= (1 - 0.55 * fault)[..., None]
+               * (0.38 + 1.08 * tone)[..., None])
+        alb *= (1 - 0.30 * fault)[..., None]
         f.slab(m, 430 * S, alb, 'rock', soft=52 * S, power=0.34)
         if which == 'crag':
             X, Y, _, _ = grids(W, H)
-            shaft = np.exp(-(((X - 1530) / 290.) ** 2 + ((Y - 1180) / 540.) ** 2))
-            shaft += 0.8 * np.exp(-(((X - 1700) / 320.) ** 2 + ((Y - 760) / 380.) ** 2))
-            shaft += 0.5 * np.exp(-(((X - 1620) / 260.) ** 2 + ((Y - 1820) / 420.) ** 2))
+            shaft = np.exp(-(((X - 1480) / 310.) ** 2 + ((Y - 1060) / 580.) ** 2))
+            shaft += 0.8 * np.exp(-(((X - 1700) / 330.) ** 2 + ((Y - 520) / 360.) ** 2))
+            shaft += 0.6 * np.exp(-(((X - 1560) / 280.) ** 2 + ((Y - 1840) / 460.) ** 2))
             alb = alb * (1 + 0.95 * shaft)[..., None]
-        f.z += blur(relief - fault * 0.9, 4.0 * S) * p['relief'] * S * m
+        f.z += blur(relief - fault * 0.45, 4.0 * S) * p['relief'] * S * m
         rgb, _ = shade(f, studio(key=p['key'], fill=0.20, bounce=0.19),
                        ao_radius=30 * S, ao_k=0.88, normal_scale=1.30,
                        normal_smooth=4.0 * S, sky_k=0.17,

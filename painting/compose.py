@@ -22,8 +22,27 @@ def over(img, rgb, m, soft=0.9):
     return img * (1 - a) + np.clip(rgb, 0, 1) * a
 
 
+# (scale, dx, dy, rotation, pivot)
+XF_A = (1.34, -102, 0, 0, 1000, 1300)        # Andromeda: 57% of the canvas height
+XF_P = (1.38, -360, 110, 0, 800, 1150)       # Perseus, swooping in from the left
+XF_C = (1.25, -157, 178, -20, 900, 1700)     # Cetus, jaws swung up toward him
+
+
 def P(x, y):
     return (x * scene.S, y * scene.S)
+
+
+def PA(x, y):
+    """a point in Andromeda's design frame, in canvas pixels"""
+    sx, dx, dy, rot, px, py = XF_A
+    u, v = x - px, y - py
+    ca, sa = np.cos(np.radians(rot)), np.sin(np.radians(rot))
+    u, v = u * ca - v * sa, u * sa + v * ca
+    return ((px + u * sx + dx) * scene.S, (py + v * sx + dy) * scene.S)
+
+
+def scA(v):
+    return v * XF_A[0] * scene.S
 
 
 def sc(v):
@@ -35,7 +54,8 @@ def chains(W, H, rng):
     """iron links from her shackled wrists up to the rock"""
     f = Form(H, W)
     iron = np.asarray(figures.IRON, np.float32)
-    b = 0.3 / scene.S
+    b = 0.3 / (scene.S * XF_A[0])
+    P, sc = PA, scA
     runs = [((1236, 772), (1356, 720), 7), ((1346, 798), (1430, 764), 7)]
     for (x0, y0), (x1, y1), r in runs:
         n = 9
@@ -92,22 +112,18 @@ def build(W, H, rng, stage='all'):
     parts = {}
 
     # ---- the monster, in the water ----
-    CDX, CDY = -90, -110
+    figures.XF = XF_C
     cet = figures.cetus(W, H, rng)
-    cet_rgb, cet_mask = shift_layer(figures.shade_cetus(W, H, rng, cet),
-                                    cet['mask'], CDX, CDY)
-    img = over(img, cet_rgb, cet_mask, 1.0)
+    img = over(img, figures.shade_cetus(W, H, rng, cet), cet['mask'], 1.0)
     for frm, mk in (('teeth', 'teeth_mask'), ('eye', 'eye_mask')):
         rgb, _ = shade(cet[frm], studio(key=1.15, fill=0.42, bounce=0.2),
                        ao_radius=8 * S, normal_scale=1.0, normal_smooth=1.2 * S,
                        sky_k=0.45)
-        rgb, mm = shift_layer(rgb, cet[mk], CDX, CDY)
-        img = over(img, rgb, mm, 0.6)
-    cet['mask'] = cet_mask
-    parts['cetus'] = cet_mask
+        img = over(img, rgb, cet[mk], 0.6)
+    parts['cetus'] = cet['mask']
 
     # water line: the monster is cut off by the surface
-    sea_line = 2210 - 130 * np.sin(X / 420.0)
+    sea_line = 2330 - 150 * np.sin(X / 420.0)
     sunk = (Y > sea_line + (fbm(H, W, 70 * S, rng, 4) - 0.5) * 190)
     deep = np.asarray(mix('viridian', 1.0, 'burnt_umber', 1.6, 'ivory_black', 2.6), np.float32)
     a = (sunk & cet['mask']).astype(np.float32)
@@ -121,10 +137,10 @@ def build(W, H, rng, stage='all'):
     rock_edge = blur((rm['ledge'] | rm['crag'] | rm['fore']).astype(np.float32), 9 * S)
     edge_band = np.clip(rock_edge * (1 - rock_edge) * 4.0, 0, 1)
     wake = blur((cet['mask'] & sunk).astype(np.float32), 16 * S)
-    where = np.clip(edge_band * smoothstep(1860, 2180, Y) * 1.15
-                    + wake * 1.35 * smoothstep(2020, 2240, Y)
+    where = np.clip(edge_band * smoothstep(2060, 2380, Y) * 1.15
+                    + wake * 1.4 * smoothstep(2120, 2360, Y)
                     + smoothstep(0.62, 0.97, fbm(H, W, 190 * S, rng, 4))
-                    * smoothstep(2180, 2560, Y) * 0.45, 0, 1)
+                    * smoothstep(2280, 2600, Y) * 0.45, 0, 1)
     where *= ~(rm['crag'] | rm['fore'])
     fc, fa = foam(W, H, rng, where, v)
     img = img * (1 - fa[..., None] * 0.92) + fc * fa[..., None] * 0.92
@@ -132,6 +148,7 @@ def build(W, H, rng, stage='all'):
     img, _ = scene.paint_rock(img, W, H, rng, rm, parts=('fore',))
 
     # ---- Andromeda ----
+    figures.XF = XF_A
     an = figures.andromeda(W, H, rng)
     # her shadow thrown back onto the rock
     shsil = blur(an['skin'].astype(np.float32), 3 * S)
@@ -143,14 +160,14 @@ def build(W, H, rng, stage='all'):
     fi = Image.new('L', (W, H), 0)
     fd = ImageDraw.Draw(fi)
     for cx, cy, rx, ry in ((1226, 2086, 72, 20), (1432, 2090, 76, 20)):
-        fd.ellipse([P(cx - rx, cy - ry)[0], P(cx - rx, cy - ry)[1],
-                    P(cx + rx, cy + ry)[0], P(cx + rx, cy + ry)[1]], fill=255)
+        fd.ellipse([PA(cx - rx, cy - ry)[0], PA(cx - rx, cy - ry)[1],
+                    PA(cx + rx, cy + ry)[0], PA(cx + rx, cy + ry)[1]], fill=255)
     foot = blur(np.asarray(fi, np.float32) / 255.0, 9 * S) * 0.75
     img = img * (1 - foot[..., None]) + img * np.array([0.30, 0.22, 0.24], np.float32)[None, None, :] * foot[..., None]
 
     ch_rgb, ch_mask = chains(W, H, rng)
     cloth_rgb = figures.drapery(W, H, rng, an['cloth'], figures.LINEN_W,
-                                fold_dir=(0.46, 1.0), fold_scale=30, thick=40, key=0.92)
+                                fold_dir=(0.40, 1.0), fold_scale=22, thick=22, key=0.84)
     an_rgb = figures.shade_andromeda(W, H, rng, an)[0]
     an_rgb = figures.model_andromeda(W, H).apply(an_rgb, an['skin'])
     img = over(img, an_rgb, an['skin'], 0.8)
@@ -161,24 +178,20 @@ def build(W, H, rng, stage='all'):
     parts['an'] = an
 
     # ---- Perseus ----
-    PDX, PDY = -40, -260
+    figures.XF = XF_P
     pe = figures.perseus(W, H, rng)
     cloak_rgb = figures.drapery(W, H, rng, pe['cloak'], figures.CLOAK,
-                                fold_dir=(1.0, 0.38), fold_scale=24, thick=34,
-                                key=1.0, mat='wool')
-    lay = []
-    lay.append(shift_layer(cloak_rgb, pe['cloak'], PDX, PDY))
+                                fold_dir=(1.0, 0.38), fold_scale=30, thick=30,
+                                key=0.72, mat='wool')
+    img = over(img, cloak_rgb, pe['cloak'], 0.9)
     pe_rgb = figures.shade_perseus(W, H, rng, pe)
     pe_rgb = figures.model_perseus(W, H).apply(pe_rgb, pe['skin'])
-    lay.append(shift_layer(pe_rgb, pe['skin'], PDX, PDY))
-    lay.append(shift_layer(figures.shade_hair(W, H, rng, pe), pe['hair_mask'], PDX, PDY))
+    img = over(img, pe_rgb, pe['skin'], 0.8)
+    img = over(img, figures.shade_hair(W, H, rng, pe), pe['hair_mask'], 0.8)
     g_rgb, _ = shade(pe['gear'], studio(key=1.35, fill=0.45, bounce=0.2),
                      ao_radius=8 * S, normal_scale=1.0, normal_smooth=1.2 * S,
                      sky_k=0.55, rim=dict(d=KEY_DIR, c=(1.0, 0.95, 0.85), k=1.0, p=2.0))
-    lay.append(shift_layer(g_rgb, pe['gear_mask'], PDX, PDY))
-    for i, (r_, m_) in enumerate(lay):
-        img = over(img, r_, m_, 0.9 if i == 0 else 0.8)
-    pe['cloak'], pe['skin'], pe['hair_mask'], pe['gear_mask'] = [m for _, m in lay]
+    img = over(img, g_rgb, pe['gear_mask'], 0.6)
     parts['perseus'] = pe['skin'] | pe['hair_mask'] | pe['cloak'] | pe['gear_mask']
     parts['pe'] = pe
     parts['rocks'] = rm

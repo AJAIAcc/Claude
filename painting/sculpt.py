@@ -195,7 +195,7 @@ def light(dirv, col, k, kind='key'):
 
 def shade(form, lights, *, ao_radius=24.0, ao_k=0.85, normal_scale=1.0,
           normal_smooth=1.6, sky=(0.42, 0.55, 0.80), sky_k=0.22,
-          rim=None, bump=None, bump_k=0.0):
+          rim=None, bump=None, bump_k=0.0, edge_turn=0.0):
     """light the modelled forms"""
     h, w = form.h, form.w
     nx, ny, nz = form.normals(normal_smooth, normal_scale)
@@ -254,6 +254,15 @@ def shade(form, lights, *, ao_radius=24.0, ao_k=0.85, normal_scale=1.0,
     # hemispheric sky light from straight above (y is down)
     hemi = np.clip(0.5 - ny * 0.5, 0, 1) ** 1.1
     out += alb * (hemi * sky_k * (0.25 + 0.75 * ao))[..., None] * np.asarray(sky, np.float32)[None, None, :]
+
+    if edge_turn > 0:
+        # At the silhouette the surface is edge-on to us: it has turned away
+        # from the light as well, so the extreme contour darkens.  Without
+        # this every figure wears a halo.
+        d = ndimage.distance_transform_edt(form.mask).astype(np.float32)
+        turn = np.clip(d / max(1e-6, edge_turn), 0, 1)
+        turn = turn * turn * (3 - 2 * turn)
+        out *= (0.34 + 0.66 * turn)[..., None]
 
     if rim is not None:
         rx, ry, rz = np.asarray(rim['d'], np.float64)

@@ -171,6 +171,19 @@ class Canvas:
         self.hgt += (np.asarray(self._hl).astype(np.float32) / 255.0) * load
         self._lay = None
 
+    def preview(self):
+        """the canvas as it stands, including the pass still being laid in"""
+        if self._lay is None:
+            return self.rgb
+        lay = np.asarray(self._lay).astype(np.float32) / 255.0
+        a = lay[..., 3:4]
+        return np.clip(self.rgb * (1 - a) + lay[..., :3] * a, 0, 1)
+
+    def preview_height(self):
+        if self._lay is None:
+            return self.hgt
+        return self.hgt + np.asarray(self._hl).astype(np.float32) / 255.0
+
     def stroke(self, pts, color, width, *, alpha=255, bristles=None, spread=0.92,
                load=1.0, streak=0.16, taper=True, rng=None):
         """one loaded bristle brush dragged along `pts`"""
@@ -237,7 +250,8 @@ def blend_dir(dx, dy, dx2, dy2, w):
 def paint_region(cv, target, dirx, diry, mask, size, *, rng, alpha=255, density=0.52,
                  length=2.4, wander=0.22, value_jitter=0.055, warm_jitter=0.035,
                  load=1.0, blur_target=None, width_var=(0.68, 1.30), segments=3,
-                 detail=None, p_broken=0.04, broken_colors=None, spread=0.92):
+                 detail=None, p_broken=0.04, broken_colors=None, spread=0.92,
+                 progress=None, progress_every=400):
     """one pass of brushwork over the region `mask`"""
     h, w = cv.h, cv.w
     tb = blur3(target, size * 0.34 if blur_target is None else blur_target)
@@ -255,7 +269,9 @@ def paint_region(cv, target, dirx, diry, mask, size, *, rng, alpha=255, density=
     pts = pts[keep]
     order = rng.permutation(len(pts))
     warm = np.array([0.055, 0.004, -0.050])
-    for idx in order:
+    for n_done, idx in enumerate(order):
+        if progress is not None and n_done and n_done % progress_every == 0:
+            progress(cv)
         x0, y0 = pts[idx]
         seq = [(x0, y0)]
         cx, cy = x0, y0
