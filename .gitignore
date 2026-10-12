@@ -8,3 +8,9 @@ out/syncheck.png
 out/jaw.png
 out/chorus.png
 out/stills/
+
+# droidforge signing key: release-key.pem is a private key. Committing it here
+# would publish it. Copy keystore/ back from the toolchain zip before building.
+droidforge/keystore/
+__pycache__/
+*.pyc

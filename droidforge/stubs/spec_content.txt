@@ -1,0 +1,1560 @@
+//// android/content/Context.java
+package android.content;
+import android.content.res.Resources;
+public abstract class Context {
+    public static final int MODE_PRIVATE = 0;
+    public static final String VIBRATOR_SERVICE = "vibrator";
+    public static final String CLIPBOARD_SERVICE = "clipboard";
+    public static final String INPUT_METHOD_SERVICE = "input_method";
+    public static final String AUDIO_SERVICE = "audio";
+    public static final String CONNECTIVITY_SERVICE = "connectivity";
+    public static final String ACCESSIBILITY_SERVICE = "accessibility";
+    public static final String DEVICE_POLICY_SERVICE = "device_policy";
+    public static final String KEYGUARD_SERVICE = "keyguard";
+    public static final String NOTIFICATION_SERVICE = "notification";
+    public static final String JOB_SCHEDULER_SERVICE = "jobscheduler";
+    public Context() STUB
+    public abstract Resources getResources();
+    public abstract SharedPreferences getSharedPreferences(String name, int mode);
+    public abstract Object getSystemService(String name);
+    public abstract String getPackageName();
+    public abstract Context getApplicationContext();
+    public abstract void startActivity(Intent intent);
+    public abstract java.io.File getFilesDir();
+    public abstract java.io.File getCacheDir();
+    public final String getString(int resId) STUB
+    public abstract android.content.pm.PackageManager getPackageManager();
+    public abstract ContentResolver getContentResolver();
+    public abstract int checkSelfPermission(String permission);
+    public abstract Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter);
+    public abstract void unregisterReceiver(BroadcastReceiver receiver);
+    public abstract void sendBroadcast(Intent intent);
+    public abstract android.content.ComponentName startService(Intent service);
+    public abstract boolean stopService(Intent service);
+}
+//// android/content/ContextWrapper.java
+package android.content;
+import android.content.res.Resources;
+public class ContextWrapper extends Context {
+    public ContextWrapper(Context base) STUB
+    public Resources getResources() STUB
+    public SharedPreferences getSharedPreferences(String name, int mode) STUB
+    public Object getSystemService(String name) STUB
+    public String getPackageName() STUB
+    public Context getApplicationContext() STUB
+    public void startActivity(Intent intent) STUB
+    public java.io.File getFilesDir() STUB
+    public java.io.File getCacheDir() STUB
+    public android.content.pm.PackageManager getPackageManager() STUB
+    public ContentResolver getContentResolver() STUB
+    public int checkSelfPermission(String permission) STUB
+    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter) STUB
+    public void unregisterReceiver(BroadcastReceiver receiver) STUB
+    public void sendBroadcast(Intent intent) STUB
+    public android.content.ComponentName startService(Intent service) STUB
+    public boolean stopService(Intent service) STUB
+}
+//// android/view/ContextThemeWrapper.java
+package android.view;
+public class ContextThemeWrapper extends android.content.ContextWrapper {
+    public ContextThemeWrapper() { super(null); throw new RuntimeException("Stub!"); }
+    public void setTheme(int resid) STUB
+}
+//// android/app/Activity.java
+package android.app;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+public class Activity extends android.view.ContextThemeWrapper {
+    public static final int RESULT_OK = -1;
+    public static final int RESULT_CANCELED = 0;
+    public Activity() STUB
+    protected void onCreate(Bundle savedInstanceState) STUB
+    protected void onStart() STUB
+    protected void onRestart() STUB
+    protected void onResume() STUB
+    protected void onPause() STUB
+    protected void onStop() STUB
+    protected void onDestroy() STUB
+    protected void onSaveInstanceState(Bundle outState) STUB
+    protected void onRestoreInstanceState(Bundle savedInstanceState) STUB
+    public void onBackPressed() STUB
+    public void onWindowFocusChanged(boolean hasFocus) STUB
+    public void setContentView(View view) STUB
+    public void setContentView(int layoutResID) STUB
+    public void setContentView(View view, ViewGroup.LayoutParams params) STUB
+    public <T extends View> T findViewById(int id) STUB
+    public Window getWindow() STUB
+    public void setTitle(CharSequence title) STUB
+    public void finish() STUB
+    public boolean isFinishing() STUB
+    public void recreate() STUB
+    public Intent getIntent() STUB
+    public void startActivity(Intent intent) STUB
+    public void startActivityForResult(Intent intent, int requestCode) STUB
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) STUB
+    public final void requestPermissions(String[] permissions, int requestCode) STUB
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                          int[] grantResults) STUB
+    public boolean shouldShowRequestPermissionRationale(String permission) STUB
+    public final void runOnUiThread(Runnable action) STUB
+    public final boolean requestWindowFeature(int featureId) STUB
+    public void setRequestedOrientation(int requestedOrientation) STUB
+}
+//// android/app/Dialog.java
+package android.app;
+public class Dialog implements android.content.DialogInterface {
+    public Dialog(android.content.Context context) STUB
+    public void show() STUB
+    public void dismiss() STUB
+    public void cancel() STUB
+    public boolean isShowing() STUB
+    public void setCancelable(boolean flag) STUB
+    public void setTitle(CharSequence title) STUB
+}
+//// android/app/AlertDialog.java
+package android.app;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.view.View;
+public class AlertDialog extends Dialog {
+    public static final int THEME_DEVICE_DEFAULT_DARK = 4;
+    public static final int THEME_DEVICE_DEFAULT_LIGHT = 5;
+    protected AlertDialog(Context context) { super(context); throw new RuntimeException("Stub!"); }
+    public void setMessage(CharSequence message) STUB
+    public static class Builder {
+        public Builder(Context context) STUB
+        public Builder(Context context, int themeResId) STUB
+        public Builder setTitle(CharSequence title) STUB
+        public Builder setMessage(CharSequence message) STUB
+        public Builder setPositiveButton(CharSequence text, DialogInterface.OnClickListener listener) STUB
+        public Builder setNegativeButton(CharSequence text, DialogInterface.OnClickListener listener) STUB
+        public Builder setNeutralButton(CharSequence text, DialogInterface.OnClickListener listener) STUB
+        public Builder setItems(CharSequence[] items, DialogInterface.OnClickListener listener) STUB
+        public Builder setView(View view) STUB
+        public Builder setCancelable(boolean cancelable) STUB
+        public AlertDialog create() STUB
+        public AlertDialog show() STUB
+    }
+}
+//// android/content/DialogInterface.java
+package android.content;
+public interface DialogInterface {
+    int BUTTON_POSITIVE = -1;
+    int BUTTON_NEGATIVE = -2;
+    int BUTTON_NEUTRAL = -3;
+    void cancel();
+    void dismiss();
+    interface OnClickListener { void onClick(DialogInterface dialog, int which); }
+}
+//// android/content/Intent.java
+package android.content;
+public class Intent {
+    public static final String ACTION_MAIN = "android.intent.action.MAIN";
+    public static final String ACTION_VIEW = "android.intent.action.VIEW";
+    public static final String ACTION_PACKAGE_ADDED = "android.intent.action.PACKAGE_ADDED";
+    public static final String ACTION_PACKAGE_REPLACED = "android.intent.action.PACKAGE_REPLACED";
+    public static final String ACTION_PACKAGE_REMOVED = "android.intent.action.PACKAGE_REMOVED";
+    public static final String ACTION_PACKAGE_FULLY_REMOVED = "android.intent.action.PACKAGE_FULLY_REMOVED";
+    public static final String ACTION_BOOT_COMPLETED = "android.intent.action.BOOT_COMPLETED";
+    public static final String EXTRA_REPLACING = "android.intent.extra.REPLACING";
+    public static final String ACTION_SEND = "android.intent.action.SEND";
+    public static final String ACTION_SENDTO = "android.intent.action.SENDTO";
+    public static final String ACTION_OPEN_DOCUMENT = "android.intent.action.OPEN_DOCUMENT";
+    public static final String ACTION_CREATE_DOCUMENT = "android.intent.action.CREATE_DOCUMENT";
+    public static final String EXTRA_TITLE = "android.intent.extra.TITLE";
+    public static final String ACTION_GET_CONTENT = "android.intent.action.GET_CONTENT";
+    public static final String CATEGORY_OPENABLE = "android.intent.category.OPENABLE";
+    public static final String ACTION_DIAL = "android.intent.action.DIAL";
+    public static final String EXTRA_TEXT = "android.intent.extra.TEXT";
+    public static final String EXTRA_SUBJECT = "android.intent.extra.SUBJECT";
+    public static final String CATEGORY_LAUNCHER = "android.intent.category.LAUNCHER";
+    public static final int FLAG_ACTIVITY_NEW_TASK = 0x10000000;
+    public static final int FLAG_GRANT_READ_URI_PERMISSION = 0x00000001;
+    public static final String EXTRA_MIME_TYPES = "android.intent.extra.MIME_TYPES";
+    public static final int FLAG_ACTIVITY_CLEAR_TOP = 0x04000000;
+    public Intent() STUB
+    public Intent(String action) STUB
+    public Intent(String action, android.net.Uri uri) STUB
+    public Intent(Context packageContext, Class<?> cls) STUB
+    public static Intent createChooser(Intent target, CharSequence title) STUB
+    public Intent putExtra(String name, String value) STUB
+    public Intent putExtra(String name, int value) STUB
+    public Intent putExtra(String name, long value) STUB
+    public Intent putExtra(String name, boolean value) STUB
+    public Intent putExtra(String name, double value) STUB
+    public String getStringExtra(String name) STUB
+    public int getIntExtra(String name, int defaultValue) STUB
+    public long getLongExtra(String name, long defaultValue) STUB
+    public boolean getBooleanExtra(String name, boolean defaultValue) STUB
+    public double getDoubleExtra(String name, double defaultValue) STUB
+    public boolean hasExtra(String name) STUB
+    public Intent setAction(String action) STUB
+    public String getAction() STUB
+    public Intent setType(String type) STUB
+    public Intent addCategory(String category) STUB
+    public android.net.Uri getData() STUB
+    public Intent setData(android.net.Uri data) STUB
+    public Intent setDataAndType(android.net.Uri data, String type) STUB
+    public Intent putExtra(String name, String[] value) STUB
+    public Intent addFlags(int flags) STUB
+    public Intent setFlags(int flags) STUB
+}
+//// android/content/SharedPreferences.java
+package android.content;
+public interface SharedPreferences {
+    String getString(String key, String defValue);
+    int getInt(String key, int defValue);
+    long getLong(String key, long defValue);
+    float getFloat(String key, float defValue);
+    boolean getBoolean(String key, boolean defValue);
+    boolean contains(String key);
+    Editor edit();
+    interface Editor {
+        Editor putString(String key, String value);
+        Editor putInt(String key, int value);
+        Editor putLong(String key, long value);
+        Editor putFloat(String key, float value);
+        Editor putBoolean(String key, boolean value);
+        Editor remove(String key);
+        Editor clear();
+        boolean commit();
+        void apply();
+    }
+}
+//// android/content/res/Resources.java
+package android.content.res;
+public class Resources {
+    public Resources(AssetManager assets, android.util.DisplayMetrics metrics, Configuration config) STUB
+    public android.util.DisplayMetrics getDisplayMetrics() STUB
+    public Configuration getConfiguration() STUB
+    public String getString(int id) STUB
+}
+//// android/content/res/AssetManager.java
+package android.content.res;
+public final class AssetManager {
+    AssetManager() STUB
+    public final java.io.InputStream open(String fileName) throws java.io.IOException STUB
+    public final String[] list(String path) throws java.io.IOException STUB
+}
+//// android/content/res/Configuration.java
+package android.content.res;
+public final class Configuration {
+    public static final int ORIENTATION_PORTRAIT = 1;
+    public static final int ORIENTATION_LANDSCAPE = 2;
+    public static final int UI_MODE_NIGHT_MASK = 0x30;
+    public static final int UI_MODE_NIGHT_NO = 0x10;
+    public static final int UI_MODE_NIGHT_YES = 0x20;
+    public int orientation;
+    public int uiMode;
+    public int screenWidthDp;
+    public int screenHeightDp;
+    public Configuration() STUB
+}
+//// android/net/Uri.java
+package android.net;
+public abstract class Uri {
+    Uri() STUB
+    public static Uri parse(String uriString) STUB
+    public abstract String getScheme();
+    public abstract String getSchemeSpecificPart();
+    public abstract String getEncodedSchemeSpecificPart();
+    public abstract String getHost();
+    public abstract String getPath();
+}
+//// android/os/Bundle.java
+package android.os;
+public final class Bundle {
+    public Bundle() STUB
+    public boolean containsKey(String key) STUB
+    public void putString(String key, String value) STUB
+    public String getString(String key) STUB
+    public String getString(String key, String defaultValue) STUB
+    public void putInt(String key, int value) STUB
+    public int getInt(String key) STUB
+    public int getInt(String key, int defaultValue) STUB
+    public void putLong(String key, long value) STUB
+    public long getLong(String key) STUB
+    public long getLong(String key, long defaultValue) STUB
+    public void putBoolean(String key, boolean value) STUB
+    public boolean getBoolean(String key) STUB
+    public boolean getBoolean(String key, boolean defaultValue) STUB
+    public void putDouble(String key, double value) STUB
+    public double getDouble(String key) STUB
+    public void putIntArray(String key, int[] value) STUB
+    public int[] getIntArray(String key) STUB
+}
+//// android/os/Handler.java
+package android.os;
+public class Handler {
+    @Deprecated public Handler() STUB
+    public Handler(Looper looper) STUB
+    public final boolean post(Runnable r) STUB
+    public final boolean postDelayed(Runnable r, long delayMillis) STUB
+    public final void removeCallbacks(Runnable r) STUB
+    public final void removeCallbacksAndMessages(Object token) STUB
+}
+//// android/os/Looper.java
+package android.os;
+public final class Looper {
+    Looper() STUB
+    public static Looper getMainLooper() STUB
+    public static Looper myLooper() STUB
+}
+//// android/os/SystemClock.java
+package android.os;
+public final class SystemClock {
+    SystemClock() STUB
+    public static long uptimeMillis() STUB
+    public static long elapsedRealtime() STUB
+    public static void sleep(long ms) STUB
+}
+//// android/os/Build.java
+package android.os;
+public class Build {
+    public static final String MODEL = stub();
+    public static final String MANUFACTURER = stub();
+    public static final String BRAND = stub();
+    public static final String TAGS = stub();
+    public static final String FINGERPRINT = stub();
+    public static final String DEVICE = stub();
+    public Build() STUB
+    private static String stub() { return null; }
+    public static class VERSION {
+        public static final int SDK_INT = sdk();
+        public static final String RELEASE = rel();
+        public static final String SECURITY_PATCH = rel();
+        public VERSION() STUB
+        private static int sdk() { return 0; }
+        private static String rel() { return null; }
+    }
+    public static class VERSION_CODES {
+        public static final int N = 24;
+        public static final int N_MR1 = 25;
+        public static final int O = 26;
+        public static final int O_MR1 = 27;
+        public static final int P = 28;
+        public static final int Q = 29;
+        public static final int R = 30;
+        public static final int S = 31;
+        public static final int S_V2 = 32;
+        public static final int TIRAMISU = 33;
+        public static final int UPSIDE_DOWN_CAKE = 34;
+        public static final int VANILLA_ICE_CREAM = 35;
+        public VERSION_CODES() STUB
+    }
+}
+//// android/os/Vibrator.java
+package android.os;
+public abstract class Vibrator {
+    Vibrator() STUB
+    public abstract boolean hasVibrator();
+    @Deprecated public void vibrate(long milliseconds) STUB
+    public abstract void cancel();
+}
+//// android/util/Log.java
+package android.util;
+public final class Log {
+    Log() STUB
+    public static int v(String tag, String msg) STUB
+    public static int d(String tag, String msg) STUB
+    public static int i(String tag, String msg) STUB
+    public static int w(String tag, String msg) STUB
+    public static int e(String tag, String msg) STUB
+    public static int e(String tag, String msg, Throwable tr) STUB
+}
+//// android/util/DisplayMetrics.java
+package android.util;
+public class DisplayMetrics {
+    public float density;
+    public int densityDpi;
+    public float scaledDensity;
+    public int widthPixels;
+    public int heightPixels;
+    public float xdpi;
+    public float ydpi;
+    public DisplayMetrics() STUB
+}
+//// android/util/TypedValue.java
+package android.util;
+public class TypedValue {
+    public static final int COMPLEX_UNIT_PX = 0;
+    public static final int COMPLEX_UNIT_DIP = 1;
+    public static final int COMPLEX_UNIT_SP = 2;
+    public static final int COMPLEX_UNIT_PT = 3;
+    public static final int COMPLEX_UNIT_IN = 4;
+    public static final int COMPLEX_UNIT_MM = 5;
+    public TypedValue() STUB
+    public static float applyDimension(int unit, float value, DisplayMetrics metrics) STUB
+}
+//// android/view/View.java
+package android.view;
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+public class View {
+    public static final int VISIBLE = 0;
+    public static final int INVISIBLE = 4;
+    public static final int GONE = 8;
+    public static final int TEXT_ALIGNMENT_CENTER = 4;
+    public static final int SYSTEM_UI_FLAG_LIGHT_STATUS_BAR = 8192;
+    public View(Context context) STUB
+    public final Context getContext() STUB
+    public Resources getResources() STUB
+    public void setOnClickListener(OnClickListener l) STUB
+    public void setOnLongClickListener(OnLongClickListener l) STUB
+    public void setOnTouchListener(OnTouchListener l) STUB
+    public boolean performClick() STUB
+    public boolean performHapticFeedback(int feedbackConstant) STUB
+    public void setVisibility(int visibility) STUB
+    public int getVisibility() STUB
+    public void setPadding(int left, int top, int right, int bottom) STUB
+    public int getPaddingLeft() STUB
+    public int getPaddingTop() STUB
+    public void setBackgroundColor(int color) STUB
+    public void setBackground(Drawable background) STUB
+    public void setLayoutParams(ViewGroup.LayoutParams params) STUB
+    public ViewGroup.LayoutParams getLayoutParams() STUB
+    public void setId(int id) STUB
+    public int getId() STUB
+    public static int generateViewId() STUB
+    public void setTag(Object tag) STUB
+    public Object getTag() STUB
+    public void setEnabled(boolean enabled) STUB
+    public boolean isEnabled() STUB
+    public void setSelected(boolean selected) STUB
+    public void setClickable(boolean clickable) STUB
+    public void setFocusable(boolean focusable) STUB
+    public final boolean requestFocus() STUB
+    public void setKeepScreenOn(boolean keepScreenOn) STUB
+    public void setMinimumHeight(int minHeight) STUB
+    public void setMinimumWidth(int minWidth) STUB
+    public void setAlpha(float alpha) STUB
+    public float getAlpha() STUB
+    public void setScaleX(float scaleX) STUB
+    public void setScaleY(float scaleY) STUB
+    public void setTranslationX(float translationX) STUB
+    public void setTranslationY(float translationY) STUB
+    public void setRotation(float rotation) STUB
+    public void setElevation(float elevation) STUB
+    public void setClipToOutline(boolean clipToOutline) STUB
+    public void setTextAlignment(int textAlignment) STUB
+    public void setSystemUiVisibility(int visibility) STUB
+    public float getX() STUB
+    public float getY() STUB
+    public void setX(float x) STUB
+    public void setY(float y) STUB
+    public final int getWidth() STUB
+    public final int getHeight() STUB
+    public final int getMeasuredWidth() STUB
+    public final int getMeasuredHeight() STUB
+    public View getRootView() STUB
+    public ViewPropertyAnimator animate() STUB
+    public final int getScrollY() STUB
+    public void scrollTo(int x, int y) STUB
+    public void invalidate() STUB
+    public void postInvalidate() STUB
+    public void postInvalidateOnAnimation() STUB
+    public void requestLayout() STUB
+    public boolean post(Runnable action) STUB
+    public boolean postDelayed(Runnable action, long delayMillis) STUB
+    public boolean removeCallbacks(Runnable action) STUB
+    protected void onDraw(Canvas canvas) STUB
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) STUB
+    protected final void setMeasuredDimension(int measuredWidth, int measuredHeight) STUB
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) STUB
+    protected void onAttachedToWindow() STUB
+    protected void onDetachedFromWindow() STUB
+    public boolean onTouchEvent(MotionEvent event) STUB
+    public interface OnClickListener { void onClick(View v); }
+    public interface OnLongClickListener { boolean onLongClick(View v); }
+    public interface OnTouchListener { boolean onTouch(View v, MotionEvent event); }
+    public static class MeasureSpec {
+        public static final int UNSPECIFIED = 0;
+        public static final int EXACTLY = 1073741824;
+        public static final int AT_MOST = -2147483648;
+        public MeasureSpec() STUB
+        public static int makeMeasureSpec(int size, int mode) STUB
+        public static int getMode(int measureSpec) STUB
+        public static int getSize(int measureSpec) STUB
+    }
+}
+//// android/view/ViewGroup.java
+package android.view;
+import android.content.Context;
+public abstract class ViewGroup extends View {
+    public ViewGroup(Context context) { super(context); throw new RuntimeException("Stub!"); }
+    public void addView(View child) STUB
+    public void addView(View child, int index) STUB
+    public void addView(View child, int width, int height) STUB
+    public void addView(View child, LayoutParams params) STUB
+    public void addView(View child, int index, LayoutParams params) STUB
+    public void removeView(View view) STUB
+    public void removeViewAt(int index) STUB
+    public void removeAllViews() STUB
+    public int getChildCount() STUB
+    public View getChildAt(int index) STUB
+    public void setClipChildren(boolean clipChildren) STUB
+    protected abstract void onLayout(boolean changed, int l, int t, int r, int b);
+    public static class LayoutParams {
+        public static final int FILL_PARENT = -1;
+        public static final int MATCH_PARENT = -1;
+        public static final int WRAP_CONTENT = -2;
+        public int width;
+        public int height;
+        public LayoutParams(int width, int height) STUB
+    }
+    public static class MarginLayoutParams extends LayoutParams {
+        public int leftMargin;
+        public int topMargin;
+        public int rightMargin;
+        public int bottomMargin;
+        public MarginLayoutParams(int width, int height) { super(0, 0); throw new RuntimeException("Stub!"); }
+        public void setMargins(int left, int top, int right, int bottom) STUB
+    }
+}
+//// android/view/ViewPropertyAnimator.java
+package android.view;
+public class ViewPropertyAnimator {
+    ViewPropertyAnimator() STUB
+    public ViewPropertyAnimator setDuration(long duration) STUB
+    public ViewPropertyAnimator setStartDelay(long startDelay) STUB
+    public ViewPropertyAnimator alpha(float value) STUB
+    public ViewPropertyAnimator scaleX(float value) STUB
+    public ViewPropertyAnimator scaleY(float value) STUB
+    public ViewPropertyAnimator translationX(float value) STUB
+    public ViewPropertyAnimator translationY(float value) STUB
+    public ViewPropertyAnimator rotation(float value) STUB
+    public ViewPropertyAnimator withEndAction(Runnable runnable) STUB
+    public void start() STUB
+    public void cancel() STUB
+}
+//// android/view/Gravity.java
+package android.view;
+public class Gravity {
+    public static final int NO_GRAVITY = 0;
+    public static final int TOP = 48;
+    public static final int BOTTOM = 80;
+    public static final int LEFT = 3;
+    public static final int RIGHT = 5;
+    public static final int CENTER_VERTICAL = 16;
+    public static final int CENTER_HORIZONTAL = 1;
+    public static final int CENTER = 17;
+    public static final int FILL = 119;
+    public static final int START = 8388611;
+    public static final int END = 8388613;
+    public Gravity() STUB
+}
+//// android/view/HapticFeedbackConstants.java
+package android.view;
+public class HapticFeedbackConstants {
+    public static final int LONG_PRESS = 0;
+    public static final int VIRTUAL_KEY = 1;
+    public static final int KEYBOARD_TAP = 3;
+    public static final int CLOCK_TICK = 4;
+    public static final int CONTEXT_CLICK = 6;
+    HapticFeedbackConstants() STUB
+}
+//// android/view/MotionEvent.java
+package android.view;
+public final class MotionEvent {
+    public static final int ACTION_DOWN = 0;
+    public static final int ACTION_UP = 1;
+    public static final int ACTION_MOVE = 2;
+    public static final int ACTION_CANCEL = 3;
+    MotionEvent() STUB
+    public final int getAction() STUB
+    public final int getActionMasked() STUB
+    public final float getX() STUB
+    public final float getY() STUB
+    public final float getRawX() STUB
+    public final float getRawY() STUB
+    public final int getPointerCount() STUB
+}
+//// android/view/Window.java
+package android.view;
+public abstract class Window {
+    public static final int FEATURE_NO_TITLE = 1;
+    public Window(android.content.Context context) STUB
+    public void addFlags(int flags) STUB
+    public void clearFlags(int flags) STUB
+    public void setFlags(int flags, int mask) STUB
+    public abstract void setStatusBarColor(int color);
+    public abstract void setNavigationBarColor(int color);
+    public abstract View getDecorView();
+}
+//// android/view/WindowManager.java
+package android.view;
+public interface WindowManager {
+    class LayoutParams extends ViewGroup.LayoutParams {
+        public static final int FLAG_KEEP_SCREEN_ON = 128;
+        public static final int FLAG_FULLSCREEN = 1024;
+        public static final int FLAG_SECURE = 8192;
+        public LayoutParams() { super(0, 0); throw new RuntimeException("Stub!"); }
+    }
+}
+//// android/view/inputmethod/EditorInfo.java
+package android.view.inputmethod;
+public class EditorInfo {
+    public static final int IME_ACTION_GO = 2;
+    public static final int IME_ACTION_SEARCH = 3;
+    public static final int IME_ACTION_SEND = 4;
+    public static final int IME_ACTION_NEXT = 5;
+    public static final int IME_ACTION_DONE = 6;
+    public EditorInfo() STUB
+}
+//// android/widget/TextView.java
+package android.widget;
+import android.content.Context;
+import android.graphics.Typeface;
+import android.text.TextWatcher;
+public class TextView extends android.view.View {
+    public TextView(Context context) { super(context); throw new RuntimeException("Stub!"); }
+    public final void setText(CharSequence text) STUB
+    public final void setText(int resid) STUB
+    public CharSequence getText() STUB
+    public int length() STUB
+    public void setTextSize(float size) STUB
+    public void setTextSize(int unit, float size) STUB
+    public float getTextSize() STUB
+    public void setTextColor(int color) STUB
+    public final int getCurrentTextColor() STUB
+    public final void setHint(CharSequence hint) STUB
+    public final void setHintTextColor(int color) STUB
+    public void setGravity(int gravity) STUB
+    public void setTypeface(Typeface tf) STUB
+    public void setTypeface(Typeface tf, int style) STUB
+    public void setSingleLine() STUB
+    public void setSingleLine(boolean singleLine) STUB
+    public void setMaxLines(int maxLines) STUB
+    public void setLines(int lines) STUB
+    public void setMinWidth(int minPixels) STUB
+    public void setInputType(int type) STUB
+    public void setImeOptions(int imeOptions) STUB
+    public void setAllCaps(boolean allCaps) STUB
+    public void setLetterSpacing(float letterSpacing) STUB
+    public void setLineSpacing(float add, float mult) STUB
+    public void setIncludeFontPadding(boolean includepad) STUB
+    public void setShadowLayer(float radius, float dx, float dy, int color) STUB
+    public void setTextIsSelectable(boolean selectable) STUB
+    public void addTextChangedListener(TextWatcher watcher) STUB
+}
+//// android/widget/Button.java
+package android.widget;
+public class Button extends TextView {
+    public Button(android.content.Context context) { super(context); throw new RuntimeException("Stub!"); }
+}
+//// android/widget/EditText.java
+package android.widget;
+public class EditText extends TextView {
+    public EditText(android.content.Context context) { super(context); throw new RuntimeException("Stub!"); }
+    public android.text.Editable getText() STUB
+    public void setSelection(int index) STUB
+    public void selectAll() STUB
+}
+//// android/widget/CompoundButton.java
+package android.widget;
+public abstract class CompoundButton extends Button {
+    public CompoundButton(android.content.Context context) { super(context); throw new RuntimeException("Stub!"); }
+    public boolean isChecked() STUB
+    public void setChecked(boolean checked) STUB
+    public void toggle() STUB
+    public void setOnCheckedChangeListener(OnCheckedChangeListener listener) STUB
+    public interface OnCheckedChangeListener { void onCheckedChanged(CompoundButton buttonView, boolean isChecked); }
+}
+//// android/widget/CheckBox.java
+package android.widget;
+public class CheckBox extends CompoundButton {
+    public CheckBox(android.content.Context context) { super(context); throw new RuntimeException("Stub!"); }
+}
+//// android/widget/Switch.java
+package android.widget;
+public class Switch extends CompoundButton {
+    public Switch(android.content.Context context) { super(context); throw new RuntimeException("Stub!"); }
+}
+//// android/widget/ImageView.java
+package android.widget;
+public class ImageView extends android.view.View {
+    public ImageView(android.content.Context context) { super(context); throw new RuntimeException("Stub!"); }
+    public void setImageDrawable(android.graphics.drawable.Drawable drawable) STUB
+    public void setImageBitmap(android.graphics.Bitmap bm) STUB
+    public final void setColorFilter(int color) STUB
+}
+//// android/widget/ProgressBar.java
+package android.widget;
+public class ProgressBar extends android.view.View {
+    public ProgressBar(android.content.Context context) { super(context); throw new RuntimeException("Stub!"); }
+    public synchronized void setMax(int max) STUB
+    public synchronized int getMax() STUB
+    public synchronized void setProgress(int progress) STUB
+    public synchronized int getProgress() STUB
+    public synchronized void setIndeterminate(boolean indeterminate) STUB
+}
+//// android/widget/AbsSeekBar.java
+package android.widget;
+public abstract class AbsSeekBar extends ProgressBar {
+    public AbsSeekBar(android.content.Context context) { super(context); throw new RuntimeException("Stub!"); }
+}
+//// android/widget/SeekBar.java
+package android.widget;
+public class SeekBar extends AbsSeekBar {
+    public SeekBar(android.content.Context context) { super(context); throw new RuntimeException("Stub!"); }
+    public void setOnSeekBarChangeListener(OnSeekBarChangeListener l) STUB
+    public interface OnSeekBarChangeListener {
+        void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser);
+        void onStartTrackingTouch(SeekBar seekBar);
+        void onStopTrackingTouch(SeekBar seekBar);
+    }
+}
+//// android/widget/LinearLayout.java
+package android.widget;
+import android.content.Context;
+import android.view.ViewGroup;
+public class LinearLayout extends ViewGroup {
+    public static final int HORIZONTAL = 0;
+    public static final int VERTICAL = 1;
+    public LinearLayout(Context context) { super(context); throw new RuntimeException("Stub!"); }
+    public void setOrientation(int orientation) STUB
+    public void setGravity(int gravity) STUB
+    public void setWeightSum(float weightSum) STUB
+    protected void onLayout(boolean changed, int l, int t, int r, int b) STUB
+    public static class LayoutParams extends ViewGroup.MarginLayoutParams {
+        public float weight;
+        public int gravity;
+        public LayoutParams(int width, int height) { super(0, 0); throw new RuntimeException("Stub!"); }
+        public LayoutParams(int width, int height, float weight) { super(0, 0); throw new RuntimeException("Stub!"); }
+    }
+}
+//// android/widget/FrameLayout.java
+package android.widget;
+import android.content.Context;
+import android.view.ViewGroup;
+public class FrameLayout extends ViewGroup {
+    public FrameLayout(Context context) { super(context); throw new RuntimeException("Stub!"); }
+    protected void onLayout(boolean changed, int l, int t, int r, int b) STUB
+    public static class LayoutParams extends ViewGroup.MarginLayoutParams {
+        public int gravity;
+        public LayoutParams(int width, int height) { super(0, 0); throw new RuntimeException("Stub!"); }
+        public LayoutParams(int width, int height, int gravity) { super(0, 0); throw new RuntimeException("Stub!"); }
+    }
+}
+//// android/widget/ScrollView.java
+package android.widget;
+public class ScrollView extends FrameLayout {
+    public ScrollView(android.content.Context context) { super(context); throw new RuntimeException("Stub!"); }
+    public boolean fullScroll(int direction) STUB
+    public final void smoothScrollTo(int x, int y) STUB
+    public void setFillViewport(boolean fillViewport) STUB
+}
+//// android/widget/HorizontalScrollView.java
+package android.widget;
+public class HorizontalScrollView extends FrameLayout {
+    public HorizontalScrollView(android.content.Context context) { super(context); throw new RuntimeException("Stub!"); }
+    public void setFillViewport(boolean fillViewport) STUB
+}
+//// android/widget/Toast.java
+package android.widget;
+public class Toast {
+    public static final int LENGTH_SHORT = 0;
+    public static final int LENGTH_LONG = 1;
+    public Toast(android.content.Context context) STUB
+    public static Toast makeText(android.content.Context context, CharSequence text, int duration) STUB
+    public void show() STUB
+    public void cancel() STUB
+}
+//// android/graphics/Canvas.java
+package android.graphics;
+public class Canvas {
+    public Canvas() STUB
+    public Canvas(Bitmap bitmap) STUB
+    public int getWidth() STUB
+    public int getHeight() STUB
+    public int save() STUB
+    public void restore() STUB
+    public void translate(float dx, float dy) STUB
+    public void rotate(float degrees) STUB
+    public final void rotate(float degrees, float px, float py) STUB
+    public void scale(float sx, float sy) STUB
+    public void drawColor(int color) STUB
+    public void drawPoint(float x, float y, Paint paint) STUB
+    public void drawLine(float startX, float startY, float stopX, float stopY, Paint paint) STUB
+    public void drawRect(float left, float top, float right, float bottom, Paint paint) STUB
+    public void drawRect(RectF rect, Paint paint) STUB
+    public void drawRect(Rect r, Paint paint) STUB
+    public void drawRoundRect(RectF rect, float rx, float ry, Paint paint) STUB
+    public void drawRoundRect(float left, float top, float right, float bottom, float rx, float ry, Paint paint) STUB
+    public void drawCircle(float cx, float cy, float radius, Paint paint) STUB
+    public void drawOval(RectF oval, Paint paint) STUB
+    public void drawArc(RectF oval, float startAngle, float sweepAngle, boolean useCenter, Paint paint) STUB
+    public void drawPath(Path path, Paint paint) STUB
+    public void drawText(String text, float x, float y, Paint paint) STUB
+    public void drawBitmap(Bitmap bitmap, float left, float top, Paint paint) STUB
+}
+//// android/graphics/Paint.java
+package android.graphics;
+public class Paint {
+    public static final int ANTI_ALIAS_FLAG = 1;
+    public static final int FAKE_BOLD_TEXT_FLAG = 32;
+    public Paint() STUB
+    public Paint(int flags) STUB
+    public void setColor(int color) STUB
+    public int getColor() STUB
+    public void setAlpha(int a) STUB
+    public void setARGB(int a, int r, int g, int b) STUB
+    public void setAntiAlias(boolean aa) STUB
+    public void setStyle(Style style) STUB
+    public void setStrokeWidth(float width) STUB
+    public void setStrokeCap(Cap cap) STUB
+    public void setTextSize(float textSize) STUB
+    public float getTextSize() STUB
+    public void setTextAlign(Align align) STUB
+    public Typeface setTypeface(Typeface typeface) STUB
+    public void setFakeBoldText(boolean fakeBoldText) STUB
+    public void setShadowLayer(float radius, float dx, float dy, int shadowColor) STUB
+    public float measureText(String text) STUB
+    public float ascent() STUB
+    public float descent() STUB
+    public enum Style { FILL, STROKE, FILL_AND_STROKE }
+    public enum Align { LEFT, CENTER, RIGHT }
+    public enum Cap { BUTT, ROUND, SQUARE }
+}
+//// android/graphics/Color.java
+package android.graphics;
+public class Color {
+    public static final int BLACK = -16777216;
+    public static final int DKGRAY = -12303292;
+    public static final int GRAY = -7829368;
+    public static final int LTGRAY = -3355444;
+    public static final int WHITE = -1;
+    public static final int RED = -65536;
+    public static final int GREEN = -16711936;
+    public static final int BLUE = -16776961;
+    public static final int YELLOW = -256;
+    public static final int CYAN = -16711681;
+    public static final int MAGENTA = -65281;
+    public static final int TRANSPARENT = 0;
+    public Color() STUB
+    public static int parseColor(String colorString) STUB
+    public static int rgb(int red, int green, int blue) STUB
+    public static int argb(int alpha, int red, int green, int blue) STUB
+    public static int alpha(int color) STUB
+    public static int red(int color) STUB
+    public static int green(int color) STUB
+    public static int blue(int color) STUB
+    public static int HSVToColor(float[] hsv) STUB
+    public static void colorToHSV(int color, float[] hsv) STUB
+}
+//// android/graphics/RectF.java
+package android.graphics;
+public class RectF {
+    public float left;
+    public float top;
+    public float right;
+    public float bottom;
+    public RectF() STUB
+    public RectF(float left, float top, float right, float bottom) STUB
+    public void set(float left, float top, float right, float bottom) STUB
+    public final float width() STUB
+    public final float height() STUB
+    public final float centerX() STUB
+    public final float centerY() STUB
+    public boolean contains(float x, float y) STUB
+}
+//// android/graphics/Rect.java
+package android.graphics;
+public final class Rect {
+    public int left;
+    public int top;
+    public int right;
+    public int bottom;
+    public Rect() STUB
+    public Rect(int left, int top, int right, int bottom) STUB
+    public final int width() STUB
+    public final int height() STUB
+}
+//// android/graphics/Path.java
+package android.graphics;
+public class Path {
+    public Path() STUB
+    public void reset() STUB
+    public void moveTo(float x, float y) STUB
+    public void lineTo(float x, float y) STUB
+    public void quadTo(float x1, float y1, float x2, float y2) STUB
+    public void cubicTo(float x1, float y1, float x2, float y2, float x3, float y3) STUB
+    public void close() STUB
+    public void addCircle(float x, float y, float radius, Direction dir) STUB
+    public enum Direction { CW, CCW }
+}
+//// android/graphics/Typeface.java
+package android.graphics;
+public class Typeface {
+    public static final int NORMAL = 0;
+    public static final int BOLD = 1;
+    public static final int ITALIC = 2;
+    public static final int BOLD_ITALIC = 3;
+    public static final Typeface DEFAULT = stub();
+    public static final Typeface DEFAULT_BOLD = stub();
+    public static final Typeface SANS_SERIF = stub();
+    public static final Typeface SERIF = stub();
+    public static final Typeface MONOSPACE = stub();
+    Typeface() STUB
+    private static Typeface stub() { return null; }
+    public static Typeface create(Typeface family, int style) STUB
+    public static Typeface create(String familyName, int style) STUB
+}
+//// android/graphics/Bitmap.java
+package android.graphics;
+public final class Bitmap {
+    Bitmap() STUB
+    public static Bitmap createBitmap(int width, int height, Config config) STUB
+    public final int getWidth() STUB
+    public final int getHeight() STUB
+    public void setPixel(int x, int y, int color) STUB
+    public int getPixel(int x, int y) STUB
+    public enum Config { ALPHA_8, RGB_565, ARGB_4444, ARGB_8888, RGBA_F16, HARDWARE, RGBA_1010102 }
+}
+//// android/graphics/drawable/Drawable.java
+package android.graphics.drawable;
+public abstract class Drawable {
+    public Drawable() STUB
+    public void setAlpha(int alpha) STUB
+}
+//// android/graphics/drawable/ColorDrawable.java
+package android.graphics.drawable;
+public class ColorDrawable extends Drawable {
+    public ColorDrawable(int color) STUB
+}
+//// android/graphics/drawable/GradientDrawable.java
+package android.graphics.drawable;
+public class GradientDrawable extends Drawable {
+    public static final int RECTANGLE = 0;
+    public static final int OVAL = 1;
+    public static final int LINE = 2;
+    public static final int RING = 3;
+    public GradientDrawable() STUB
+    public GradientDrawable(Orientation orientation, int[] colors) STUB
+    public void setShape(int shape) STUB
+    public void setColor(int argb) STUB
+    public void setCornerRadius(float radius) STUB
+    public void setCornerRadii(float[] radii) STUB
+    public void setStroke(int width, int color) STUB
+    public enum Orientation { TOP_BOTTOM, TR_BL, RIGHT_LEFT, BR_TL, BOTTOM_TOP, BL_TR, LEFT_RIGHT, TL_BR }
+}
+//// android/text/Editable.java
+package android.text;
+public interface Editable extends CharSequence {
+    Editable append(CharSequence text);
+    void clear();
+}
+//// android/text/TextWatcher.java
+package android.text;
+public interface TextWatcher {
+    void beforeTextChanged(CharSequence s, int start, int count, int after);
+    void onTextChanged(CharSequence s, int start, int before, int count);
+    void afterTextChanged(Editable s);
+}
+//// android/text/TextUtils.java
+package android.text;
+public class TextUtils {
+    TextUtils() STUB
+    public static boolean isEmpty(CharSequence str) STUB
+}
+//// android/text/InputType.java
+package android.text;
+public interface InputType {
+    int TYPE_CLASS_TEXT = 1;
+    int TYPE_CLASS_NUMBER = 2;
+    int TYPE_CLASS_PHONE = 3;
+    int TYPE_CLASS_DATETIME = 4;
+    int TYPE_NUMBER_FLAG_SIGNED = 4096;
+    int TYPE_NUMBER_FLAG_DECIMAL = 8192;
+    int TYPE_TEXT_VARIATION_EMAIL_ADDRESS = 32;
+    int TYPE_TEXT_VARIATION_PASSWORD = 128;
+    int TYPE_TEXT_FLAG_CAP_WORDS = 8192;
+    int TYPE_TEXT_FLAG_CAP_SENTENCES = 16384;
+    int TYPE_TEXT_FLAG_MULTI_LINE = 131072;
+    int TYPE_TEXT_FLAG_NO_SUGGESTIONS = 524288;
+}
+//// android/animation/Animator.java
+package android.animation;
+public abstract class Animator {
+    public Animator() STUB
+    public void start() STUB
+    public void cancel() STUB
+    public void end() STUB
+    public abstract Animator setDuration(long duration);
+    public abstract boolean isRunning();
+}
+//// android/animation/ValueAnimator.java
+package android.animation;
+public class ValueAnimator extends Animator {
+    public static final int RESTART = 1;
+    public static final int REVERSE = 2;
+    public static final int INFINITE = -1;
+    public ValueAnimator() STUB
+    public static ValueAnimator ofFloat(float... values) STUB
+    public static ValueAnimator ofInt(int... values) STUB
+    public ValueAnimator setDuration(long duration) STUB
+    public boolean isRunning() STUB
+    public void setRepeatCount(int value) STUB
+    public void setRepeatMode(int value) STUB
+    public Object getAnimatedValue() STUB
+    public float getAnimatedFraction() STUB
+    public void addUpdateListener(AnimatorUpdateListener listener) STUB
+    public interface AnimatorUpdateListener { void onAnimationUpdate(ValueAnimator animation); }
+}
+//// android/content/ComponentName.java
+package android.content;
+public final class ComponentName {
+    public ComponentName(String pkg, String cls) STUB
+    public String getPackageName() STUB
+    public String getClassName() STUB
+    public String flattenToString() STUB
+    public static ComponentName unflattenFromString(String str) STUB
+}
+//// android/os/IBinder.java
+package android.os;
+public interface IBinder {
+}
+//// android/os/ParcelFileDescriptor.java
+package android.os;
+public class ParcelFileDescriptor implements java.io.Closeable {
+    ParcelFileDescriptor() STUB
+    public java.io.FileDescriptor getFileDescriptor() STUB
+    public int getFd() STUB
+    public int detachFd() STUB
+    public long getStatSize() STUB
+    public void close() throws java.io.IOException STUB
+}
+//// android/content/pm/ApplicationInfo.java
+package android.content.pm;
+public class ApplicationInfo {
+    public static final int FLAG_SYSTEM = 0x00000001;
+    public static final int FLAG_DEBUGGABLE = 0x00000002;
+    public static final int FLAG_HAS_CODE = 0x00000004;
+    public static final int FLAG_PERSISTENT = 0x00000008;
+    public static final int FLAG_ALLOW_CLEAR_USER_DATA = 0x00000040;
+    public static final int FLAG_UPDATED_SYSTEM_APP = 0x00000080;
+    public static final int FLAG_TEST_ONLY = 0x00000100;
+    public static final int FLAG_ALLOW_BACKUP = 0x00008000;
+    public static final int FLAG_STOPPED = 0x00200000;
+    public String packageName;
+    public String name;
+    public String sourceDir;
+    public String dataDir;
+    public int flags;
+    public int uid;
+    public int targetSdkVersion;
+    public boolean enabled;
+    public ApplicationInfo() STUB
+}
+//// android/content/pm/PackageInfo.java
+package android.content.pm;
+public class PackageInfo {
+    public static final int REQUESTED_PERMISSION_GRANTED = 0x00000002;
+    public String packageName;
+    public String versionName;
+    public int versionCode;
+    public long firstInstallTime;
+    public long lastUpdateTime;
+    public String[] requestedPermissions;
+    public int[] requestedPermissionsFlags;
+    public ApplicationInfo applicationInfo;
+    public Signature[] signatures;
+    public SigningInfo signingInfo;
+    public ServiceInfo[] services;
+    public ActivityInfo[] receivers;
+    public PackageInfo() STUB
+}
+//// android/content/pm/PackageManager.java
+package android.content.pm;
+import android.content.Intent;
+public abstract class PackageManager {
+    public static final int GET_META_DATA = 0x00000080;
+    public static final int GET_PERMISSIONS = 0x00001000;
+    public static final int GET_SIGNATURES = 0x00000040;
+    public static final int GET_SIGNING_CERTIFICATES = 0x08000000;
+    public static final int GET_SERVICES = 0x00000004;
+    public static final int GET_RECEIVERS = 0x00000002;
+    public static final int MATCH_SYSTEM_ONLY = 0x00100000;
+    public static final int MATCH_UNINSTALLED_PACKAGES = 0x00002000;
+    public static final int MATCH_DISABLED_COMPONENTS = 0x00000200;
+    public static final int PERMISSION_GRANTED = 0;
+    public static final int PERMISSION_DENIED = -1;
+    public PackageManager() STUB
+    public abstract java.util.List<ApplicationInfo> getInstalledApplications(int flags);
+    public abstract java.util.List<PackageInfo> getInstalledPackages(int flags);
+    public abstract PackageInfo getPackageInfo(String packageName, int flags) throws NameNotFoundException;
+    public abstract ApplicationInfo getApplicationInfo(String packageName, int flags) throws NameNotFoundException;
+    public abstract CharSequence getApplicationLabel(ApplicationInfo info);
+    public abstract String getInstallerPackageName(String packageName);
+    public abstract Intent getLaunchIntentForPackage(String packageName);
+    public abstract int checkPermission(String permName, String pkgName);
+    public abstract String[] getPackagesForUid(int uid);
+    public abstract java.util.List<ResolveInfo> queryIntentServices(Intent intent, int flags);
+    public abstract PackageInfo getPackageArchiveInfo(String archiveFilePath, int flags);
+    public abstract java.util.List<ResolveInfo> queryBroadcastReceivers(Intent intent, int flags);
+    public abstract String getNameForUid(int uid);
+    public static class NameNotFoundException extends Exception {
+        public NameNotFoundException() STUB
+        public NameNotFoundException(String name) STUB
+    }
+}
+//// android/app/Service.java
+package android.app;
+import android.content.Intent;
+import android.os.IBinder;
+public abstract class Service extends android.content.ContextWrapper {
+    public static final int START_STICKY_COMPATIBILITY = 0;
+    public static final int START_STICKY = 1;
+    public static final int START_NOT_STICKY = 2;
+    public static final int START_REDELIVER_INTENT = 3;
+    public Service() { super(null); throw new RuntimeException("Stub!"); }
+    public void onCreate() STUB
+    public int onStartCommand(Intent intent, int flags, int startId) STUB
+    public void onDestroy() STUB
+    public abstract IBinder onBind(Intent intent);
+    public final void stopSelf() STUB
+    public void stopSelf(int startId) STUB
+}
+//// android/net/VpnService.java
+package android.net;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.IBinder;
+import android.os.ParcelFileDescriptor;
+public class VpnService extends android.app.Service {
+    public static final String SERVICE_INTERFACE = "android.net.VpnService";
+    public VpnService() STUB
+    public static Intent prepare(Context context) STUB
+    public boolean protect(int socket) STUB
+    public boolean protect(java.net.Socket socket) STUB
+    public boolean protect(java.net.DatagramSocket socket) STUB
+    public void onRevoke() STUB
+    public IBinder onBind(Intent intent) STUB
+    public class Builder {
+        public Builder() STUB
+        public Builder addAddress(String address, int prefixLength) STUB
+        public Builder addRoute(String address, int prefixLength) STUB
+        public Builder addDnsServer(String address) STUB
+        public Builder addSearchDomain(String domain) STUB
+        public Builder addAllowedApplication(String packageName) throws PackageManager.NameNotFoundException STUB
+        public Builder addDisallowedApplication(String packageName) throws PackageManager.NameNotFoundException STUB
+        public Builder setSession(String session) STUB
+        public Builder setMtu(int mtu) STUB
+        public Builder setBlocking(boolean blocking) STUB
+        public Builder allowFamily(int family) STUB
+        public ParcelFileDescriptor establish() STUB
+    }
+}
+//// android/provider/Settings.java
+package android.provider;
+import android.content.ContentResolver;
+public final class Settings {
+    public static final String ACTION_APPLICATION_DETAILS_SETTINGS = "android.settings.APPLICATION_DETAILS_SETTINGS";
+    public static final String ACTION_SETTINGS = "android.settings.SETTINGS";
+    public static final String ACTION_VPN_SETTINGS = "android.net.vpn.SETTINGS";
+    public static final String ACTION_ACCESSIBILITY_SETTINGS = "android.settings.ACCESSIBILITY_SETTINGS";
+    public static final String ACTION_SECURITY_SETTINGS = "android.settings.SECURITY_SETTINGS";
+    public static final String ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
+    public static final String ACTION_APPLICATION_DEVELOPMENT_SETTINGS = "android.settings.APPLICATION_DEVELOPMENT_SETTINGS";
+    private Settings() {}
+    public static final class Secure {
+        public static final String ENABLED_ACCESSIBILITY_SERVICES = "enabled_accessibility_services";
+        private Secure() {}
+        public static String getString(ContentResolver cr, String name) STUB
+        public static int getInt(ContentResolver cr, String name, int def) STUB
+    }
+    public static final class Global {
+        public static final String ADB_ENABLED = "adb_enabled";
+        public static final String DEVELOPMENT_SETTINGS_ENABLED = "development_settings_enabled";
+        public static final String HTTP_PROXY = "http_proxy";
+        private Global() {}
+        public static String getString(ContentResolver cr, String name) STUB
+        public static int getInt(ContentResolver cr, String name, int def) STUB
+    }
+}
+//// android/net/ConnectivityManager.java
+package android.net;
+public class ConnectivityManager {
+    ConnectivityManager() STUB
+    public int getConnectionOwnerUid(int protocol, java.net.InetSocketAddress local,
+                                     java.net.InetSocketAddress remote) STUB
+}
+//// android/os/Process.java
+package android.os;
+public class Process {
+    public static final int INVALID_UID = -1;
+    public Process() STUB
+    public static final int myUid() STUB
+    public static final int myPid() STUB
+}
+//// android/content/ContentResolver.java
+package android.content;
+public class ContentResolver {
+    ContentResolver() STUB
+    public java.io.InputStream openInputStream(android.net.Uri uri) throws java.io.FileNotFoundException STUB
+    public java.io.OutputStream openOutputStream(android.net.Uri uri) throws java.io.FileNotFoundException STUB
+    public String getType(android.net.Uri uri) STUB
+    public final android.database.Cursor query(android.net.Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) STUB
+}
+//// android/content/pm/Signature.java
+package android.content.pm;
+public class Signature {
+    public Signature(byte[] signature) STUB
+    public byte[] toByteArray() STUB
+    public String toCharsString() STUB
+}
+//// android/content/pm/SigningInfo.java
+package android.content.pm;
+public final class SigningInfo {
+    SigningInfo() STUB
+    public Signature[] getApkContentsSigners() STUB
+    public Signature[] getSigningCertificateHistory() STUB
+    public boolean hasMultipleSigners() STUB
+}
+//// android/content/pm/ComponentInfo.java
+package android.content.pm;
+public class ComponentInfo {
+    public String name;
+    public String packageName;
+    public ApplicationInfo applicationInfo;
+    public boolean exported;
+    public boolean enabled;
+    public ComponentInfo() STUB
+}
+//// android/content/pm/ServiceInfo.java
+package android.content.pm;
+public class ServiceInfo extends ComponentInfo {
+    public String permission;
+    public ServiceInfo() STUB
+}
+//// android/content/pm/ActivityInfo.java
+package android.content.pm;
+public class ActivityInfo extends ComponentInfo {
+    public String permission;
+    public ActivityInfo() STUB
+}
+//// android/content/pm/ResolveInfo.java
+package android.content.pm;
+public class ResolveInfo {
+    public ServiceInfo serviceInfo;
+    public ActivityInfo activityInfo;
+    public ResolveInfo() STUB
+}
+//// android/accessibilityservice/AccessibilityServiceInfo.java
+package android.accessibilityservice;
+public class AccessibilityServiceInfo {
+    public static final int FEEDBACK_ALL_MASK = -1;
+    public static final int CAPABILITY_CAN_RETRIEVE_WINDOW_CONTENT = 0x00000001;
+    public static final int CAPABILITY_CAN_PERFORM_GESTURES = 0x00000020;
+    public AccessibilityServiceInfo() STUB
+    public String getId() STUB
+    public int getCapabilities() STUB
+    public android.content.pm.ResolveInfo getResolveInfo() STUB
+}
+//// android/view/accessibility/AccessibilityManager.java
+package android.view.accessibility;
+public final class AccessibilityManager {
+    AccessibilityManager() STUB
+    public boolean isEnabled() STUB
+    public java.util.List<android.accessibilityservice.AccessibilityServiceInfo>
+            getEnabledAccessibilityServiceList(int feedbackTypeFlags) STUB
+    public java.util.List<android.accessibilityservice.AccessibilityServiceInfo>
+            getInstalledAccessibilityServiceList() STUB
+}
+//// android/app/admin/DevicePolicyManager.java
+package android.app.admin;
+public class DevicePolicyManager {
+    DevicePolicyManager() STUB
+    public java.util.List<android.content.ComponentName> getActiveAdmins() STUB
+    public boolean isDeviceOwnerApp(String packageName) STUB
+    public boolean isAdminActive(android.content.ComponentName admin) STUB
+}
+//// android/app/KeyguardManager.java
+package android.app;
+public class KeyguardManager {
+    KeyguardManager() STUB
+    public boolean isDeviceSecure() STUB
+    public boolean isKeyguardSecure() STUB
+    public boolean isDeviceLocked() STUB
+}
+//// android/app/PendingIntent.java
+package android.app;
+import android.content.Context;
+import android.content.Intent;
+public final class PendingIntent {
+    public static final int FLAG_ONE_SHOT = 0x40000000;
+    public static final int FLAG_NO_CREATE = 0x20000000;
+    public static final int FLAG_CANCEL_CURRENT = 0x10000000;
+    public static final int FLAG_UPDATE_CURRENT = 0x08000000;
+    public static final int FLAG_IMMUTABLE = 0x04000000;
+    public static final int FLAG_MUTABLE = 0x02000000;
+    PendingIntent() STUB
+    public static PendingIntent getActivity(Context context, int requestCode, Intent intent, int flags) STUB
+    public static PendingIntent getBroadcast(Context context, int requestCode, Intent intent, int flags) STUB
+    public static PendingIntent getService(Context context, int requestCode, Intent intent, int flags) STUB
+    public void cancel() STUB
+}
+//// android/app/Notification.java
+package android.app;
+import android.content.Context;
+public class Notification {
+    public static final int PRIORITY_DEFAULT = 0;
+    public static final int PRIORITY_HIGH = 1;
+    public Notification() STUB
+    public static class Builder {
+        public Builder(Context context, String channelId) STUB
+        public Builder setContentTitle(CharSequence title) STUB
+        public Builder setContentText(CharSequence text) STUB
+        public Builder setSmallIcon(int icon) STUB
+        public Builder setAutoCancel(boolean autoCancel) STUB
+        public Builder setOngoing(boolean ongoing) STUB
+        public Builder setOnlyAlertOnce(boolean onlyAlertOnce) STUB
+        public Builder setContentIntent(PendingIntent intent) STUB
+        public Builder setWhen(long when) STUB
+        public Builder setShowWhen(boolean show) STUB
+        public Builder setStyle(Style style) STUB
+        public Notification build() STUB
+    }
+    public static abstract class Style {
+        public Style() STUB
+    }
+    public static class BigTextStyle extends Style {
+        public BigTextStyle() STUB
+        public BigTextStyle bigText(CharSequence text) STUB
+    }
+}
+//// android/app/NotificationChannel.java
+package android.app;
+public final class NotificationChannel {
+    public NotificationChannel(String id, CharSequence name, int importance) STUB
+    public void setDescription(String description) STUB
+    public void setShowBadge(boolean showBadge) STUB
+    public String getId() STUB
+}
+//// android/app/NotificationManager.java
+package android.app;
+public class NotificationManager {
+    public static final int IMPORTANCE_NONE = 0;
+    public static final int IMPORTANCE_MIN = 1;
+    public static final int IMPORTANCE_LOW = 2;
+    public static final int IMPORTANCE_DEFAULT = 3;
+    public static final int IMPORTANCE_HIGH = 4;
+    NotificationManager() STUB
+    public void createNotificationChannel(NotificationChannel channel) STUB
+    public void notify(int id, Notification notification) STUB
+    public void cancel(int id) STUB
+    public void cancelAll() STUB
+    public boolean areNotificationsEnabled() STUB
+}
+//// android/app/job/JobParameters.java
+package android.app.job;
+public class JobParameters {
+    JobParameters() STUB
+    public int getJobId() STUB
+}
+//// android/app/job/JobInfo.java
+package android.app.job;
+import android.content.ComponentName;
+public class JobInfo {
+    public static final int NETWORK_TYPE_NONE = 0;
+    public static final int NETWORK_TYPE_ANY = 1;
+    public static final int NETWORK_TYPE_UNMETERED = 2;
+    JobInfo() STUB
+    public int getId() STUB
+    public static final class Builder {
+        public Builder(int jobId, ComponentName jobService) STUB
+        public Builder setPeriodic(long intervalMillis) STUB
+        public Builder setPersisted(boolean isPersisted) STUB
+        public Builder setRequiredNetworkType(int networkType) STUB
+        public Builder setRequiresCharging(boolean requiresCharging) STUB
+        public Builder setRequiresDeviceIdle(boolean requiresDeviceIdle) STUB
+        public JobInfo build() STUB
+    }
+}
+//// android/app/job/JobScheduler.java
+package android.app.job;
+public abstract class JobScheduler {
+    public static final int RESULT_FAILURE = 0;
+    public static final int RESULT_SUCCESS = 1;
+    public JobScheduler() STUB
+    public abstract int schedule(JobInfo job);
+    public abstract void cancel(int jobId);
+    public abstract void cancelAll();
+}
+//// android/app/job/JobService.java
+package android.app.job;
+import android.content.Intent;
+import android.os.IBinder;
+public abstract class JobService extends android.app.Service {
+    public JobService() STUB
+    public final IBinder onBind(Intent intent) STUB
+    public abstract boolean onStartJob(JobParameters params);
+    public abstract boolean onStopJob(JobParameters params);
+    public final void jobFinished(JobParameters params, boolean wantsReschedule) STUB
+}
+//// android/widget/TimePicker.java
+package android.widget;
+public class TimePicker extends FrameLayout {
+    public TimePicker(android.content.Context context) { super(context); throw new RuntimeException("Stub!"); }
+    public int getHour() STUB
+    public int getMinute() STUB
+}
+//// android/app/TimePickerDialog.java
+package android.app;
+import android.content.Context;
+import android.widget.TimePicker;
+public class TimePickerDialog extends Dialog {
+    public TimePickerDialog(Context context, OnTimeSetListener listener, int hourOfDay,
+                            int minute, boolean is24HourView) { super(context); throw new RuntimeException("Stub!"); }
+    public void updateTime(int hourOfDay, int minuteOfHour) STUB
+    public interface OnTimeSetListener {
+        void onTimeSet(TimePicker view, int hourOfDay, int minute);
+    }
+}
+//// android/content/IntentFilter.java
+package android.content;
+public class IntentFilter {
+    public IntentFilter() STUB
+    public IntentFilter(String action) STUB
+    public IntentFilter(String action, String dataType) STUB
+    public final void addAction(String action) STUB
+    public final void addCategory(String category) STUB
+    public final void addDataScheme(String scheme) STUB
+    public final void setPriority(int priority) STUB
+    public final int countActions() STUB
+}
+//// android/content/BroadcastReceiver.java
+package android.content;
+public abstract class BroadcastReceiver {
+    public BroadcastReceiver() STUB
+    public abstract void onReceive(Context context, Intent intent);
+    public final PendingResult goAsync() STUB
+    public final void setResultCode(int code) STUB
+    public static class PendingResult {
+        PendingResult() STUB
+        public final void finish() STUB
+    }
+}
+//// android/database/Cursor.java
+package android.database;
+public interface Cursor extends java.io.Closeable {
+    boolean moveToFirst();
+    int getColumnIndex(String columnName);
+    String getString(int columnIndex);
+    long getLong(int columnIndex);
+    boolean isNull(int columnIndex);
+    void close();
+}
+//// android/provider/OpenableColumns.java
+package android.provider;
+public interface OpenableColumns {
+    String DISPLAY_NAME = "_display_name";
+    String SIZE = "_size";
+}
+//// android/view/Surface.java
+package android.view;
+public class Surface {
+    Surface() STUB
+}
+//// android/media/MediaCrypto.java
+package android.media;
+public final class MediaCrypto {
+    MediaCrypto() STUB
+}
+//// android/media/MediaFormat.java
+package android.media;
+public final class MediaFormat {
+    public static final String KEY_MIME = "mime";
+    public static final String KEY_SAMPLE_RATE = "sample-rate";
+    public static final String KEY_CHANNEL_COUNT = "channel-count";
+    public static final String KEY_DURATION = "durationUs";
+    public static final String KEY_PCM_ENCODING = "pcm-encoding";
+    public MediaFormat() STUB
+    public final boolean containsKey(String name) STUB
+    public final int getInteger(String name) STUB
+    public final long getLong(String name) STUB
+    public final String getString(String name) STUB
+    public final void setInteger(String name, int value) STUB
+}
+//// android/media/MediaExtractor.java
+package android.media;
+public final class MediaExtractor {
+    public MediaExtractor() STUB
+    public final void setDataSource(android.content.Context context, android.net.Uri uri, java.util.Map<String, String> headers) throws java.io.IOException STUB
+    public final void setDataSource(java.io.FileDescriptor fd) throws java.io.IOException STUB
+    public final int getTrackCount() STUB
+    public MediaFormat getTrackFormat(int index) STUB
+    public void selectTrack(int index) STUB
+    public int readSampleData(java.nio.ByteBuffer byteBuf, int offset) STUB
+    public long getSampleTime() STUB
+    public int getSampleFlags() STUB
+    public boolean advance() STUB
+    public final void release() STUB
+}
+//// android/media/MediaCodec.java
+package android.media;
+public final class MediaCodec {
+    public static final int BUFFER_FLAG_END_OF_STREAM = 4;
+    public static final int INFO_TRY_AGAIN_LATER = -1;
+    public static final int INFO_OUTPUT_FORMAT_CHANGED = -2;
+    public static final int INFO_OUTPUT_BUFFERS_CHANGED = -3;
+    public static final class BufferInfo {
+        public int flags;
+        public int offset;
+        public long presentationTimeUs;
+        public int size;
+        public BufferInfo() STUB
+    }
+    MediaCodec() STUB
+    public static MediaCodec createDecoderByType(String type) throws java.io.IOException STUB
+    public void configure(MediaFormat format, android.view.Surface surface, MediaCrypto crypto, int flags) STUB
+    public final void start() STUB
+    public final void stop() STUB
+    public final void release() STUB
+    public final int dequeueInputBuffer(long timeoutUs) STUB
+    public java.nio.ByteBuffer getInputBuffer(int index) STUB
+    public final void queueInputBuffer(int index, int offset, int size, long presentationTimeUs, int flags) STUB
+    public final int dequeueOutputBuffer(BufferInfo info, long timeoutUs) STUB
+    public java.nio.ByteBuffer getOutputBuffer(int index) STUB
+    public final MediaFormat getOutputFormat() STUB
+    public final void releaseOutputBuffer(int index, boolean render) STUB
+}
+//// android/provider/DocumentsContract.java
+package android.provider;
+public final class DocumentsContract {
+    DocumentsContract() STUB
+    public static boolean deleteDocument(android.content.ContentResolver content, android.net.Uri documentUri) throws java.io.FileNotFoundException STUB
+}
+//// android/content/ActivityNotFoundException.java
+package android.content;
+public class ActivityNotFoundException extends RuntimeException {
+    public ActivityNotFoundException() STUB
+    public ActivityNotFoundException(String name) STUB
+}
+//// android/widget/DatePicker.java
+package android.widget;
+public class DatePicker extends FrameLayout {
+    public DatePicker(android.content.Context context) { super(context); throw new RuntimeException("Stub!"); }
+    public int getYear() STUB
+    public int getMonth() STUB
+    public int getDayOfMonth() STUB
+}
+//// android/app/DatePickerDialog.java
+package android.app;
+import android.content.Context;
+import android.widget.DatePicker;
+public class DatePickerDialog extends AlertDialog {
+    public DatePickerDialog(Context context, OnDateSetListener listener, int year,
+                            int month, int dayOfMonth) { super(context); throw new RuntimeException("Stub!"); }
+    public void setButton(int whichButton, CharSequence text, android.content.DialogInterface.OnClickListener listener) STUB
+    public DatePicker getDatePicker() STUB
+    public interface OnDateSetListener {
+        void onDateSet(DatePicker view, int year, int month, int dayOfMonth);
+    }
+}

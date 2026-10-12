@@ -1,0 +1,11 @@
+{
+  "package": "dev.forge.counter",
+  "name": "Forge Counter",
+  "version_code": 1,
+  "version_name": "1.0",
+  "activity": "MainActivity",
+  "min_sdk": 24,
+  "target_sdk": 34,
+  "orientation": "portrait",
+  "icon": {"background": "#1E2A44", "foreground": "#FFB547", "letter": "F"}
+}

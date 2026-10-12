@@ -1,0 +1,22 @@
+{
+  "package": "dev.forge.resfix",
+  "name": "ResFixture",
+  "label_res": "@string/app_name",
+  "version_code": 1,
+  "version_name": "1.0",
+  "activity": "MainActivity",
+  "min_sdk": 24,
+  "target_sdk": 33,
+  "permissions": ["android.permission.INTERNET"],
+  "receivers": [
+    {
+      "name": "TestReceiver",
+      "exported": true,
+      "actions": ["android.intent.action.PACKAGE_ADDED"],
+      "data": [{"scheme": "package"}],
+      "meta_data": [{"name": "dev.forge.resfix.config", "resource": "@xml/config"}]
+    }
+  ],
+  "meta_data": [{"name": "dev.forge.resfix.build", "value": "fixture"}],
+  "icon": {"background": "#203040", "foreground": "#FFCC00", "letter": "R"}
+}

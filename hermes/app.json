@@ -1,0 +1,16 @@
+{
+  "package": "dev.aj.hermes",
+  "name": "Hermes",
+  "version_code": 1,
+  "version_name": "1.0",
+  "activity": "MainActivity",
+  "min_sdk": 24,
+  "target_sdk": 34,
+  "orientation": "portrait",
+  "allow_backup": false,
+  "label_res": "@string/app_name",
+  "permissions": [
+    "android.permission.INTERNET"
+  ],
+  "icon": {"background": "#1B1630", "foreground": "#8B7BF0", "letter": "H"}
+}
